@@ -1,0 +1,170 @@
+/* Configuración General */
+body {/* Estilos para la sección de normativa */
+.contenedor-normativa {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 10px;
+}
+
+.tarjeta-tecnica {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+
+.cabecera-critica, .cabecera-info, .cabecera-alerta {
+    padding: 15px;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.cabecera-critica { background-color: #d32f2f; } /* Rojo */
+.cabecera-info { background-color: #1976d2; }    /* Azul */
+.cabecera-alerta { background-color: #f57c00; }  /* Naranja */
+
+.icono { font-size: 1.5rem; margin-right: 15px; }
+
+.cuerpo { padding: 20px; color: #333; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table th, table td {
+    border: 1px solid #eee;
+    padding: 10px;
+    text-align: center;
+}
+
+table th { background-color: #f8f9fa; }
+
+.formula {
+    background: #f0f0f0;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 5px;
+    margin: 10px 0;
+    border-left: 5px solid #f57c00;
+}
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: white;
+    width: 100%;
+    padding: 2rem 0;
+    text-align: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor de la App */
+.contenedor-principal {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    margin-top: -30px; /* Para que monte un poco sobre el header */
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* Botones Estilo Moderno */
+.botones {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+button {
+    border: none;
+    padding: 12px 5px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.btn-rebt { background-color: #fbbf24; color: #78350f; }
+.btn-rite { background-color: #3b82f6; color: white; }
+button[onclick*="calculadora"] { background-color: #10b981; color: white; }
+
+button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* Estilo de los Inputs */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    box-sizing: border-box; /* Importante para que no se salga */
+}
+
+.visor-contenido {
+    text-align: left;
+    border-top: 2px solid #f3f4f6;
+    padding-top: 20px;
+}/* Animación de Sacudida (Vibración) */
+@keyframes sacudida {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    20% { transform: translate(-1px, -2px) rotate(-1deg); }
+    40% { transform: translate(-3px, 0px) rotate(1deg); }
+    60% { transform: translate(3px, 2px) rotate(0deg); }
+    80% { transform: translate(1px, -1px) rotate(1deg); }
+    100% { transform: translate(-1px, 2px) rotate(0deg); }
+}
+
+/* Efecto Electricidad (REBT) */
+.efecto-rebt {
+    animation: sacudida 0.3s;
+    box-shadow: 0 0 20px #fbbf24, 0 0 40px #f59e0b !important;
+    border: 2px solid white !important;
+}
+
+/* Efecto Fuego (RITE) */
+.efecto-rite {
+    animation: sacudida 0.3s;
+    box-shadow: 0 0 20px #ef4444, 0 0 40px #b91c1c !important;
+    border: 2px solid white !important;
+}/* Animación de vibración */
+@keyframes vibrar {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+}
+
+/* Estilo del rayo eléctrico */
+.efecto-rebt {
+    animation: vibrar 0.2s infinite;
+    box-shadow: 0 0 15px #fbbf24, 0 0 30px #fbbf24 !important;
+    background-color: #f59e0b !important;
+}
+
+/* Estilo del fuego */
+.efecto-rite {
+    animation: vibrar 0.2s infinite;
+    box-shadow: 0 0 15px #ef4444, 0 0 30px #ef4444 !important;
+    background-color: #dc2626 !important;
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App REBT & RITE</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+</body><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <h2>Guía Técnica: Integración REBT & RITE</h2>
+
+    <div class="tarjeta-tecnica">
+        <div class="cabecera-critica">
+            <span class="icono">🏛️</span>
+            <h3>Locales de Pública Concurrencia (ITC-BT-28)</h3>
+        </div>
+        <div class="cuerpo">
+            <p>En locales como bares, clínicas u oficinas grandes, la seguridad es prioritaria:</p>
+            <ul>
+                <li><strong>Cableado:</strong> Obligatorio cables libres de halógenos <strong>RZ1-K (AS)</strong>.</li>
+                <li><strong>Emergencia:</strong> Los equipos RITE deben permitir el corte de energía inmediato.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="tarjeta-tecnica">
+        <div class="cabecera-info">
+            <span class="icono">📏</span>
+            <h3>Dimensionado de Tubos (ITC-BT-21)</h3>
+        </div>
+        <div class="cuerpo">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sección Cable</th>
+                        <th>Nº Conductores</th>
+                        <th>Ø Tubo Ext. (mm)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>2,5 mm²</td><td>3 (F+N+T)</td><td><strong>20 mm</strong></td></tr>
+                    <tr><td>4 mm²</td><td>3 (F+N+T)</td><td><strong>20 mm</strong></td></tr>
+                    <tr><td>6 mm²</td><td>3 (F+N+T)</td><td><strong>25 mm</strong></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="tarjeta-tecnica alerta">
+        <div class="cabecera-alerta">
+            <span class="icono">❄️</span>
+            <h3>Cálculo de Secciones para Climatización</h3>
+        </div>
+        <div class="cuerpo">
+            <p><strong>Regla de Oro (ITC-BT-47):</strong> Los motores se calculan al 125% de su intensidad nominal.</p>
+            <div class="formula">
+                I<sub>diseño</sub> = I<sub>nominal</sub> × 1,25
+            </div>
+            <p><small>* Ejemplo: Una máquina de 16A requiere protección de 20A y cable de 4mm².</small></p>
+        </div>
+    </div>
+</section>
+    <header>
+        <h1>Manual Técnico Interactivo</h1>
+        <p>REBT ⚡ & RITE 🔥 | Herramienta de Consulta</p>
+    </header>
+
+    <div class="contenedor-principal">
+        <div class="botones">
+            <button onclick="cargarInfo('rebt')" class="btn-rebt">⚡ REBT</button>
+            <button onclick="cargarInfo('rite')" class="btn-rite">🔥 RITE</button>
+            <button onclick="cargarInfo('calculadora')">🧮 Calcular</button>
+        </div>
+<button onclick="cargarInfo('tierra')" style="background-color: #6366f1; color: white;">🌱 Tierra</button>
+        <div id="visor" class="visor-contenido">
+            <div class="bienvenida">
+                <h2>¡Bienvenido al Panel de Control!</h2>
+                <p>Selecciona una opción arriba para desplegar la normativa técnica.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Desarrollado para Formación Técnica REBT/RITE - 2024
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
