@@ -1,0 +1,409 @@
+/* ==========================================================================
+   FORZADO GLOBAL DE MODO OSCURO Y VARIABLES
+   ========================================================================== */
+:root {
+    color-scheme: dark !important;
+    --bg-principal: #1e222b;
+    --bg-paneles: #282c34;
+    --bg-sidebar: #181a1f; 
+    --texto-principal: #abb2bf;
+    --texto-brillante: #ffffff;
+    --azul-tecnico: #4b96e6;
+    --azul-brillante: #188fa7;
+    --verde-ia: #43b581;
+    --bordes: #3e4451;
+    --input-bg: #21252b;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Evita destellos blancos en el navegador o movil */
+html {
+    background-color: var(--bg-principal) !important;
+    height: 100%;
+}
+
+body {
+    background-color: var(--bg-principal) !important;
+    color: var(--texto-principal) !important;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+/* Contenedor principal unificado */
+.contenedor, .container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-principal);
+}
+
+/* ==========================================================================
+   BARRA LATERAL IZQUIERDA: MENÚ
+   ========================================================================== */
+.sidebar-izquierda {
+    width: 260px;
+    background-color: var(--bg-sidebar);
+    border-right: 1px solid var(--bordes);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.sidebar-header, .encabezado-sidebar {
+    padding: 20px;
+    border-bottom: 1px solid var(--bordes);
+}
+
+.sidebar-header h2, .encabezado-sidebar h2 {
+    color: var(--texto-brillante);
+    font-size: 18px;
+}
+
+.sidebar-header p, .encabezado-sidebar p {
+    color: var(--azul-tecnico);
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.sidebar-search {
+    padding: 15px 20px;
+}
+
+.sidebar-search input {
+    width: 100%;
+    background-color: var(--input-bg);
+    border: 1px solid var(--bordes);
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: var(--texto-brillante);
+    font-size: 13px;
+}
+
+.sidebar-menu, .menu-sidebar {
+    flex: 1;
+    padding: 10px 20px;
+    overflow-y: auto;
+}
+
+.menu-section {
+    margin-bottom: 25px;
+}
+
+.menu-section h3 {
+    font-size: 11px;
+    color: #5c6370;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.menu-section ul {
+    list-style: none;
+}
+
+.menu-section li {
+    margin-bottom: 5px;
+}
+
+.menu-section a {
+    color: var(--texto-principal);
+    text-decoration: none;
+    display: block;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.menu-section a:hover {
+    background-color: var(--bg-paneles);
+    color: var(--texto-brillante);
+}
+
+.menu-section a.active {
+    background-color: var(--azul-tecnico);
+    color: white;
+    font-weight: bold;
+}
+
+/* ==========================================================================
+   PANEL CENTRAL DINÁMICO (VISTAS)
+   ========================================================================== */
+.panel-tecnico {
+    flex: 1.5;
+    background-color: var(--bg-principal);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--bordes);
+    overflow-y: auto;
+}
+
+header h1 {
+    color: var(--texto-brillante);
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+header p {
+    color: var(--azul-tecnico);
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+/* Portada / Dashboard */
+.portada-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.tarjeta-modulo {
+    background-color: var(--bg-paneles) !important;
+    border: 1px solid var(--bordes) !important;
+    padding: 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.tarjeta-modulo:hover {
+    transform: translateY(-4px);
+    border-color: var(--azul-tecnico) !important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ==========================================================================
+   ELEMENTOS DE FORMULARIO Y BLOQUES TÉCNICOS
+   ========================================================================== */
+.buscador-normativa h2 {
+    color: var(--texto-brillante);
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.cuadro-busqueda, .search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+input[type="text"], input[type="number"], .cuadro-busqueda input, select {
+    background-color: var(--input-bg);
+    border: 1px solid var(--bordes);
+    padding: 12px 15px;
+    border-radius: 6px;
+    color: var(--texto-brillante);
+    font-size: 14px;
+}
+
+input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    outline: none;
+    border-color: var(--azul-tecnico);
+}
+
+button, .cuadro-busqueda button {
+    background-color: var(--azul-tecnico);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s, filter 0.2s;
+}
+
+button:hover, .cuadro-busqueda button:hover {
+    filter: brightness(1.15);
+}
+
+.resultados, .seccion-bloque, .seccion-bloque-factura {
+    background-color: var(--bg-paneles);
+    border: 1px solid var(--bordes);
+    border-radius: 8px;
+    padding: 20px;
+    width: 100%;
+}
+
+.placeholder-text {
+    color: #5c6370;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Facturación */
+.form-grupo {
+    margin-bottom: 20px;
+}
+
+.form-grupo h3 {
+    color: var(--texto-brillante);
+    font-size: 15px;
+    margin-bottom: 12px;
+    border-left: 3px solid var(--azul-tecnico);
+    padding-left: 8px;
+}
+
+.form-grupo input, .form-grupo select {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.linea-concepto {
+    display: flex;
+    gap: 15px;
+}
+
+.linea-concepto input[type="number"] {
+    width: 160px;
+    flex: none;
+}
+
+.factura-totales {
+    background-color: var(--bg-principal);
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid var(--bordes);
+    margin-top: 15px;
+    text-align: right;
+}
+
+.factura-totales p {
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: var(--texto-principal);
+}
+
+.factura-totales h3 {
+    color: var(--verde-ia);
+    font-size: 18px;
+    margin-top: 5px;
+}
+
+/* ==========================================================================
+   PANEL DERECHO: CHAT AGENTE IA
+   ========================================================================== */
+.panel-ia {
+    flex: 1;
+    background-color: var(--bg-paneles);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.panel-ia h2 {
+    color: var(--texto-brillante);
+    font-size: 18px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--bordes);
+}
+
+.chat-container {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-right: 5px;
+    margin-bottom: 15px;
+}
+
+.mensaje {
+    max-width: 85%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.mensaje.bot {
+    background-color: var(--bg-principal);
+    color: var(--texto-principal);
+    align-self: flex-start;
+    border-left: 4px solid var(--verde-ia);
+}
+
+.mensaje.usuario {
+    background-color: var(--azul-tecnico);
+    color: white;
+    align-self: flex-end;
+}
+
+.chat-input-area {
+    display: flex;
+    gap: 10px;
+}
+
+#btn-enviar-ia {
+    background-color: var(--verde-ia);
+}
+
+/* ==========================================================================
+   CONTROL ESTRICTO DE VISIBILIDAD DE SECCIONES (SOLUCIÓN FONDO BLANCO)
+   ========================================================================== */
+.oculto, .vista-seccion.oculto, .vista-section.oculto {
+    display: none !important;
+}
+
+.vista-seccion:not(.oculto), .vista-section:not(.oculto) {
+    display: flex !important;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* ==========================================================================
+   RESPONSIVE (MÓVILES Y TABLETS)
+   ========================================================================== */
+@media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+        height: auto;
+    }
+    
+    .contenedor, .container {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .sidebar-izquierda {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--bordes);
+    }
+    
+    .panel-tecnico {
+        width: 100%;
+        border-right: none;
+        padding: 20px;
+    }
+
+    .panel-ia {
+        width: 100%;
+        padding: 20px;
+        border-top: 1px solid var(--bordes);
+        height: 400px; 
+    }
+
+    button, .cuadro-busqueda button {
+        width: 100%;
+        padding: 14px;
+    }
+
+    .linea-concepto {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .linea-concepto input[type="number"] {
+        width: 100%;
+    }
+}

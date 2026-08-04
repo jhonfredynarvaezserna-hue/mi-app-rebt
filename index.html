@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es" style="background-color: #0a1118; color-scheme: dark;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicio y Gestión SM</title>
+
+    <!-- CONFIGURACIÓN PWA Y PANTALLA COMPLETA -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#4b96e6">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Gestión SM">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/567/567041.png">
+
+    <style>
+        /* PALETA AZUL TÉCNICO Y MODO OSCURO GLOBAL */
+        :root {
+            --bg-principal: #0a1118;
+            --panel-bg: #131e2b;
+            --sidebar-bg: #0f1923;
+            --azul-tecnico: #1e6091;
+            --azul-brillante: #188fa7;
+            --texto-principal: #e2e8f0;
+            --texto-brillante: #ffffff;
+            --bordes: #223347;
+            --input-bg: #1a2936;
+            --verde-ia: #10b981;
+        }
+
+        /* FORZAR FONDO OSCURO PERMANENTE */
+        html, body {
+            background-color: #0a1118 !important;
+            color: var(--texto-principal);
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .contenedor { 
+            display: flex; 
+            min-height: 100vh; 
+            background-color: var(--bg-principal); 
+        }
+
+        .sidebar-izquierda { 
+            width: 280px; 
+            background-color: var(--sidebar-bg); 
+            border-right: 1px solid var(--bordes); 
+            padding: 20px; 
+            box-sizing: border-box; 
+            flex-shrink: 0;
+        }
+
+        .encabezado-sidebar h2 { color: var(--azul-brillante); font-size: 1.3rem; margin: 0; }
+        .menu-sidebar ul { list-style: none; padding: 0; margin: 0; }
+        .menu-sidebar a { color: var(--texto-principal); text-decoration: none; display: block; padding: 10px; border-radius: 6px; }
+        .menu-sidebar a:hover { background-color: var(--azul-tecnico); color: #fff; }
+
+        .panel-tecnico { flex-grow: 1; padding: 30px; background-color: var(--bg-principal); box-sizing: border-box; }
+        .seccion-bloque, .tarjeta-modulo { background-color: var(--panel-bg); border: 1px solid var(--bordes); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        
+        .portada-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .tarjeta-modulo { cursor: pointer; border: 1px solid var(--bordes); transition: 0.2s; }
+        .tarjeta-modulo:hover { border-color: var(--azul-brillante); background-color: #182838; }
+
+        input, select, button {
+            background-color: var(--input-bg);
+            border: 1px solid var(--bordes);
+            color: var(--texto-brillante);
+            padding: 10px 14px;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        button { background-color: var(--azul-tecnico); color: white; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: var(--azul-brillante); }
+
+        .oculto { display: none !important; }
+
+        /* ADAPTACIÓN MÓVIL (RESPONSIVE) */
+        @media (max-width: 768px) {
+            .contenedor { flex-direction: column; }
+            .sidebar-izquierda { width: 100%; border-right: none; border-bottom: 1px solid var(--bordes); padding: 15px; }
+            .panel-tecnico { padding: 15px; }
+            .portada-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor">
+
+        <aside class="sidebar-izquierda">
+            <div class="encabezado-sidebar" id="menu-inicio" style="cursor: pointer;">
+                <h2>Servicio y Gestión SM</h2>
+                <p style="color: #8a99ad; font-size: 0.9rem;">Menú Principal</p>
+            </div>
+            
+            <nav class="menu-sidebar">
+                <div class="menu-section">
+                    <h3 style="color: var(--azul-brillante); font-size: 0.85rem; margin-top: 20px;">📚 APRENDIZAJE Y NORMATIVA</h3>
+                    <ul>
+                        <li><a href="#" id="menu-rebt">⚖️ Buscador REBT / RITE</a></li>
+                        <li><a href="#" id="menu-industrial">⚡ Automatismos Potencia</a></li>
+                        <li><a href="#" id="menu-ve">🚗 Vehículo Eléctrico (ITC-BT-52)</a></li>
+                        <li><a href="#" id="menu-knx">🟢 Métodos Fáciles KNX</a></li>
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <h3 style="color: var(--azul-brillante); font-size: 0.85rem; margin-top: 20px;">💰 MONETIZACIÓN Y NEGOCIO</h3>
+                    <ul>
+                        <li><a href="#" id="menu-facturas">📄 Generar Facturas</a></li>
+                        <li><a href="#" id="menu-precios">📊 Tarifas y Precios</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="panel-tecnico">
+
+            <!-- VISTA INICIO -->
+            <section id="vista-inicio" class="vista-section">
+                <header style="text-align: center; margin-bottom: 40px; border-bottom: 1px solid var(--bordes); padding-bottom: 20px;">
+                    <h1 style="font-size: 2.3rem; margin-bottom: 10px; color: var(--texto-brillante);">Servicio y Gestión SM</h1>
+                    <p style="color: #a0aec0; font-size: 1.1rem;">Plataforma Integral de Normativa, Ingeniería y Gestión Eléctrica</p>
+                </header>
+
+                <div class="portada-grid">
+                    <div class="tarjeta-modulo" id="card-rebt">
+                        <div style="font-size: 2rem; margin-bottom: 12px;">⚖️</div>
+                        <h3>Buscador REBT / RITE</h3>
+                        <p style="color: #a0aec0;">Consulta rápida de normativas de baja tensión e instalaciones térmicas.</p>
+                    </div>
+
+                    <div class="tarjeta-modulo" id="card-industrial">
+                        <div style="font-size: 2rem; margin-bottom: 12px;">⚡</div>
+                        <h3>Automatismos</h3>
+                        <p style="color: #a0aec0;">Calculadora de motores trifásicos, esquemas de campo y averías.</p>
+                    </div>
+
+                    <div class="tarjeta-modulo" id="card-ve">
+                        <div style="font-size: 2rem; margin-bottom: 12px;">🚗</div>
+                        <h3>Puntos de Recarga VE</h3>
+                        <p style="color: #a0aec0;">Calculadora técnica de protecciones, esquemas y cableado según ITC-BT-52.</p>
+                    </div>
+
+                    <div class="tarjeta-modulo" id="card-knx">
+                        <div style="font-size: 2rem; margin-bottom: 12px;">🟢</div>
+                        <h3>Domótica KNX</h3>
+                        <p style="color: #a0aec0;">Direccionamientos lógicos, topologías físicas y apuntes del estándar.</p>
+                    </div>
+
+                    <div class="tarjeta-modulo" id="card-facturas">
+                        <div style="font-size: 2rem; margin-bottom: 12px;">📄</div>
+                        <h3>Facturación</h3>
+                        <p style="color: #a0aec0;">Cálculo ágil de presupuestos, bases imponibles e IVA para clientes.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA REBT -->
+            <section id="vista-rebt" class="vista-section oculto">
+                <header>
+                    <h1>Buscador de Reglamento</h1>
+                    <p style="color: #a0aec0;">Cálculos Eléctricos y Térmicos Avanzados</p>
+                </header>
+                <div class="seccion-bloque">
+                    <h2>Consulta de Normativa (REBT / RITE)</h2>
+                    <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                        <input type="text" id="entrada-busqueda" placeholder="Ej: caida de tension, seccion, contador, diferencial..." style="flex-grow: 1; min-width: 200px;">
+                        <button type="button" id="btn-buscar">Buscar</button>
+                    </div>
+                    <div id="resultados-busqueda" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;">
+                        <p class="placeholder-text" style="color: #a0aec0;">Los resultados de la búsqueda aparecerán aquí.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA AUTOMATISMOS -->
+            <section id="vista-industrial" class="vista-section oculto">
+                <header>
+                    <h1>⚡ Automatismos y Potencia Industrial</h1>
+                    <p style="color: #a0aec0;">Cálculos rápidos en planta, esquemas de borneras y diagnóstico de averías</p>
+                </header>
+
+                <div class="seccion-bloque">
+                    <h2>🎮 Simulador Virtual de Circuito de Maniobra (Marcha/Paro)</h2>
+                    <p style="color: #a0aec0;">Prueba el funcionamiento eléctrico del enclavamiento de contactos haciendo clic en los pulsadores virtuales.</p>
+
+                    <div style="display: flex; justify-content: space-around; align-items: center; background-color: var(--input-bg); padding: 20px; border-radius: 8px; border: 1px solid var(--bordes); margin-top: 15px; flex-wrap: wrap; gap: 20px;">
+                        <div style="display: flex; flex-direction: column; gap: 15px;">
+                            <button type="button" id="sim-btn-paro" style="background-color: #e53e3e; color: white; padding: 15px; border-radius: 50%; font-weight: bold; border: 3px solid #9b2c2c; cursor: pointer; width: 80px; height: 80px; font-size: 11px;">S1 (PARO)</button>
+                            <button type="button" id="sim-btn-marcha" style="background-color: #38a169; color: white; padding: 15px; border-radius: 50%; font-weight: bold; border: 3px solid #22543d; cursor: pointer; width: 80px; height: 80px; font-size: 11px;">S2 (MARCHA)</button>
+                        </div>
+
+                        <div style="color: white; font-family: monospace; font-size: 14px; display: flex; flex-direction: column; gap: 10px;">
+                            <p>• Contacto S1 (Paro): <span id="estado-s1" style="color: #68d391; font-weight: bold;">CERRADO (NC)</span></p>
+                            <p>• Contacto S2 (Marcha): <span id="estado-s2" style="color: #fc8181; font-weight: bold;">ABIERTO (NA)</span></p>
+                            <p>• Enclavamiento KM1 (13-14): <span id="estado-km1-aux" style="color: #fc8181; font-weight: bold;">ABIERTO</span></p>
+                            <p>• Bobina Contactor KM1 (A1-A2): <span id="estado-bobina" style="color: #718096; font-weight: bold;">DESACTIVADA</span></p>
+                        </div>
+
+                        <div style="text-align: center;">
+                            <div id="piloto-motor" style="width: 60px; height: 60px; border-radius: 50%; background-color: #2a3441; border: 4px solid #1a232e; margin: 0 auto; transition: background-color 0.2s, box-shadow 0.2s;"></div>
+                            <p style="margin-top: 8px; font-size: 12px; font-weight: bold; color: #ffffff;">MOTOR</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA FACTURAS -->
+            <section id="vista-facturas" class="vista-section oculto">
+                <header>
+                    <h1>📄 Sistema de Facturación</h1>
+                    <p style="color: #a0aec0;">Crea y calcula de forma rápida presupuestos y facturas</p>
+                </header>
+                <div class="seccion-bloque">
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <h3>Datos del Cliente</h3>
+                        <input type="text" id="fac-cliente" placeholder="Nombre del Cliente">
+                        <input type="text" id="fac-nif" placeholder="DNI / NIF / CIF">
+
+                        <h3>Concepto del Trabajo</h3>
+                        <input type="text" id="fac-concepto" placeholder="Ej: Mantenimiento cuadro">
+                        <input type="number" id="fac-precio" placeholder="Precio Base (€)">
+                    </div>
+
+                    <div style="margin-top: 20px; padding: 15px; background: var(--input-bg); border-radius: 6px;">
+                        <p>Base Imponible: <span id="total-base">0.00</span> €</p>
+                        <p>IVA (21%): <span id="total-iva">0.00</span> €</p>
+                        <h3 style="color: var(--verde-ia);">Total Factura: <span id="total-factura">0.00</span> €</h3>
+                    </div>
+                    <button type="button" id="btn-calcular-factura" style="margin-top: 15px; width: 100%;">📊 Calcular Totales</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // REGISTRO DEL SERVICE WORKER PARA APP INSTALABLE PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registrado con éxito:', reg.scope))
+                    .catch(err => console.error('Error al registrar Service Worker:', err));
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // NAVEGACIÓN ENTRE SECCIONES (SPA)
+            const enlacesMenu = {
+                'menu-inicio': 'vista-inicio',
+                'menu-rebt': 'vista-rebt',
+                'card-rebt': 'vista-rebt',
+                'menu-industrial': 'vista-industrial',
+                'card-industrial': 'vista-industrial',
+                'menu-facturas': 'vista-facturas',
+                'card-facturas': 'vista-facturas'
+            };
+
+            const secciones = document.querySelectorAll('.vista-section');
+
+            Object.keys(enlacesMenu).forEach(id => {
+                const elem = document.getElementById(id);
+                if (elem) {
+                    elem.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const objetivoId = enlacesMenu[id];
+                        secciones.forEach(sec => sec.classList.add('oculto'));
+                        const objetivo = document.getElementById(objetivoId);
+                        if (objetivo) objetivo.classList.remove('oculto');
+                    });
+                }
+            });
+
+            // BUSCADOR REBT / RITE
+            const baseNormativa = [
+                { termino: "caida de tension", respuesta: "<strong>ITC-BT-19 / ITC-BT-15:</strong> Caída máx en Derivación Individual: 1.5% (contadores centralizados) o 3% (un solo usuario). En Alumbrado: 3%. En Otros usos: 5%." },
+                { termino: "seccion", respuesta: "<strong>ITC-BT-19:</strong> Sección mín. conductores de cobre: Alumbrado 1.5 mm², Tomas generales 2.5 mm², Lavadora/Termo 4 mm², Cocina/Horno 6 mm²." },
+                { termino: "ve", respuesta: "<strong>ITC-BT-52:</strong> Puntos de recarga de vehículo eléctrico. Protecciones obligatorias: Sobretensiones permanentes/transitorias y diferencial clase A." },
+                { termino: "diferencial", respuesta: "<strong>ITC-BT-24:</strong> Sensibilidad máxima de 30 mA (Alta sensibilidad) para protección de personas en viviendas." },
+                { termino: "contador", respuesta: "<strong>ITC-BT-16:</strong> Centralización de contadores. Requiere iluminación de emergencia y extintor eficaz en la sala." }
+            ];
+
+            const btnBuscar = document.getElementById('btn-buscar');
+            const entradaBusqueda = document.getElementById('entrada-busqueda');
+            const resultadosBusqueda = document.getElementById('resultados-busqueda');
+
+            function buscar() {
+                const query = entradaBusqueda.value.toLowerCase().trim();
+                if (!query) {
+                    resultadosBusqueda.innerHTML = '<p style="color: #a0aec0;">Escribe un término técnico para consultar.</p>';
+                    return;
+                }
+
+                const resultados = baseNormativa.filter(item => item.termino.includes(query));
+                if (resultados.length > 0) {
+                    resultadosBusqueda.innerHTML = resultados.map(r => `<div style="margin-bottom: 10px; border-left: 3px solid var(--azul-brillante); padding-left: 10px;">${r.respuesta}</div>`).join('');
+                } else {
+                    resultadosBusqueda.innerHTML = `<p style="color: #f6ad55;">No hay coincidencias directas para "${query}". Prueba con "seccion", "caida de tension", "diferencial" o "ve".</p>`;
+                }
+            }
+
+            if (btnBuscar) btnBuscar.addEventListener('click', buscar);
+            if (entradaBusqueda) {
+                entradaBusqueda.addEventListener('keyup', (e) => {
+                    if (e.key === 'Enter') buscar();
+                });
+            }
+
+            // SIMULADOR VIRTUAL
+            const btnMarcha = document.getElementById('sim-btn-marcha');
+            const btnParo = document.getElementById('sim-btn-paro');
+            const pilotoMotor = document.getElementById('piloto-motor');
+
+            if (btnMarcha && btnParo && pilotoMotor) {
+                btnMarcha.addEventListener('click', () => {
+                    document.getElementById('estado-s2').innerText = 'PULSADO (NA CERRADO)';
+                    document.getElementById('estado-s2').style.color = '#68d391';
+
+                    document.getElementById('estado-km1-aux').innerText = 'CERRADO (ENCLAVADO)';
+                    document.getElementById('estado-km1-aux').style.color = '#68d391';
+
+                    document.getElementById('estado-bobina').innerText = 'ACTIVADA (230V)';
+                    document.getElementById('estado-bobina').style.color = '#68d391';
+
+                    pilotoMotor.style.backgroundColor = '#10b981';
+                    pilotoMotor.style.boxShadow = '0 0 18px #10b981';
+
+                    setTimeout(() => {
+                        document.getElementById('estado-s2').innerText = 'ABIERTO (NA)';
+                        document.getElementById('estado-s2').style.color = '#fc8181';
+                    }, 300);
+                });
+
+                btnParo.addEventListener('click', () => {
+                    document.getElementById('estado-s1').innerText = 'ABIERTO (PULSADO)';
+                    document.getElementById('estado-s1').style.color = '#fc8181';
+
+                    document.getElementById('estado-km1-aux').innerText = 'ABIERTO';
+                    document.getElementById('estado-km1-aux').style.color = '#fc8181';
+
+                    document.getElementById('estado-bobina').innerText = 'DESACTIVADA';
+                    document.getElementById('estado-bobina').style.color = '#718096';
+
+                    pilotoMotor.style.backgroundColor = '#2a3441';
+                    pilotoMotor.style.boxShadow = 'none';
+
+                    setTimeout(() => {
+                        document.getElementById('estado-s1').innerText = 'CERRADO (NC)';
+                        document.getElementById('estado-s1').style.color = '#68d391';
+                    }, 300);
+                });
+            }
+
+            // LÓGICA DE FACTURACIÓN
+            const btnCalcularFactura = document.getElementById('btn-calcular-factura');
+            if (btnCalcularFactura) {
+                btnCalcularFactura.addEventListener('click', () => {
+                    const inputPrecio = document.getElementById('fac-precio');
+                    const precioBase = parseFloat(inputPrecio.value) || 0;
+                    
+                    const iva = precioBase * 0.21;
+                    const total = precioBase + iva;
+
+                    document.getElementById('total-base').innerText = precioBase.toFixed(2);
+                    document.getElementById('total-iva').innerText = iva.toFixed(2);
+                    document.getElementById('total-factura').innerText = total.toFixed(2);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

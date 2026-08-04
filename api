@@ -1,0 +1,148 @@
+// --- ELEMENTOS DE LA INTERFAZ ---
+const inputBusqueda = document.getElementById('input-busqueda');
+const btnBuscar = document.getElementById('btn-buscar');
+const resultadosBusqueda = document.getElementById('resultados-busqueda');
+
+const chatInput = document.getElementById('chat-input');
+const btnEnviarIa = document.getElementById('btn-enviar-ia');
+const chatContainer = document.getElementById('chat-container');
+
+// --- BOTONES DEL MENÚ ---
+const botonesMenu = {
+    'menu-rebt': document.getElementById('menu-rebt'),
+    'menu-knx': document.getElementById('menu-knx'),
+    'menu-domotica': document.getElementById('menu-domotica'),
+    'menu-facturas': document.getElementById('menu-facturas'),
+    'menu-precios': document.getElementById('menu-precios')
+};
+
+// --- VISTAS DE CONTENIDO (Módulos principales) ---
+const vistasContenido = {
+    'menu-rebt': document.getElementById('vista-rebt'),
+    'menu-knx': document.getElementById('vista-knx'),
+    'menu-domotica': document.getElementById('vista-domotica'),
+    'menu-facturas': document.getElementById('vista-facturas'),
+    'menu-precios': document.getElementById('vista-precios')
+};
+
+// --- LÓGICA DE ENRUTADO SEGURO (Cambio de pantallas) ---
+Object.keys(botonesMenu).forEach(idBoton => {
+    const boton = botonesMenu[idBoton];
+    const vista = vistasContenido[idBoton];
+
+    if (boton) {
+        boton.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            Object.values(botonesMenu).forEach(btn => {
+                if (btn) btn.classList.remove('active');
+            });
+            boton.classList.add('active');
+
+            Object.values(vistasContenido).forEach(v => {
+                if (v) v.classList.add('oculto');
+            });
+            
+            if (vista) {
+                vista.classList.remove('oculto');
+            } else {
+                console.warn(`⚠️ La vista para el botón ${idBoton} no se encuentra en el HTML.`);
+            }
+        });
+    }
+});
+
+
+// --- 1. LÓGICA DEL BUSCADOR TÉCNICO ---
+if (btnBuscar && inputBusqueda) {
+    btnBuscar.addEventListener('click', ejecutarBusqueda);
+    inputBusqueda.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') ejecutarBusqueda();
+    });
+}
+
+function ejecutarBusqueda() {
+    const query = inputBusqueda.value.trim();
+    if (!query || !resultadosBusqueda) return;
+
+    resultadosBusqueda.innerHTML = `<p class="placeholder-text">Buscando "${query}" en el reglamento...</p>`;
+
+    setTimeout(() => {
+        resultadosBusqueda.innerHTML = `
+            <div style="padding: 10px; border-bottom: 1px solid #3e4451;">
+                <h3 style="color: #4b96e6; margin-bottom: 5px;">Resultado para: ${query}</h3>
+                <p style="font-size: 14px; line-height: 1.6;">Aquí aparecerán los parámetros del REBT/RITE o las alertas de <strong>Servicio y Gestión SM</strong>.</p>
+            </div>
+        `;
+    }, 800);
+}
+
+
+// --- 2. LÓGICA DEL CHAT CON LA IA (Sintonizado con server.js) ---
+if (btnEnviarIa && chatInput) {
+    btnEnviarIa.addEventListener('click', enviarMensajeIA);
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') enviarMensajeIA();
+    });
+}
+
+async function enviarMensajeIA() {
+    const textoMensaje = chatInput.value.trim();
+    if (!textoMensaje || !chatContainer) return;
+
+    // Pintar mensaje del usuario en pantalla
+    agregarMensajeAlChat(textoMensaje, 'usuario');
+    chatInput.value = ''; 
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    try {
+        // Hacemos el puente directo a la ruta que espera tu server.js
+        const respuestaServidor = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mensaje: textoMensaje })
+        });
+
+        const datos = await respuestaServidor.json();
+        
+        if (datos.respuesta) {
+            agregarMensajeAlChat(datos.respuesta, 'bot');
+        } else {
+            agregarMensajeAlChat('Hubo un problema al procesar la respuesta de la IA.', 'bot');
+        }
+
+    } catch (error) {
+        console.error(error);
+        agregarMensajeAlChat('No se pudo conectar con el servidor. Error de red.', 'bot');
+    }
+
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function agregarMensajeAlChat(texto, remitente) {
+    if (!chatContainer) return;
+    const divMensaje = document.createElement('div');
+    divMensaje.classList.add('mensaje', remitente);
+    divMensaje.innerHTML = `<p>${texto}</p>`;
+    chatContainer.appendChild(divMensaje);
+}
+
+
+// --- 3. MATEMÁTICAS DE FACTURACIÓN (IVA 21%) ---
+const facPrecio = document.getElementById('fac-precio');
+const btnCalcularFactura = document.getElementById('btn-calcular-factura');
+const totalBase = document.getElementById('total-base');
+const totalIva = document.getElementById('total-iva');
+const totalFactura = document.getElementById('total-factura');
+
+if (btnCalcularFactura && facPrecio) {
+    btnCalcularFactura.addEventListener('click', () => {
+        const precioBase = parseFloat(facPrecio.value) || 0;
+        const totalIvaCalculado = precioBase * 0.21;
+        const importeTotalCalculado = precioBase + totalIvaCalculado;
+
+        if (totalBase) totalBase.textContent = precioBase.toFixed(2) + " €";
+        if (totalIva) totalIva.textContent = totalIvaCalculado.toFixed(2) + " €";
+        if (totalFactura) totalFactura.textContent = importeTotalCalculado.toFixed(2) + " €";
+    });
+}
