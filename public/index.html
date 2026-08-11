@@ -37,41 +37,6 @@
             min-height: 100vh;
         }
 
-        /* PANTALLA DE ACCESO (LOGIN) */
-        #pantalla-login {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: var(--bg-principal);
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .tarjeta-login {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--bordes);
-            border-radius: 12px;
-            padding: 30px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-        }
-
-        .btn-google {
-            background-color: #ffffff;
-            color: #333;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-            font-weight: 600;
-        }
-        .btn-google:hover { background-color: #e2e8f0; }
-
         /* APLICACIÓN PRINCIPAL */
         .contenedor { 
             display: flex; 
@@ -177,31 +142,8 @@
 </head>
 <body>
 
-    <!-- 1. PANTALLA DE LOGIN -->
-    <div id="pantalla-login">
-        <div class="tarjeta-login">
-            <h1 style="color: var(--texto-brillante); font-size: 1.8rem; margin-bottom: 5px;">Servicio y Gestión SM</h1>
-            <p style="color: #8a99ad; font-size: 0.9rem; margin-bottom: 25px;">Ingresa para acceder a la plataforma técnica</p>
-            
-            <form id="form-login" style="display: flex; flex-direction: column; gap: 12px;">
-                <input type="email" id="login-email" placeholder="Correo Electrónico">
-                <input type="password" id="login-pass" placeholder="Contraseña">
-                <button type="submit" style="width: 100%; margin-top: 5px;">Ingresar a la App</button>
-            </form>
-
-            <div style="margin: 20px 0; border-bottom: 1px solid var(--bordes); position: relative;">
-                <span style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--panel-bg); padding: 0 10px; font-size: 0.8rem; color: #8a99ad;">O</span>
-            </div>
-
-            <button type="button" class="btn-google" id="btn-login-google">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="Google">
-                Acceder con Google
-            </button>
-        </div>
-    </div>
-
-    <!-- 2. CONTENEDOR PRINCIPAL -->
-    <div id="app-principal" class="contenedor oculto">
+    <!-- CONTENEDOR PRINCIPAL (ENTRADA DIRECTA) -->
+    <div id="app-principal" class="contenedor">
 
         <aside class="sidebar-izquierda">
             <div class="encabezado-sidebar" id="menu-inicio" style="cursor: pointer;">
@@ -231,8 +173,6 @@
                     </ul>
                 </div>
             </nav>
-
-            <button type="button" id="btn-cerrar-sesion" style="margin-top: 30px; width: 100%; background-color: #e53e3e;">Cerrar Sesión</button>
         </aside>
 
         <main class="panel-tecnico">
@@ -333,7 +273,7 @@
                 </div>
             </section>
 
-            <!-- VISTA ASESOR PARLANTE DE VOZ (FOTO DIRECTA EN HTML) -->
+            <!-- VISTA ASESOR PARLANTE DE VOZ -->
             <section id="vista-asesor-voz" class="vista-section oculto">
                 <header>
                     <h1>🗣️ Asesor Parlante de Normativa</h1>
@@ -341,8 +281,6 @@
                 </header>
 
                 <div class="seccion-bloque" style="text-align: center; padding: 40px 20px;">
-                    
-                    <!-- FOTO REAL DE LA ASESORA -->
                     <div id="avatar-femenino-box">
                         <img id="img-asesora-virtual" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80" alt="Asesora Virtual SM" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
@@ -621,7 +559,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             verificarEstadoAutenticacion();
             inicializarNavegacion();
-            inicializarAutenticacion();
             cargarVocesFemeninas();
             inicializarAsesorVoz();
             inicializarBusquedasIA();
@@ -762,65 +699,11 @@
             }
         }
 
+        // ACCESO DIRECTO SIN CONDICIONES DE LOGIN
         function verificarEstadoAutenticacion() {
-            const estaLogueado = localStorage.getItem('usuario_logueado') === 'true';
-            const pantallaLogin = document.getElementById('pantalla-login');
             const appPrincipal = document.getElementById('app-principal');
-
-            if (estaLogueado) {
-                pantallaLogin.classList.add('oculto');
+            if (appPrincipal) {
                 appPrincipal.classList.remove('oculto');
-            } else {
-                pantallaLogin.classList.remove('oculto');
-                appPrincipal.classList.add('oculto');
-            }
-        }
-
-        function inicializarAutenticacion() {
-            const formLogin = document.getElementById('form-login');
-            const btnGoogle = document.getElementById('btn-login-google');
-            const btnCerrar = document.getElementById('btn-cerrar-sesion');
-
-            if (formLogin) {
-                formLogin.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const password = document.getElementById('login-pass').value.trim();
-
-                    try {
-                        const response = await fetch('/api/login', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ password })
-                        });
-
-                        const data = await response.json();
-
-                        if (response.ok && data.success) {
-                            localStorage.setItem('usuario_logueado', 'true');
-                            document.getElementById('login-pass').value = '';
-                            verificarEstadoAutenticacion();
-                        } else {
-                            alert(data.error || 'Clave no válida. Introduce SM2026 para ingresar.');
-                        }
-                    } catch (err) {
-                        console.error('Error al iniciar sesión:', err);
-                        alert('Error al conectar con el servidor.');
-                    }
-                });
-            }
-
-            if (btnGoogle) {
-                btnGoogle.addEventListener('click', () => {
-                    localStorage.setItem('usuario_logueado', 'true');
-                    verificarEstadoAutenticacion();
-                });
-            }
-
-            if (btnCerrar) {
-                btnCerrar.addEventListener('click', () => {
-                    localStorage.removeItem('usuario_logueado');
-                    verificarEstadoAutenticacion();
-                });
             }
         }
 
@@ -939,7 +822,7 @@
                     const nombre = document.getElementById('cliente-nombre').value.trim();
                     const servicio = document.getElementById('tipo-servicio').value;
                     const descripcion = document.getElementById('descripcion-servicio').value.trim();
-                    const archivo = inputImagen.files[0];
+                    const archivo = inputImagen ? inputImagen.files[0] : null;
 
                     const prompt = `Cliente: ${nombre || 'Anónimo'}\nTipo de Servicio: ${servicio}\nDetalles: ${descripcion}`;
                     diagnosticoPrevio.classList.remove('oculto');
