@@ -13,19 +13,19 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "app.js"
+      "dest": "/app.js"
     },
     {
       "src": "/chat(.*)",
-      "dest": "app.js"
+      "dest": "/app.js"
     },
     {
       "src": "/generar-knx(.*)",
-      "dest": "app.js"
+      "dest": "/app.js"
     },
     {
       "src": "/(.*)",
-      "dest": "public/$1"
+      "dest": "/public/index.html"
     }
   ]
 }

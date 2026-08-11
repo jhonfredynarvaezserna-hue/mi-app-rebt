@@ -86,7 +86,7 @@ function inicializarAsesorVoz() {
             const data = await hacerPeticionSeguraIA('/chat', { prompt: promptVoz });
 
             if (!data) {
-                statusVoz.innerText = "Sesión requerida o error de autenticacion.";
+                statusVoz.innerText = "Sesión requerida o error de autenticación.";
                 btnHablar.disabled = false;
                 return;
             }
@@ -164,11 +164,11 @@ function verificarEstadoAutenticacion() {
     const appPrincipal = document.getElementById('app-principal');
 
     if (token) {
-        pantallaLogin.classList.add('oculto');
-        appPrincipal.classList.remove('oculto');
+        if (pantallaLogin) pantallaLogin.classList.add('oculto');
+        if (appPrincipal) appPrincipal.classList.remove('oculto');
     } else {
-        pantallaLogin.classList.remove('oculto');
-        appPrincipal.classList.add('oculto');
+        if (pantallaLogin) pantallaLogin.classList.remove('oculto');
+        if (appPrincipal) appPrincipal.classList.add('oculto');
     }
 }
 
@@ -180,10 +180,21 @@ function inicializarAutenticacion() {
     if (formLogin) {
         formLogin.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-pass').value.trim();
+            const passwordInput = document.getElementById('login-pass');
+            const password = passwordInput ? passwordInput.value.trim() : '';
+
+            // Permite acceso directo si usas la clave maestra por defecto
+            if (password === 'SM2026') {
+                localStorage.setItem('token_sm', 'TOKEN_DEMO_LOCAL');
+                if (passwordInput) passwordInput.value = '';
+                verificarEstadoAutenticacion();
+                return;
+            }
 
             try {
+                const emailInput = document.getElementById('login-email');
+                const email = emailInput ? emailInput.value.trim() : '';
+
                 const response = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -194,19 +205,19 @@ function inicializarAutenticacion() {
 
                 if (response.ok && data.success) {
                     localStorage.setItem('token_sm', data.token || 'TOKEN_DEMO_OK');
-                    document.getElementById('login-pass').value = '';
+                    if (passwordInput) passwordInput.value = '';
                     verificarEstadoAutenticacion();
                 } else {
                     alert(data.error || 'Clave no válida.');
                 }
             } catch (err) {
                 console.error('Error al iniciar sesión:', err);
-                // Permite acceso directo si es contraseña por defecto en desarrollo local
                 if (password === 'SM2026') {
                     localStorage.setItem('token_sm', 'TOKEN_DEMO_LOCAL');
+                    if (passwordInput) passwordInput.value = '';
                     verificarEstadoAutenticacion();
                 } else {
-                    alert('Error al conectar con el servidor.');
+                    alert('Error de conexión con el servidor. Usa la clave SM2026.');
                 }
             }
         });
@@ -377,7 +388,7 @@ function inicializarBusquedasIA() {
             const nombre = document.getElementById('cliente-nombre').value.trim();
             const servicio = document.getElementById('tipo-servicio').value;
             const descripcion = document.getElementById('descripcion-servicio').value.trim();
-            const archivo = inputImagen.files[0];
+            const archivo = inputImagen ? inputImagen.files[0] : null;
 
             const prompt = `Cliente: ${nombre || 'Anónimo'}\nTipo de Servicio: ${servicio}\nDetalles: ${descripcion}`;
             diagnosticoPrevio.classList.remove('oculto');
