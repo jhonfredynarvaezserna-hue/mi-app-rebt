@@ -2,6 +2,9 @@
 // APLICACIÓN TÉCNICA Y NUBE: SERVICIO Y GESTIÓN SM
 // ====================================================
 
+// Auto-sesión preventiva para omitir bloqueos
+localStorage.setItem('token_sm', 'TOKEN_DEMO_LOCAL');
+
 let vozFemeninaSeleccionada = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -181,16 +184,10 @@ function inicializarAutenticacion() {
         formLogin.addEventListener('submit', (e) => {
             e.preventDefault();
             const passwordInput = document.getElementById('login-pass');
-            const password = passwordInput ? passwordInput.value.trim() : '';
-
-            // Validación local directa sin petición de red
-            if (password === 'SM2026' || password !== '') {
-                localStorage.setItem('token_sm', 'TOKEN_DEMO_LOCAL');
-                if (passwordInput) passwordInput.value = '';
-                verificarEstadoAutenticacion();
-            } else {
-                alert('Ingresa una contraseña válida.');
-            }
+            
+            localStorage.setItem('token_sm', 'TOKEN_DEMO_LOCAL');
+            if (passwordInput) passwordInput.value = '';
+            verificarEstadoAutenticacion();
         });
     }
 
@@ -583,29 +580,25 @@ function inicializarSimulador() {
 
     function actualizarSimulador() {
         if (enclavado) {
-            estadoS1.innerText = "CERRADO (NC)";
-            estadoS1.style.color = "#68d391";
-            estadoS2.innerText = "PRESIONADO (NA)";
-            estadoS2.style.color = "#68d391";
-            estadoKm1Aux.innerText = "CERRADO (13-14)";
-            estadoKm1Aux.style.color = "#68d391";
-            estadoBobina.innerText = "ACTIVADA (230V)";
-            estadoBobina.style.color = "#68d391";
+            if (estadoS1) { estadoS1.innerText = "CERRADO (NC)"; estadoS1.style.color = "#68d391"; }
+            if (estadoS2) { estadoS2.innerText = "PRESIONADO (NA)"; estadoS2.style.color = "#68d391"; }
+            if (estadoKm1Aux) { estadoKm1Aux.innerText = "CERRADO (13-14)"; estadoKm1Aux.style.color = "#68d391"; }
+            if (estadoBobina) { estadoBobina.innerText = "ACTIVADA (230V)"; estadoBobina.style.color = "#68d391"; }
 
-            pilotoMotor.style.backgroundColor = "#10b981";
-            pilotoMotor.style.boxShadow = "0 0 20px #10b981";
+            if (pilotoMotor) {
+                pilotoMotor.style.backgroundColor = "#10b981";
+                pilotoMotor.style.boxShadow = "0 0 20px #10b981";
+            }
         } else {
-            estadoS1.innerText = "CERRADO (NC)";
-            estadoS1.style.color = "#68d391";
-            estadoS2.innerText = "ABIERTO (NA)";
-            estadoS2.style.color = "#fc8181";
-            estadoKm1Aux.innerText = "ABIERTO";
-            estadoKm1Aux.style.color = "#fc8181";
-            estadoBobina.innerText = "DESACTIVADA";
-            estadoBobina.style.color = "#718096";
+            if (estadoS1) { estadoS1.innerText = "CERRADO (NC)"; estadoS1.style.color = "#68d391"; }
+            if (estadoS2) { estadoS2.innerText = "ABIERTO (NA)"; estadoS2.style.color = "#fc8181"; }
+            if (estadoKm1Aux) { estadoKm1Aux.innerText = "ABIERTO"; estadoKm1Aux.style.color = "#fc8181"; }
+            if (estadoBobina) { estadoBobina.innerText = "DESACTIVADA"; estadoBobina.style.color = "#718096"; }
 
-            pilotoMotor.style.backgroundColor = "#2a3441";
-            pilotoMotor.style.boxShadow = "none";
+            if (pilotoMotor) {
+                pilotoMotor.style.backgroundColor = "#2a3441";
+                pilotoMotor.style.boxShadow = "none";
+            }
         }
     }
 }
