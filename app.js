@@ -2,15 +2,11 @@
 // APLICACIÓN TÉCNICA Y NUBE: SERVICIO Y GESTIÓN SM
 // ====================================================
 
-// Auto-sesión preventiva para omitir bloqueos
-localStorage.setItem('token_sm', 'TOKEN_DEMO_LOCAL');
-
 let vozFemeninaSeleccionada = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     verificarEstadoAutenticacion();
     inicializarNavegacion();
-    inicializarAutenticacion();
     cargarVocesFemeninas();
     inicializarAsesorVoz();
     inicializarBusquedasIA();
@@ -89,7 +85,7 @@ function inicializarAsesorVoz() {
             const data = await hacerPeticionSeguraIA('/chat', { prompt: promptVoz });
 
             if (!data) {
-                statusVoz.innerText = "Sesión requerida o error de autenticación.";
+                statusVoz.innerText = "Error de conexión o consulta no procesada.";
                 btnHablar.disabled = false;
                 return;
             }
@@ -159,74 +155,37 @@ function reproducirVoz(texto, alTerminar) {
 }
 
 // ----------------------------------------------------
-// 3. SEGURIDAD Y AUTENTICACIÓN DIRECTA
+// 3. ACCESO DIRECTO SIN LOGIN
 // ----------------------------------------------------
 function verificarEstadoAutenticacion() {
-    const token = localStorage.getItem('token_sm');
     const pantallaLogin = document.getElementById('pantalla-login');
     const appPrincipal = document.getElementById('app-principal');
 
-    if (token) {
-        if (pantallaLogin) pantallaLogin.classList.add('oculto');
-        if (appPrincipal) appPrincipal.classList.remove('oculto');
-    } else {
-        if (pantallaLogin) pantallaLogin.classList.remove('oculto');
-        if (appPrincipal) appPrincipal.classList.add('oculto');
-    }
+    // Muestra la app siempre de forma directa
+    if (pantallaLogin) pantallaLogin.classList.add('oculto');
+    if (appPrincipal) appPrincipal.classList.remove('oculto');
 }
 
-function inicializarAutenticacion() {
-    const formLogin = document.getElementById('form-login');
-    const btnGoogle = document.getElementById('btn-login-google');
-    const btnCerrar = document.getElementById('btn-cerrar-sesion');
-
-    if (formLogin) {
-        formLogin.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const passwordInput = document.getElementById('login-pass');
-            
-            localStorage.setItem('token_sm', 'TOKEN_DEMO_LOCAL');
-            if (passwordInput) passwordInput.value = '';
-            verificarEstadoAutenticacion();
-        });
-    }
-
-    if (btnGoogle) {
-        btnGoogle.addEventListener('click', () => {
-            localStorage.setItem('token_sm', 'TOKEN_GOOGLE_DEMO');
-            verificarEstadoAutenticacion();
-        });
-    }
-
-    if (btnCerrar) {
-        btnCerrar.addEventListener('click', () => {
-            localStorage.removeItem('token_sm');
-            verificarEstadoAutenticacion();
-        });
-    }
-}
-
-// Petición HTTP centralizada enviando el Token de Seguridad
+// Petición HTTP centralizada para llamadas a la IA
 async function hacerPeticionSeguraIA(url, body) {
-    const token = localStorage.getItem('token_sm');
+    try {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
 
-    const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(body)
-    });
+        if (!res.ok) {
+            throw new Error(`Error HTTP: ${res.status}`);
+        }
 
-    if (res.status === 401 || res.status === 403) {
-        alert('Sesión expirada o no autorizada. Inicia sesión nuevamente.');
-        localStorage.removeItem('token_sm');
-        verificarEstadoAutenticacion();
+        return await res.json();
+    } catch (err) {
+        console.error("Error en petición a la IA:", err);
         return null;
     }
-
-    return await res.json();
 }
 
 // Solicitar pasarela de pago para cobro con Stripe
