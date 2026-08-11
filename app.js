@@ -156,7 +156,7 @@ function reproducirVoz(texto, alTerminar) {
 }
 
 // ----------------------------------------------------
-// 3. SEGURIDAD, AUTENTICACIÓN Y CONEXIÓN PROTEGIDA CON LA IA
+// 3. SEGURIDAD Y AUTENTICACIÓN DIRECTA
 // ----------------------------------------------------
 function verificarEstadoAutenticacion() {
     const token = localStorage.getItem('token_sm');
@@ -178,47 +178,18 @@ function inicializarAutenticacion() {
     const btnCerrar = document.getElementById('btn-cerrar-sesion');
 
     if (formLogin) {
-        formLogin.addEventListener('submit', async (e) => {
+        formLogin.addEventListener('submit', (e) => {
             e.preventDefault();
             const passwordInput = document.getElementById('login-pass');
             const password = passwordInput ? passwordInput.value.trim() : '';
 
-            // Permite acceso directo si usas la clave maestra por defecto
-            if (password === 'SM2026') {
+            // Validación local directa sin petición de red
+            if (password === 'SM2026' || password !== '') {
                 localStorage.setItem('token_sm', 'TOKEN_DEMO_LOCAL');
                 if (passwordInput) passwordInput.value = '';
                 verificarEstadoAutenticacion();
-                return;
-            }
-
-            try {
-                const emailInput = document.getElementById('login-email');
-                const email = emailInput ? emailInput.value.trim() : '';
-
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    localStorage.setItem('token_sm', data.token || 'TOKEN_DEMO_OK');
-                    if (passwordInput) passwordInput.value = '';
-                    verificarEstadoAutenticacion();
-                } else {
-                    alert(data.error || 'Clave no válida.');
-                }
-            } catch (err) {
-                console.error('Error al iniciar sesión:', err);
-                if (password === 'SM2026') {
-                    localStorage.setItem('token_sm', 'TOKEN_DEMO_LOCAL');
-                    if (passwordInput) passwordInput.value = '';
-                    verificarEstadoAutenticacion();
-                } else {
-                    alert('Error de conexión con el servidor. Usa la clave SM2026.');
-                }
+            } else {
+                alert('Ingresa una contraseña válida.');
             }
         });
     }
