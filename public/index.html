@@ -15,7 +15,6 @@
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/567/567041.png">
 
     <style>
-        /* PALETA AZUL TÉCNICO Y MODO OSCURO GLOBAL */
         :root {
             --bg-principal: #0a1118;
             --panel-bg: #131e2b;
@@ -29,7 +28,6 @@
             --verde-ia: #10b981;
         }
 
-        /* FORZAR FONDO OSCURO PERMANENTE */
         html, body {
             background-color: #0a1118 !important;
             color: var(--texto-principal);
@@ -80,7 +78,6 @@
 
         .oculto { display: none !important; }
 
-        /* ADAPTACIÓN MÓVIL (RESPONSIVE) */
         @media (max-width: 768px) {
             .contenedor { flex-direction: column; }
             .sidebar-izquierda { width: 100%; border-right: none; border-bottom: 1px solid var(--bordes); padding: 15px; }
@@ -89,7 +86,7 @@
         }
     </style>
 </head>
-<body suppressHydrationWarning={true}>
+<body suppressHydrationWarning="true">
 
     <div class="contenedor" id="app-principal">
 
