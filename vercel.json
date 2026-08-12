@@ -6,8 +6,12 @@
       "destination": "/api/chat.js"
     },
     {
-      "source": "/chat",
-      "destination": "/api/chat.js"
+      "source": "/api/chat-cliente",
+      "destination": "/api/chat-cliente.js"
+    },
+    {
+      "source": "/api/generar-knx",
+      "destination": "/api/generar-knx.js"
     }
   ]
 }
