@@ -4,7 +4,7 @@
 
 let vozFemeninaSeleccionada = null;
 
-// Inicialización segura tras la carga completa del DOM y recursos
+// Inicialización segura tras la carga completa del DOM
 window.addEventListener('load', () => {
     verificarEstadoAutenticacion();
     inicializarNavegacion();
@@ -15,6 +15,26 @@ window.addEventListener('load', () => {
     inicializarCalculadoras();
     inicializarSimulador();
 });
+
+// ----------------------------------------------------
+// 0. FUNCIÓN GLOBAL DE NAVEGACIÓN (CAMBIO DE VISTAS)
+// ----------------------------------------------------
+window.mostrarSeccion = function(idSeccion) {
+    const secciones = document.querySelectorAll('.vista-section');
+    const enlacesMenu = document.querySelectorAll('.menu-sidebar a');
+
+    secciones.forEach(sec => sec.classList.add('oculto'));
+    const seccionObjetivo = document.getElementById(idSeccion);
+
+    if (seccionObjetivo) {
+        seccionObjetivo.classList.remove('oculto');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    enlacesMenu.forEach(link => link.classList.remove('activo'));
+    const enlaceActivo = document.getElementById(`menu-${idSeccion.replace('vista-', '')}`);
+    if (enlaceActivo) enlaceActivo.classList.add('activo');
+};
 
 // ----------------------------------------------------
 // 1. CARGA DE VOCES FEMENINAS EN ESPAÑOL
@@ -201,12 +221,11 @@ async function solicitarSuscripcionPro() {
 }
 
 // ----------------------------------------------------
-// 4. NAVEGACIÓN Y VISTAS (MAPA EXPLÍCITO CORREGIDO)
+// 4. NAVEGACIÓN Y VISTAS
 // ----------------------------------------------------
 function inicializarNavegacion() {
     const enlacesMenu = document.querySelectorAll('.menu-sidebar a');
     const tarjetasModulos = document.querySelectorAll('.tarjeta-modulo');
-    const secciones = document.querySelectorAll('.vista-section');
     const menuInicio = document.getElementById('menu-inicio');
 
     const mapaNavegacion = {
@@ -230,37 +249,23 @@ function inicializarNavegacion() {
         'menu-precios': 'vista-precios'
     };
 
-    function mostrarSeccion(idSeccion) {
-        secciones.forEach(sec => sec.classList.add('oculto'));
-        const seccionObjetivo = document.getElementById(idSeccion);
-        if (seccionObjetivo) {
-            seccionObjetivo.classList.remove('oculto');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        enlacesMenu.forEach(link => link.classList.remove('activo'));
-        const enlaceActivo = document.getElementById(`menu-${idSeccion.replace('vista-', '')}`);
-        if (enlaceActivo) enlaceActivo.classList.add('activo');
-    }
-
     if (menuInicio) {
-        menuInicio.addEventListener('click', () => mostrarSeccion('vista-inicio'));
+        menuInicio.addEventListener('click', () => window.mostrarSeccion('vista-inicio'));
     }
 
     enlacesMenu.forEach(enlace => {
         enlace.addEventListener('click', (e) => {
             e.preventDefault();
             const destino = mapaNavegacion[enlace.id] || enlace.id.replace('menu-', 'vista-');
-            mostrarSeccion(destino);
+            window.mostrarSeccion(destino);
         });
     });
 
     tarjetasModulos.forEach(tarjeta => {
         tarjeta.addEventListener('click', (e) => {
             e.preventDefault();
-            e.stopPropagation();
             const destino = mapaNavegacion[tarjeta.id] || tarjeta.id.replace('card-', 'vista-');
-            mostrarSeccion(destino);
+            window.mostrarSeccion(destino);
         });
     });
 }
