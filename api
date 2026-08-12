@@ -1,26 +1,37 @@
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const ai = new GoogleGenAI({ 
-  apiKey: process.env.GEMINI_API_KEY 
-});
+// Utiliza GEMINI_API_KEY o fallback a OPENAI_API_KEY / API_KEY
+const apiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_KEY;
 
 export default async function handler(req, res) {
+  // Configuración de cabeceras CORS para evitar bloqueos
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
+  if (!apiKey) {
+    return res.status(500).json({ error: 'Falta configurar la variable GEMINI_API_KEY en Vercel' });
+  }
+
   try {
-    const { prompt } = req.body;
+    const { prompt } = req.body || {};
 
     if (!prompt) {
       return res.status(400).json({ error: 'El mensaje está vacío' });
     }
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        systemInstruction: `Eres el asistente técnico integral de la plataforma "Servicio y Gestión SM".
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-1.5-flash', // Modelo estable para funciones serverless
+      systemInstruction: `Eres el asistente técnico integral de la plataforma "Servicio y Gestión SM".
 Tu función es ayudar a electricistas e instaladores autorizados en España.
 
 ÁMBITOS DE RESPUESTA PERMITIDOS:
@@ -33,10 +44,15 @@ REGLAS DE FORMATO:
 1. Responde de forma técnica, clara y precisa.
 2. Si preguntan por precios de componentes KNX o materiales, proporciona rangos de mercado actuales en España.
 3. Usa formato HTML limpio (<strong>, <br>, <ul>, <li>, <table>, <tr>, <td>) para que la respuesta se muestre ordenada en la pantalla.`
-      }
     });
 
-    return res.status(200).json({ text: response.text });
+    const result = await model.generateContent(prompt);
+    const responseText = result.response.text();
+
+    return res.status(200).json({ 
+      text: responseText,
+      respuesta: responseText 
+    });
 
   } catch (error) {
     console.error('Error en la API de Gemini:', error);
