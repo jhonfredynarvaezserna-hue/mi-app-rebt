@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarVocesFemeninas();
     inicializarAsesorVoz();
     inicializarBusquedasIA();
+    inicializarBusquedasICT();
     inicializarCalculadoras();
     inicializarSimulador();
 });
@@ -82,7 +83,8 @@ function inicializarAsesorVoz() {
         const promptVoz = `[ASISTENTE DE VOZ REBT/RITE]: ${textoEscuchado}`;
 
         try {
-            const data = await hacerPeticionSeguraIA('/chat', { prompt: promptVoz });
+            // CORREGIDO: Ajustada la ruta a /api/chat
+            const data = await hacerPeticionSeguraIA('/api/chat', { prompt: promptVoz });
 
             if (!data) {
                 statusVoz.innerText = "Error de conexión o consulta no procesada.";
@@ -161,7 +163,6 @@ function verificarEstadoAutenticacion() {
     const pantallaLogin = document.getElementById('pantalla-login');
     const appPrincipal = document.getElementById('app-principal');
 
-    // Muestra la app siempre de forma directa
     if (pantallaLogin) pantallaLogin.classList.add('oculto');
     if (appPrincipal) appPrincipal.classList.remove('oculto');
 }
@@ -188,7 +189,6 @@ async function hacerPeticionSeguraIA(url, body) {
     }
 }
 
-// Solicitar pasarela de pago para cobro con Stripe
 async function solicitarSuscripcionPro() {
     try {
         const data = await hacerPeticionSeguraIA('/api/crear-checkout', {});
@@ -260,7 +260,8 @@ function inicializarBusquedasIA() {
             resultadosBusqueda.innerHTML = "<p style='color: #a0aec0;'>Consultando normativa con la IA...</p>";
 
             try {
-                const data = await hacerPeticionSeguraIA('/chat', { prompt });
+                // CORREGIDO: Ajustada la ruta a /api/chat
+                const data = await hacerPeticionSeguraIA('/api/chat', { prompt });
                 if (data) {
                     resultadosBusqueda.innerHTML = data.text || data.respuesta || "Sin respuesta.";
                 }
@@ -280,7 +281,8 @@ function inicializarBusquedasIA() {
         resultadoNormativaPro.innerHTML = "<p style='color: #a0aec0;'>Procesando consulta reglamentaria...</p>";
 
         try {
-            const data = await hacerPeticionSeguraIA('/chat', { prompt });
+            // CORREGIDO: Ajustada la ruta a /api/chat
+            const data = await hacerPeticionSeguraIA('/api/chat', { prompt });
             if (data) {
                 resultadoNormativaPro.innerHTML = data.text || data.respuesta || "Sin respuesta.";
             }
@@ -337,7 +339,8 @@ function inicializarBusquedasIA() {
 
     async function enviarPeticionCliente(prompt, imagenBase64, mimeType) {
         try {
-            const data = await hacerPeticionSeguraIA('/chat-cliente', { prompt, imagenBase64, mimeType });
+            // CORREGIDO: Ajustada la ruta a /api/chat-cliente
+            const data = await hacerPeticionSeguraIA('/api/chat-cliente', { prompt, imagenBase64, mimeType });
             if (data) {
                 diagnosticoPrevio.innerHTML = data.text || data.respuesta || "Sin diagnóstico generado.";
             }
@@ -370,13 +373,54 @@ function inicializarBusquedasIA() {
             resultadoIaKnx.innerHTML = "<p style='color: #a0aec0;'>Generando estructura ETS y direcciones de grupo...</p>";
 
             try {
-                const data = await hacerPeticionSeguraIA('/generar-knx', { consultaKnx });
+                // CORREGIDO: Ajustada la ruta a /api/generar-knx
+                const data = await hacerPeticionSeguraIA('/api/generar-knx', { consultaKnx });
                 if (data) {
                     resultadoIaKnx.innerHTML = data.text || data.respuesta || "Error al estructurar proyecto KNX.";
                 }
             } catch (err) {
                 resultadoIaKnx.innerHTML = "<p style='color: #e53e3e;'>Error al procesar el proyecto KNX.</p>";
             }
+        });
+    }
+}
+
+// ----------------------------------------------------
+// 5.B BUSCADOR TÉCNICO ICT
+// ----------------------------------------------------
+function inicializarBusquedasICT() {
+    const btnBuscarICT = document.getElementById('btn-buscar-ict');
+    const entradaBusquedaICT = document.getElementById('entrada-busqueda-ict');
+    const resultadosBusquedaICT = document.getElementById('resultados-busqueda-ict');
+
+    const baseICT = [
+        { termino: "riti", respuesta: "<strong>RITI (Recinto Inferior):</strong> Ubicado en planta baja o sótano. Alberga registros de RTV, TB+RDSI y TLCA." },
+        { termino: "rits", respuesta: "<strong>RITS (Recinto Superior):</strong> Ubicado en cubierta o planta alta. Alberga equipos de captación de señales de RTV y radiodifusión." },
+        { termino: "pau", respuesta: "<strong>PAU (Punto de Acceso al Usuario):</strong> Delimita la propiedad entre la red comunitaria y la red interior de la vivienda." },
+        { termino: "tomas", respuesta: "<strong>Tomas por Vivienda:</strong> Mínimo 2 tomas de RTV (Salón y Cocina), 2 tomas de Telecomunicaciones (Salón y Dormitorio principal) y previsión de toma de fibra (FO)." },
+        { termino: "fibra", respuesta: "<strong>Red de Fibra Óptica (FO):</strong> Obligatoria en nuevas edificaciones ICT-2. Conexión desde RITI hasta PAU de cada vivienda mediante cable multifibra." },
+        { termino: "coaxial", respuesta: "<strong>Red Coaxial / RTV:</strong> Cobertura de señales TDT y Satélite. Distribuidores, derivadores y tomas finales con paso de corriente continuada si requieren alimentación." }
+    ];
+
+    function ejecutarBusqueda() {
+        const query = entradaBusquedaICT.value.toLowerCase().trim();
+        if (!query) {
+            resultadosBusquedaICT.innerHTML = '<p style="color: #a0aec0;">Escribe un término técnico de ICT para consultar.</p>';
+            return;
+        }
+
+        const resultados = baseICT.filter(item => item.termino.includes(query));
+        if (resultados.length > 0) {
+            resultadosBusquedaICT.innerHTML = resultados.map(r => `<div style="margin-bottom: 10px; border-left: 3px solid var(--verde-ia); padding-left: 10px;">${r.respuesta}</div>`).join('');
+        } else {
+            resultadosBusquedaICT.innerHTML = `<p style="color: #f6ad55;">No hay coincidencias directas para "${query}". Prueba con "riti", "rits", "pau", "tomas", "fibra" o "coaxial".</p>`;
+        }
+    }
+
+    if (btnBuscarICT && entradaBusquedaICT) {
+        btnBuscarICT.addEventListener('click', ejecutarBusqueda);
+        entradaBusquedaICT.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') ejecutarBusqueda();
         });
     }
 }

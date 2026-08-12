@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Servicio y Gestión SM</title>
 
-    <!-- CONFIGURACIÓN PWA -->
+    <!-- CONFIGURACIÓN PWA Y PANTALLA COMPLETA -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#4b96e6">
     <meta name="mobile-web-app-capable" content="yes">
@@ -15,6 +15,7 @@
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/567/567041.png">
 
     <style>
+        /* PALETA AZUL TÉCNICO Y MODO OSCURO GLOBAL */
         :root {
             --bg-principal: #0a1118;
             --panel-bg: #131e2b;
@@ -28,6 +29,7 @@
             --verde-ia: #10b981;
         }
 
+        /* FORZAR FONDO OSCURO PERMANENTE */
         html, body {
             background-color: #0a1118 !important;
             color: var(--texto-principal);
@@ -37,7 +39,6 @@
             min-height: 100vh;
         }
 
-        /* APLICACIÓN PRINCIPAL */
         .contenedor { 
             display: flex; 
             min-height: 100vh; 
@@ -56,8 +57,7 @@
         .encabezado-sidebar h2 { color: var(--azul-brillante); font-size: 1.3rem; margin: 0; }
         .menu-sidebar ul { list-style: none; padding: 0; margin: 0; }
         .menu-sidebar a { color: var(--texto-principal); text-decoration: none; display: block; padding: 10px; border-radius: 6px; }
-        .menu-sidebar a:hover { background-color: var(--azul-tecnico); color: #fff; }
-        .menu-sidebar a.activo { background-color: var(--azul-tecnico) !important; color: var(--texto-brillante) !important; font-weight: bold; }
+        .menu-sidebar a:hover, .menu-sidebar a.activo { background-color: var(--azul-tecnico); color: #fff; }
 
         .panel-tecnico { flex-grow: 1; padding: 30px; background-color: var(--bg-principal); box-sizing: border-box; }
         .seccion-bloque, .tarjeta-modulo { background-color: var(--panel-bg); border: 1px solid var(--bordes); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
@@ -78,60 +78,9 @@
         button { background-color: var(--azul-tecnico); color: white; cursor: pointer; font-weight: bold; }
         button:hover { background-color: var(--azul-brillante); }
 
-        .factura-preview {
-            background: #0f1923;
-            border: 1px dashed var(--azul-brillante);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-        }
-
         .oculto { display: none !important; }
 
-        /* ESTILO DEL AVATAR CON FOTO REAL */
-        #avatar-femenino-box {
-            width: 180px;
-            height: 180px;
-            margin: 0 auto 20px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 3px solid var(--azul-brillante);
-            box-shadow: 0 0 25px rgba(24, 143, 167, 0.5);
-            position: relative;
-            background: #0f1923;
-            transition: box-shadow 0.3s ease;
-        }
-
-        #avatar-femenino-box.hablando {
-            box-shadow: 0 0 35px rgba(16, 185, 129, 0.9);
-            border-color: var(--verde-ia);
-        }
-
-        /* BOTÓN FLOTANTE DE WHATSAPP */
-        #btn-whatsapp-flotante {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background-color: #25d366;
-            color: #ffffff;
-            padding: 14px 22px;
-            border-radius: 50px;
-            font-weight: bold;
-            text-decoration: none;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            z-index: 9999;
-            font-size: 0.95rem;
-            transition: transform 0.2s, background-color 0.2s;
-        }
-
-        #btn-whatsapp-flotante:hover {
-            background-color: #1ebc57;
-            transform: scale(1.05);
-        }
-
+        /* ADAPTACIÓN MÓVIL (RESPONSIVE) */
         @media (max-width: 768px) {
             .contenedor { flex-direction: column; }
             .sidebar-izquierda { width: 100%; border-right: none; border-bottom: 1px solid var(--bordes); padding: 15px; }
@@ -142,8 +91,7 @@
 </head>
 <body>
 
-    <!-- CONTENEDOR PRINCIPAL (ENTRADA DIRECTA) -->
-    <div id="app-principal" class="contenedor">
+    <div class="contenedor">
 
         <aside class="sidebar-izquierda">
             <div class="encabezado-sidebar" id="menu-inicio" style="cursor: pointer;">
@@ -157,11 +105,11 @@
                     <ul>
                         <li><a href="#" id="menu-asesor-voz">🗣️ Asesor de Voz (REBT / RITE)</a></li>
                         <li><a href="#" id="menu-rebt">⚖️ Buscador REBT / RITE (IA)</a></li>
-                        <li><a href="#" id="menu-normativa-pro">📜 REBT & RITE Explicados</a></li>
+                        <li><a href="#" id="menu-ict">📡 Consultas ICT (Telecom)</a></li>
                         <li><a href="#" id="menu-industrial">⚡ Automatismos Potencia</a></li>
                         <li><a href="#" id="menu-ve">🚗 Vehículo Eléctrico (ITC-BT-52)</a></li>
                         <li><a href="#" id="menu-knx">🟢 Métodos Fáciles KNX</a></li>
-                        <li><a href="#" id="menu-fotovoltaica">☀️ Solar Fotovoltaica (ITC-BT-40)</a></li>
+                        <li><a href="#" id="menu-solar">🌞 Solar Fotovoltaica (ITC-BT-40)</a></li>
                     </ul>
                 </div>
 
@@ -197,10 +145,10 @@
                         <p style="color: #a0aec0;">Consulta rápida de normativas de baja tensión asistida por IA.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-normativa-pro">
-                        <div style="font-size: 2rem; margin-bottom: 12px;">📜</div>
-                        <h3>REBT & RITE Explicados</h3>
-                        <p style="color: #a0aec0;">Guía experta de normativa eléctrica (REBT) y térmica (RITE).</p>
+                    <div class="tarjeta-modulo" id="card-ict">
+                        <div style="font-size: 2rem; margin-bottom: 12px;">📡</div>
+                        <h3>Consultas ICT</h3>
+                        <p style="color: #a0aec0;">Infraestructuras comunes de telecomunicación (RD 346/2011), registros y tomas.</p>
                     </div>
 
                     <div class="tarjeta-modulo" id="card-industrial">
@@ -212,7 +160,7 @@
                     <div class="tarjeta-modulo" id="card-ve">
                         <div style="font-size: 2rem; margin-bottom: 12px;">🚗</div>
                         <h3>Puntos de Recarga VE</h3>
-                        <p style="color: #a0aec0;">Calculadora técnica de protecciones y cableado según ITC-BT-52.</p>
+                        <p style="color: #a0aec0;">Calculadora técnica de protecciones, esquemas y cableado según ITC-BT-52.</p>
                     </div>
 
                     <div class="tarjeta-modulo" id="card-knx">
@@ -221,8 +169,8 @@
                         <p style="color: #a0aec0;">Direccionamientos lógicos, topologías físicas y apuntes del estándar.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-fotovoltaica">
-                        <div style="font-size: 2rem; margin-bottom: 12px;">☀️</div>
+                    <div class="tarjeta-modulo" id="card-solar">
+                        <div style="font-size: 2rem; margin-bottom: 12px;">🌞</div>
                         <h3>Solar Fotovoltaica</h3>
                         <p style="color: #a0aec0;">Cálculo de dimensionamiento, inversores y protecciones ITC-BT-40.</p>
                     </div>
@@ -240,100 +188,79 @@
                     </div>
                 </div>
 
-                <!-- BLOQUE DEL GESTOR TÉCNICO E INTÉRPRETE MULTIMODAL -->
+                <!-- GESTOR MULTIMODAL EN INICIO -->
                 <div class="seccion-bloque" style="margin-top: 30px;">
-                    <h2>🤖 Gestor Técnico e Intérprete Multimodal</h2>
+                    <h3>🤖 Gestor Técnico e Intérprete Multimodal</h3>
                     <p style="color: #a0aec0;">Escribe tu duda o sube una foto de tu instalación (climatización, suelo radiante, cargador VE, cuadro eléctrico o registros ICT).</p>
-
-                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
-                        <input type="text" id="cliente-nombre" placeholder="Tu Nombre o Nombre de Empresa">
+                    
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                        <input type="text" id="cliente-nombre" placeholder="Nombre completo">
                         <select id="tipo-servicio">
-                            <option value="Suelo Radiante / Climatización RITE">❄️ Suelo Radiante / Aerotermia / Clima RITE</option>
-                            <option value="Punto de Recarga VE (ITC-BT-52)">🚗 Punto de Recarga Vehículo Eléctrico</option>
-                            <option value="Telecomunicaciones / ICT (RD 346/2011)">📡 Telecomunicaciones / ICT (Fibra/Coaxial)</option>
-                            <option value="Avería urgente">🚨 Avería Urgente / Reparación</option>
-                            <option value="Montaje e instalación">⚡ Montaje / Nueva Instalación (Cuadros/Líneas)</option>
-                            <option value="Placas Solares / Autoconsumo">☀️ Instalación Placas Solares</option>
-                            <option value="Domótica KNX">🟢 Domótica KNX</option>
+                            <option value="Avería Urgente">Avería Urgente</option>
+                            <option value="Instalación Eléctrica">Instalación Eléctrica</option>
+                            <option value="Climatización RITE">Climatización / RITE</option>
+                            <option value="Consulta ICT">Consulta Telecomunicaciones / ICT</option>
                         </select>
-                        <textarea id="descripcion-servicio" rows="3" placeholder="Describe lo que necesitas o la duda técnica que deseas consultar..."></textarea>
+                        <textarea id="descripcion-servicio" placeholder="Describe brevemente la consulta..." rows="3"></textarea>
+                        <input type="file" id="input-imagen-gestor" accept="image/*">
                         
-                        <div style="display: flex; align-items: center; gap: 10px; background: var(--input-bg); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--bordes);">
-                            <label style="font-size: 0.9rem; color: #a0aec0;">📷 Adjuntar foto / esquema (Opcional):</label>
-                            <input type="file" id="input-imagen-gestor" accept="image/*" style="font-size: 0.85rem; border: none; padding: 0;">
-                        </div>
-
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 5px;">
-                            <button type="button" id="btn-consultar-ia-cliente" style="flex: 1; background-color: var(--azul-tecnico);">🤖 Consultar al Gestor</button>
-                            <button type="button" id="btn-enviar-instalador" style="flex: 1; background-color: #25d366;">📱 Contactar por WhatsApp</button>
+                        <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                            <button type="button" id="btn-consultar-ia-cliente" style="background-color: var(--verde-ia); flex-grow: 1;">💬 Diagnosticar con IA</button>
+                            <button type="button" id="btn-enviar-instalador" style="background-color: #25d366; color: white;">📱 Enviar por WhatsApp</button>
                         </div>
                     </div>
 
-                    <div id="diagnostico-previo" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;" class="oculto"></div>
+                    <div id="diagnostico-previo" class="oculto" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;"></div>
                 </div>
             </section>
 
-            <!-- VISTA ASESOR PARLANTE DE VOZ -->
+            <!-- VISTA ASESOR DE VOZ -->
             <section id="vista-asesor-voz" class="vista-section oculto">
                 <header>
-                    <h1>🗣️ Asesor Parlante de Normativa</h1>
-                    <p style="color: #a0aec0;">Consultas habladas en tiempo real sobre REBT, RITE y protecciones diferenciales Tipo A/B.</p>
+                    <h1>🗣️ Asesor Parlante de Voz</h1>
+                    <p style="color: #a0aec0;">Consulta la normativa hablando directamente con tu asistente técnico</p>
                 </header>
-
                 <div class="seccion-bloque" style="text-align: center; padding: 40px 20px;">
-                    <div id="avatar-femenino-box">
-                        <img id="img-asesora-virtual" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80" alt="Asesora Virtual SM" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-
-                    <div id="status-voz" style="font-size: 1.05rem; color: #a0aec0; margin-bottom: 20px;">Presiona el botón para realizar tu consulta reglamentaria</div>
-                    
-                    <button type="button" id="btn-hablar-asesor" style="background-color: var(--verde-ia); padding: 14px 28px; font-size: 1.1rem; border-radius: 30px;">🎙️ Hablar con el Asesor</button>
-
-                    <div id="respuesta-voz-box" style="margin-top: 25px; padding: 20px; background: var(--input-bg); border-radius: 8px; text-align: left; font-size: 1rem; line-height: 1.6;" class="oculto"></div>
+                    <div id="avatar-femenino-box" style="width: 100px; height: 100px; border-radius: 50%; background: var(--azul-tecnico); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">🎙️</div>
+                    <button type="button" id="btn-hablar-asesor" style="font-size: 1.2rem; padding: 15px 30px; border-radius: 30px;">Presionar para Hablar</button>
+                    <p id="status-voz" style="color: #a0aec0; margin-top: 15px;">Haz clic en el botón e indica tu duda reglamentaria.</p>
+                    <div id="respuesta-voz-box" class="oculto" style="margin-top: 20px; text-align: left; padding: 20px; background: var(--input-bg); border-radius: 8px;"></div>
                 </div>
             </section>
 
-            <!-- VISTA REBT E IA -->
+            <!-- VISTA REBT -->
             <section id="vista-rebt" class="vista-section oculto">
                 <header>
-                    <h1>Buscador de Reglamento & Asistente IA</h1>
-                    <p style="color: #a0aec0;">Consultas normativas, precios y componentes KNX en tiempo real</p>
+                    <h1>Buscador de Reglamento (REBT / RITE)</h1>
+                    <p style="color: #a0aec0;">Consultas de Normativa Asistida por IA</p>
                 </header>
                 <div class="seccion-bloque">
-                    <h2>Consulta Técnica Integral (REBT / RITE / KNX / Precios)</h2>
+                    <h2>Consulta de Normativa</h2>
                     <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                        <input type="text" id="entrada-busqueda" placeholder="Ej: precios componentes KNX, sección en derivación individual, caída de tensión..." style="flex-grow: 1; min-width: 200px;">
-                        <button type="button" id="btn-buscar">Buscar con IA</button>
+                        <input type="text" id="entrada-busqueda" placeholder="Ej: caida de tension, seccion, contador, diferencial..." style="flex-grow: 1; min-width: 200px;">
+                        <button type="button" id="btn-buscar">Buscar</button>
                     </div>
-                    <div id="resultados-busqueda" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px; min-height: 60px;">
-                        <p class="placeholder-text" style="color: #a0aec0;">Los resultados de la búsqueda y respuestas de la IA aparecerán aquí.</p>
+                    <div id="resultados-busqueda" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;">
+                        <p class="placeholder-text" style="color: #a0aec0;">Los resultados de la búsqueda aparecerán aquí.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- VISTA NORMATIVA REBT Y RITE PRO -->
-            <section id="vista-normativa-pro" class="vista-section oculto">
+            <!-- VISTA ICT -->
+            <section id="vista-ict" class="vista-section oculto">
                 <header>
-                    <h1>📜 Guía Oficial REBT & RITE Explicada</h1>
-                    <p style="color: #a0aec0;">Consulta directa de las ITC de Baja Tensión y los requisitos térmicos de climatización.</p>
+                    <h1>📡 Infraestructuras Comunes de Telecomunicaciones (ICT)</h1>
+                    <p style="color: #a0aec0;">Reglamento Real Decreto 346/2011 y normativa técnica de ICT-2</p>
                 </header>
-
                 <div class="seccion-bloque">
-                    <h2>🔍 Consulta Rápida de Artículos y Guías</h2>
-                    <p style="color: #a0aec0; margin-bottom: 15px;">Selecciona una guía rápida frecuente o escribe tu propia consulta normativa:</p>
-
-                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px;">
-                        <button type="button" class="btn-guia-rapida" data-prompt="Explícame los requisitos de la ITC-BT-25 para instalaciones interiores en viviendas (circuitos C1, C2, C3, C4, C5)" style="font-size: 0.85rem; padding: 6px 12px; background: #1a2936; border: 1px solid var(--azul-brillante);">🏠 Viviendas (ITC-BT-25)</button>
-                        <button type="button" class="btn-guia-rapida" data-prompt="¿Cuáles son las exigencias de eficiencia energética y ventilación del RITE para climatización?" style="font-size: 0.85rem; padding: 6px 12px; background: #1a2936; border: 1px solid var(--azul-brillante);">❄️ RITE Climatización</button>
-                        <button type="button" class="btn-guia-rapida" data-prompt="¿Qué locales se consideran de pública concurrencia según la ITC-BT-28 del REBT?" style="font-size: 0.85rem; padding: 6px 12px; background: #1a2936; border: 1px solid var(--azul-brillante);">🏢 Pública Concurrencia</button>
+                    <h2>Consulta Técnica de Telecomunicaciones</h2>
+                    <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                        <input type="text" id="entrada-busqueda-ict" placeholder="Ej: riti, rits, pau, tomas, fibra, coaxial, registro..." style="flex-grow: 1; min-width: 200px;">
+                        <button type="button" id="btn-buscar-ict">Buscar ICT</button>
                     </div>
-
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <input type="text" id="input-normativa-pro" placeholder="Ej: secciones mínimas en locales mojados, condiciones de ventilación RITE..." style="flex-grow: 1; min-width: 200px;">
-                        <button type="button" id="btn-enviar-normativa-pro">Consultar a la IA</button>
+                    <div id="resultados-busqueda-ict" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;">
+                        <p class="placeholder-text" style="color: #a0aec0;">Introduce un término como "riti", "pau", "tomas" o "fibra" para consultar la normativa ICT.</p>
                     </div>
-
-                    <div id="resultado-normativa-pro" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px; min-height: 60px;" class="oculto"></div>
                 </div>
             </section>
 
@@ -372,116 +299,70 @@
             <!-- VISTA VEHÍCULO ELÉCTRICO -->
             <section id="vista-ve" class="vista-section oculto">
                 <header>
-                    <h1>🚗 Vehículo Eléctrico (ITC-BT-52)</h1>
-                    <p style="color: #a0aec0;">Calculadora de dimensionamiento y protecciones para la infraestructura de recarga</p>
+                    <h1>🚗 Puntos de Recarga de Vehículo Eléctrico (ITC-BT-52)</h1>
+                    <p style="color: #a0aec0;">Cálculo de líneas, protecciones e IGA recomendado</p>
                 </header>
-
                 <div class="seccion-bloque">
-                    <h2>⚡ Calculadora Técnica de Instalación VE</h2>
-                    <p style="color: #a0aec0; margin-bottom: 15px;">Selecciona los parámetros de la recarga para determinar protecciones y cableado según la ITC-BT-52.</p>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <label style="color: var(--texto-brillante); font-size: 0.9rem;">Esquema de Instalación (ITC-BT-52):</label>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <label>Esquema de Instalación (ITC-BT-52)</label>
                         <select id="ve-esquema">
-                            <option value="1a">Esquema 1a: Colectivo con contador principal en origen</option>
-                            <option value="2">Esquema 2: Individual con contador común para vivienda y recarga</option>
-                            <option value="3a">Esquema 3a: Individual con contador exclusivo para la recarga</option>
-                            <option value="4b">Esquema 4b: Circuito dedicado con contador secundario</option>
+                            <option value="2">Esquema 2 (Contador Principal Único)</option>
+                            <option value="1a">Esquema 1a (Contador Principal + Secundario)</option>
+                            <option value="4a">Esquema 4a (Circuito dedicado vivienda)</option>
                         </select>
-
-                        <label style="color: var(--texto-brillante); font-size: 0.9rem;">Potencia del Punto de Recarga (kW):</label>
-                        <select id="ve-potencia">
-                            <option value="3.7">3.7 kW (Monofásico - 16A)</option>
-                            <option value="7.4" selected>7.4 kW (Monofásico - 32A)</option>
-                            <option value="11">11.0 kW (Trifásico - 16A)</option>
-                            <option value="22">22.0 kW (Trifásico - 32A)</option>
-                        </select>
-
-                        <label style="color: var(--texto-brillante); font-size: 0.9rem;">Longitud de la Línea (metros):</label>
-                        <input type="number" id="ve-distancia" value="15" placeholder="Distancia en metros">
+                        <label>Potencia de Recarga (kW)</label>
+                        <input type="number" id="ve-potencia" value="7.4" step="0.1">
+                        <label>Distancia aproximada (metros)</label>
+                        <input type="number" id="ve-distancia" value="20">
+                        <button type="button" id="btn-calcular-ve" style="margin-top: 10px;">⚡ Calcular Protecciones y Cable</button>
                     </div>
-
-                    <button type="button" id="btn-calcular-ve" style="margin-top: 20px; width: 100%;">📐 Calcular Protecciones y Cable</button>
-
-                    <div id="resultado-ve" style="margin-top: 20px; padding: 15px; background: var(--input-bg); border-radius: 6px; border-left: 4px solid var(--azul-brillante);" class="oculto">
-                        <h3 style="color: var(--azul-brillante); margin-top: 0;">📋 Prescripciones Técnicas Obtenidas:</h3>
-                        <div id="contenido-resultado-ve" style="line-height: 1.6; color: var(--texto-principal);"></div>
+                    <div id="resultado-ve" class="oculto" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;">
+                        <div id="contenido-resultado-ve"></div>
                     </div>
                 </div>
             </section>
 
-            <!-- VISTA KNX INTEGRADA CON IA -->
+            <!-- VISTA KNX -->
             <section id="vista-knx" class="vista-section oculto">
                 <header>
                     <h1>🟢 Domótica KNX</h1>
-                    <p style="color: #a0aec0;">Diseño inteligente de proyectos, Direcciones de Grupo y topología ETS</p>
+                    <p style="color: #a0aec0;">Estructurador de Direcciones Físicas y Asistente ETS</p>
                 </header>
-
                 <div class="seccion-bloque">
-                    <h2>🤖 Generador de Proyectos KNX para ETS (con IA)</h2>
-                    <p style="color: #a0aec0;">Describe las necesidades de tu proyecto y la IA calculará la tabla de Direcciones de Grupo (3 niveles), los objetos de comunicación (DPT) y los componentes recomendados.</p>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
-                        <textarea id="knx-prompt-ia" rows="3" placeholder="Ej: Proyecto para vivienda de 2 plantas. Necesito controlar 4 zonas de clima por suelo radiante, 8 líneas de iluminación ON/OFF, 2 dimmers DALI y 6 persianas venecianas..."></textarea>
-                        <button type="button" id="btn-generar-proyecto-knx" style="width: 100%; background-color: var(--verde-ia);">⚡ Generar Estructura ETS y Direcciones de Grupo</button>
+                    <h3>Generador Manual de Dirección Física</h3>
+                    <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                        <input type="number" id="knx-area" placeholder="Área (Ej: 1)" style="width: 100px;">
+                        <input type="number" id="knx-linea" placeholder="Línea (Ej: 1)" style="width: 100px;">
+                        <input type="number" id="knx-dispositivo" placeholder="Aparato (Ej: 10)" style="width: 120px;">
+                        <button type="button" id="btn-generar-knx">Generar</button>
                     </div>
-
-                    <div id="resultado-ia-knx" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;" class="oculto"></div>
-                </div>
-
-                <div class="seccion-bloque">
-                    <h2>Configurador Rápido de Direcciones Físicas</h2>
-                    <p style="color: #a0aec0;">Introduce la topología de tu dispositivo KNX para verificar el formato de dirección física.</p>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                        <input type="number" id="knx-area" placeholder="Área (0-15)" min="0" max="15" value="1">
-                        <input type="number" id="knx-linea" placeholder="Línea (0-15)" min="0" max="15" value="1">
-                        <input type="number" id="knx-dispositivo" placeholder="Dispositivo (1-255)" min="1" max="255" value="10">
-                    </div>
-
-                    <button type="button" id="btn-generar-knx" style="margin-top: 15px; width: 100%;">🟢 Formatear Dirección Física</button>
-
-                    <div id="resultado-knx" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;" class="oculto">
-                        <p>Dirección Física Formateada: <strong id="knx-direccion-result" style="color: var(--verde-ia); font-size: 1.2rem;">-</strong></p>
+                    <div id="resultado-knx" class="oculto" style="margin-top: 10px; padding: 10px; background: var(--input-bg);">
+                        <p>Dirección Física Resultante: <strong id="knx-direccion-result" style="color: var(--verde-ia);"></strong></p>
                     </div>
                 </div>
             </section>
 
-            <!-- VISTA SOLAR FOTOVOLTAICA -->
-            <section id="vista-fotovoltaica" class="vista-section oculto">
+            <!-- VISTA SOLAR -->
+            <section id="vista-solar" class="vista-section oculto">
                 <header>
-                    <h1>☀️ Solar Fotovoltaica (ITC-BT-40)</h1>
-                    <p style="color: #a0aec0;">Cálculo de autoconsumo, dimensionamiento de paneles, inversor y protecciones.</p>
+                    <h1>🌞 Solar Fotovoltaica (ITC-BT-40)</h1>
+                    <p style="color: #a0aec0;">Calculadora de Dimensionamiento e Inversores</p>
                 </header>
-
                 <div class="seccion-bloque">
-                    <h2>⚡ Calculadora de Dimensionamiento Solar</h2>
-                    <p style="color: #a0aec0; margin-bottom: 15px;">Estima el número de paneles y el inversor recomendado según el consumo mensual del cliente.</p>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <label style="color: var(--texto-brillante); font-size: 0.9rem;">Consumo Promedio Mensual (kWh):</label>
-                        <input type="number" id="fv-consumo" placeholder="Ej: 350" value="350">
-
-                        <label style="color: var(--texto-brillante); font-size: 0.9rem;">Potencia Deseada por Panel (Wp):</label>
-                        <select id="fv-potencia-panel">
-                            <option value="450">450 Wp (Monocristalino PERC)</option>
-                            <option value="500" selected>500 Wp (Alta eficiencia N-Type)</option>
-                            <option value="550">550 Wp (Uso residencial / industrial)</option>
-                        </select>
-
-                        <label style="color: var(--texto-brillante); font-size: 0.9rem;">Tipo de Instalación:</label>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <label>Consumo Promedio Mensual (kWh)</label>
+                        <input type="number" id="fv-consumo" value="350">
+                        <label>Potencia de cada Panel (Wp)</label>
+                        <input type="number" id="fv-potencia-panel" value="500">
+                        <label>Tipo de Instalación</label>
                         <select id="fv-tipo">
-                            <option value="autoconsumo_red">Autoconsumo conectado a red (Sin baterías)</option>
-                            <option value="autoconsumo_bateria">Autoconsumo híbrido (Con baterías)</option>
-                            <option value="aislada">Instalación Aislada</option>
+                            <option value="red">Conectada a Red (On-Grid)</option>
+                            <option value="bateria">Híbrida con Baterías</option>
                         </select>
+                        <button type="button" id="btn-calcular-fv">☀️ Calcular Generación</button>
                     </div>
-
-                    <button type="button" id="btn-calcular-fv" style="margin-top: 20px; width: 100%;">📐 Calcular Kit Solar y Protecciones</button>
-
-                    <div id="resultado-fv" style="margin-top: 20px; padding: 15px; background: var(--input-bg); border-radius: 6px; border-left: 4px solid #f6ad55;" class="oculto">
-                        <h3 style="color: #f6ad55; margin-top: 0;">📋 Propuesta Técnica Fotovoltaica:</h3>
-                        <div id="contenido-resultado-fv" style="line-height: 1.6; color: var(--texto-principal);"></div>
+                    <div id="resultado-fv" class="oculto" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;">
+                        <div id="contenido-resultado-fv"></div>
                     </div>
                 </div>
             </section>
@@ -500,23 +381,20 @@
 
                         <h3>Concepto del Trabajo</h3>
                         <input type="text" id="fac-concepto" placeholder="Ej: Mantenimiento cuadro">
-                        <input type="number" id="fac-precio" placeholder="Precio Base (€)" step="0.01">
+                        <input type="number" id="fac-precio" placeholder="Precio Base (€)">
                     </div>
 
                     <div style="margin-top: 20px; padding: 15px; background: var(--input-bg); border-radius: 6px;">
                         <p>Base Imponible: <span id="total-base">0.00</span> €</p>
                         <p>IVA (21%): <span id="total-iva">0.00</span> €</p>
-                        <h3 style="color: var(--verde-ia); margin: 5px 0 0 0;">Total Factura: <span id="total-factura">0.00</span> €</h3>
+                        <h3 style="color: var(--verde-ia);">Total Factura: <span id="total-factura">0.00</span> €</h3>
                     </div>
-
-                    <div id="vista-previa-factura" class="factura-preview oculto">
-                        <h4 style="color: var(--azul-brillante); margin-top: 0;">📋 Borrador de Factura</h4>
-                        <div id="contenido-borrador" style="line-height: 1.6; color: var(--texto-principal);"></div>
-                    </div>
-
                     <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <button type="button" id="btn-calcular-factura" style="flex: 1;">📊 Calcular Totales</button>
-                        <button type="button" id="btn-imprimir-factura" style="flex: 1; background-color: var(--verde-ia);">🖨️ Imprimir / Guardar PDF</button>
+                        <button type="button" id="btn-calcular-factura" style="flex-grow: 1;">📊 Calcular Totales</button>
+                        <button type="button" id="btn-imprimir-factura">🖨️ Imprimir</button>
+                    </div>
+                    <div id="vista-previa-factura" class="oculto" style="margin-top: 15px; padding: 15px; background: #fff; color: #000; border-radius: 6px;">
+                        <div id="contenido-borrador"></div>
                     </div>
                 </div>
             </section>
@@ -524,553 +402,39 @@
             <!-- VISTA TARIFAS Y PRECIOS -->
             <section id="vista-precios" class="vista-section oculto">
                 <header>
-                    <h1>📊 Tarifas y Precios</h1>
-                    <p style="color: #a0aec0;">Cálculo de tarifas horarias, desplazamiento y márgenes comerciales</p>
+                    <h1>📊 Tarifas y Cuadro de Precios</h1>
+                    <p style="color: #a0aec0;">Calculadora de margen comercial y servicios técnicos por hora</p>
                 </header>
                 <div class="seccion-bloque">
                     <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <h3>Calculadora de Mano de Obra</h3>
-                        <input type="number" id="tarifa-horas" placeholder="Horas estimadas del servicio">
-                        <input type="number" id="tarifa-precio-hora" placeholder="Precio / Hora (€)" value="35">
-                        <input type="number" id="tarifa-desplazamiento" placeholder="Gastos de desplazamiento (€)" value="20">
+                        <label>Horas Estimadas de Trabajo</label>
+                        <input type="number" id="tarifa-horas" value="2">
+                        <label>Precio / Hora (€/h)</label>
+                        <input type="number" id="tarifa-precio-hora" value="35">
+                        <label>Desplazamiento / Salida (€)</label>
+                        <input type="number" id="tarifa-desplazamiento" value="25">
+                        <button type="button" id="btn-calcular-tarifa" style="margin-top: 10px;">💶 Calcular Presupuesto Estimado</button>
                     </div>
-
                     <div style="margin-top: 20px; padding: 15px; background: var(--input-bg); border-radius: 6px;">
-                        <p>Subtotal Horas: <span id="subtotal-horas">0.00</span> €</p>
+                        <p>Subtotal Mano de Obra: <span id="subtotal-horas">0.00</span> €</p>
                         <p>Desplazamiento: <span id="subtotal-desplazamiento">0.00</span> €</p>
-                        <h3 style="color: var(--verde-ia); margin: 5px 0 0 0;">Total Presupuesto Estimado: <span id="total-estimado">0.00</span> €</h3>
+                        <h3 style="color: var(--verde-ia);">Total Estimado: <span id="total-estimado">0.00</span> €</h3>
                     </div>
-                    <button type="button" id="btn-calcular-tarifa" style="margin-top: 15px; width: 100%;">📊 Calcular Tarifa</button>
                 </div>
             </section>
 
         </main>
     </div>
 
-    <!-- BOTÓN FLOTANTE DE WHATSAPP -->
-    <a href="https://wa.me/34642269680?text=Hola,%20necesito%20asistencia%20técnica" target="_blank" id="btn-whatsapp-flotante">
-        💬 Solicitar Servicio / Avería
-    </a>
-
-    <!-- LÓGICA JAVASCRIPT DIRECTA -->
+    <!-- SCRIPT DE PWA Y LÓGICA VÍA APP.JS -->
+    <script src="./app.js"></script>
     <script>
-        let vozFemeninaSeleccionada = null;
-
-        document.addEventListener('DOMContentLoaded', () => {
-            verificarEstadoAutenticacion();
-            inicializarNavegacion();
-            cargarVocesFemeninas();
-            inicializarAsesorVoz();
-            inicializarBusquedasIA();
-            inicializarCalculadoras();
-            inicializarSimulador();
-        });
-
-        function cargarVocesFemeninas() {
-            if ('speechSynthesis' in window) {
-                const asignarVoz = () => {
-                    const voces = window.speechSynthesis.getVoices();
-                    vozFemeninaSeleccionada = voces.find(v => 
-                        v.lang.startsWith('es') && 
-                        (v.name.includes('Monica') || 
-                         v.name.includes('Lucia') || 
-                         v.name.includes('Helena') || 
-                         v.name.includes('Laura') || 
-                         v.name.includes('Sabina') || 
-                         v.name.includes('Google español') ||
-                         v.name.includes('Female'))
-                    ) || voces.find(v => v.lang.startsWith('es'));
-                };
-
-                asignarVoz();
-                if (speechSynthesis.onvoiceschanged !== undefined) {
-                    speechSynthesis.onvoiceschanged = asignarVoz;
-                }
-            }
-        }
-
-        function inicializarAsesorVoz() {
-            const btnHablar = document.getElementById('btn-hablar-asesor');
-            const statusVoz = document.getElementById('status-voz');
-            const respuestaBox = document.getElementById('respuesta-voz-box');
-
-            if (!btnHablar) return;
-
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-            if (!SpeechRecognition) {
-                statusVoz.innerText = "Tu navegador no soporta entrada de voz. Usa Google Chrome o Edge.";
-                btnHablar.disabled = true;
-                btnHablar.style.opacity = "0.5";
-                return;
-            }
-
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'es-ES';
-            recognition.interimResults = false;
-            recognition.continuous = false;
-
-            btnHablar.addEventListener('click', () => {
-                try {
-                    recognition.start();
-                    statusVoz.innerText = "Escuchando tu consulta...";
-                    btnHablar.disabled = true;
-                } catch (err) {
-                    console.error("Error al iniciar micrófono:", err);
-                    btnHablar.disabled = false;
-                }
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registrado:', reg.scope))
+                    .catch(err => console.error('Error Service Worker:', err));
             });
-
-            recognition.onresult = async (event) => {
-                const textoEscuchado = event.results[0][0].transcript;
-                statusVoz.innerText = `Has dicho: "${textoEscuchado}"`;
-
-                const promptVoz = `[ASISTENTE DE VOZ REBT/RITE]: ${textoEscuchado}`;
-
-                try {
-                    const res = await fetch('/chat', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ prompt: promptVoz })
-                    });
-
-                    const data = await res.json();
-                    const respuestaTexto = data.text || data.respuesta || "No pude procesar la consulta.";
-
-                    respuestaBox.classList.remove('oculto');
-                    respuestaBox.innerText = respuestaTexto;
-
-                    reproducirVoz(respuestaTexto, () => {
-                        statusVoz.innerText = "Presiona el botón para realizar otra consulta";
-                        btnHablar.disabled = false;
-                    });
-
-                } catch (error) {
-                    console.error("Error en la consulta al servidor:", error);
-                    statusVoz.innerText = "Error de conexión con el servidor.";
-                    btnHablar.disabled = false;
-                }
-            };
-
-            recognition.onerror = (event) => {
-                console.error("Error en el micrófono:", event.error);
-                statusVoz.innerText = "No se pudo escuchar. Inténtalo de nuevo.";
-                btnHablar.disabled = false;
-            };
-
-            recognition.onend = () => {
-                if (!respuestaBox.classList.contains('oculto')) return;
-                btnHablar.disabled = false;
-            };
-        }
-
-        function reproducirVoz(texto, alTerminar) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-
-                const utterance = new SpeechSynthesisUtterance(texto);
-                utterance.lang = 'es-ES';
-                utterance.rate = 1.0;
-                utterance.pitch = 1.1;
-
-                if (vozFemeninaSeleccionada) {
-                    utterance.voice = vozFemeninaSeleccionada;
-                }
-
-                const avatarBox = document.getElementById('avatar-femenino-box');
-
-                utterance.onstart = () => {
-                    if (avatarBox) avatarBox.classList.add('hablando');
-                };
-
-                utterance.onend = () => {
-                    if (avatarBox) avatarBox.classList.remove('hablando');
-                    if (typeof alTerminar === 'function') alTerminar();
-                };
-
-                utterance.onerror = () => {
-                    if (avatarBox) avatarBox.classList.remove('hablando');
-                    if (typeof alTerminar === 'function') alTerminar();
-                };
-
-                window.speechSynthesis.speak(utterance);
-            } else {
-                if (typeof alTerminar === 'function') alTerminar();
-            }
-        }
-
-        // ACCESO DIRECTO SIN CONDICIONES DE LOGIN
-        function verificarEstadoAutenticacion() {
-            const appPrincipal = document.getElementById('app-principal');
-            if (appPrincipal) {
-                appPrincipal.classList.remove('oculto');
-            }
-        }
-
-        function inicializarNavegacion() {
-            const enlacesMenu = document.querySelectorAll('.menu-sidebar a');
-            const tarjetasModulos = document.querySelectorAll('.tarjeta-modulo');
-            const secciones = document.querySelectorAll('.vista-section');
-            const menuInicio = document.getElementById('menu-inicio');
-
-            function mostrarSeccion(idSeccion) {
-                secciones.forEach(sec => sec.classList.add('oculto'));
-                const seccionObjetivo = document.getElementById(idSeccion);
-                if (seccionObjetivo) {
-                    seccionObjetivo.classList.remove('oculto');
-                }
-
-                enlacesMenu.forEach(link => {
-                    link.classList.remove('activo');
-                    if (link.getAttribute('id') === `menu-${idSeccion.replace('vista-', '')}`) {
-                        link.classList.add('activo');
-                    }
-                });
-            }
-
-            if (menuInicio) {
-                menuInicio.addEventListener('click', () => mostrarSeccion('vista-inicio'));
-            }
-
-            enlacesMenu.forEach(enlace => {
-                enlace.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = enlace.id.replace('menu-', 'vista-');
-                    mostrarSeccion(targetId);
-                });
-            });
-
-            tarjetasModulos.forEach(tarjeta => {
-                tarjeta.addEventListener('click', () => {
-                    const targetId = tarjeta.id.replace('card-', 'vista-');
-                    mostrarSeccion(targetId);
-                });
-            });
-        }
-
-        function inicializarBusquedasIA() {
-            const btnBuscar = document.getElementById('btn-buscar');
-            const entradaBusqueda = document.getElementById('entrada-busqueda');
-            const resultadosBusqueda = document.getElementById('resultados-busqueda');
-
-            if (btnBuscar && entradaBusqueda) {
-                btnBuscar.addEventListener('click', async () => {
-                    const prompt = entradaBusqueda.value.trim();
-                    if (!prompt) return;
-
-                    resultadosBusqueda.innerHTML = "<p style='color: #a0aec0;'>Consultando normativa con la IA...</p>";
-
-                    try {
-                        const res = await fetch('/chat', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ prompt })
-                        });
-                        const data = await res.json();
-                        resultadosBusqueda.innerHTML = data.text || data.respuesta || "Sin respuesta.";
-                    } catch (err) {
-                        resultadosBusqueda.innerHTML = "<p style='color: #e53e3e;'>Error al realizar la consulta.</p>";
-                    }
-                });
-            }
-
-            const btnNormativaPro = document.getElementById('btn-enviar-normativa-pro');
-            const inputNormativaPro = document.getElementById('input-normativa-pro');
-            const resultadoNormativaPro = document.getElementById('resultado-normativa-pro');
-            const botonesRapidos = document.querySelectorAll('.btn-guia-rapida');
-
-            async function ejecutarConsultaNormativa(prompt) {
-                resultadoNormativaPro.classList.remove('oculto');
-                resultadoNormativaPro.innerHTML = "<p style='color: #a0aec0;'>Procesando consulta reglamentaria...</p>";
-
-                try {
-                    const res = await fetch('/chat', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ prompt })
-                    });
-                    const data = await res.json();
-                    resultadoNormativaPro.innerHTML = data.text || data.respuesta || "Sin respuesta.";
-                } catch (err) {
-                    resultadoNormativaPro.innerHTML = "<p style='color: #e53e3e;'>Error al conectar con la IA.</p>";
-                }
-            }
-
-            if (btnNormativaPro && inputNormativaPro) {
-                btnNormativaPro.addEventListener('click', () => {
-                    const prompt = inputNormativaPro.value.trim();
-                    if (prompt) ejecutarConsultaNormativa(prompt);
-                });
-            }
-
-            botonesRapidos.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const prompt = btn.getAttribute('data-prompt');
-                    if (prompt) {
-                        inputNormativaPro.value = prompt;
-                        ejecutarConsultaNormativa(prompt);
-                    }
-                });
-            });
-
-            const btnClienteIA = document.getElementById('btn-consultar-ia-cliente');
-            const inputImagen = document.getElementById('input-imagen-gestor');
-            const diagnosticoPrevio = document.getElementById('diagnostico-previo');
-
-            if (btnClienteIA) {
-                btnClienteIA.addEventListener('click', async () => {
-                    const nombre = document.getElementById('cliente-nombre').value.trim();
-                    const servicio = document.getElementById('tipo-servicio').value;
-                    const descripcion = document.getElementById('descripcion-servicio').value.trim();
-                    const archivo = inputImagen ? inputImagen.files[0] : null;
-
-                    const prompt = `Cliente: ${nombre || 'Anónimo'}\nTipo de Servicio: ${servicio}\nDetalles: ${descripcion}`;
-                    diagnosticoPrevio.classList.remove('oculto');
-                    diagnosticoPrevio.innerHTML = "<p style='color: #a0aec0;'>Analizando consulta e imagen...</p>";
-
-                    if (archivo) {
-                        const reader = new FileReader();
-                        reader.onloadend = async () => {
-                            const base64Data = reader.result.split(',')[1];
-                            const mimeType = archivo.type;
-                            enviarPeticionCliente(prompt, base64Data, mimeType);
-                        };
-                        reader.readAsDataURL(archivo);
-                    } else {
-                        enviarPeticionCliente(prompt, null, null);
-                    }
-                });
-            }
-
-            async function enviarPeticionCliente(prompt, imagenBase64, mimeType) {
-                try {
-                    const res = await fetch('/chat-cliente', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ prompt, imagenBase64, mimeType })
-                    });
-                    const data = await res.json();
-                    diagnosticoPrevio.innerHTML = data.text || data.respuesta || "Sin diagnóstico generado.";
-                } catch (err) {
-                    diagnosticoPrevio.innerHTML = "<p style='color: #e53e3e;'>Error al enviar consulta.</p>";
-                }
-            }
-
-            const btnEnviarWhatsapp = document.getElementById('btn-enviar-instalador');
-            if (btnEnviarWhatsapp) {
-                btnEnviarWhatsapp.addEventListener('click', () => {
-                    const nombre = document.getElementById('cliente-nombre').value.trim();
-                    const servicio = document.getElementById('tipo-servicio').value;
-                    const descripcion = document.getElementById('descripcion-servicio').value.trim();
-                    const mensaje = encodeURIComponent(`Hola, mi nombre es ${nombre || 'un cliente'}. Consulta sobre [${servicio}]: ${descripcion}`);
-                    window.open(`https://wa.me/34642269680?text=${mensaje}`, '_blank');
-                });
-            }
-
-            const btnGenerarKnxIA = document.getElementById('btn-generar-proyecto-knx');
-            const promptKnxIA = document.getElementById('knx-prompt-ia');
-            const resultadoIaKnx = document.getElementById('resultado-ia-knx');
-
-            if (btnGenerarKnxIA && promptKnxIA) {
-                btnGenerarKnxIA.addEventListener('click', async () => {
-                    const consultaKnx = promptKnxIA.value.trim();
-                    if (!consultaKnx) return;
-
-                    resultadoIaKnx.classList.remove('oculto');
-                    resultadoIaKnx.innerHTML = "<p style='color: #a0aec0;'>Generando estructura ETS y direcciones de grupo...</p>";
-
-                    try {
-                        const res = await fetch('/generar-knx', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ consultaKnx })
-                        });
-                        const data = await res.json();
-                        resultadoIaKnx.innerHTML = data.text || data.respuesta || "Error al estructurar proyecto KNX.";
-                    } catch (err) {
-                        resultadoIaKnx.innerHTML = "<p style='color: #e53e3e;'>Error al procesar el proyecto KNX.</p>";
-                    }
-                });
-            }
-        }
-
-        function inicializarCalculadoras() {
-            const btnKnxManual = document.getElementById('btn-generar-knx');
-            if (btnKnxManual) {
-                btnKnxManual.addEventListener('click', () => {
-                    const area = document.getElementById('knx-area').value || 0;
-                    const linea = document.getElementById('knx-linea').value || 0;
-                    const disp = document.getElementById('knx-dispositivo').value || 0;
-
-                    document.getElementById('knx-direccion-result').innerText = `${area}.${linea}.${disp}`;
-                    document.getElementById('resultado-knx').classList.remove('oculto');
-                });
-            }
-
-            const btnVE = document.getElementById('btn-calcular-ve');
-            if (btnVE) {
-                btnVE.addEventListener('click', () => {
-                    const esquema = document.getElementById('ve-esquema').value;
-                    const potencia = parseFloat(document.getElementById('ve-potencia').value);
-                    const distancia = parseFloat(document.getElementById('ve-distancia').value) || 0;
-
-                    const intensidad = (potencia * 1000) / (230 * 0.9);
-                    let seccion = "2.5 mm²";
-                    let iga = "16 A";
-
-                    if (intensidad > 16 && intensidad <= 32) {
-                        seccion = distancia > 25 ? "10 mm²" : "6 mm²";
-                        iga = "32 A";
-                    } else if (intensidad > 32) {
-                        seccion = "10 mm²";
-                        iga = "40 A";
-                    }
-
-                    const html = `
-                        <ul>
-                            <li><strong>Esquema seleccionado:</strong> Esquema ${esquema.toUpperCase()}</li>
-                            <li><strong>Intensidad de Cálculo:</strong> ${intensidad.toFixed(2)} A</li>
-                            <li><strong>IGA Recomendado:</strong> ${iga} (Curva C)</li>
-                            <li><strong>Protección Diferencial:</strong> Tipo A superinmunizado o Tipo B (30mA)</li>
-                            <li><strong>Protección contra Sobretensiones:</strong> Permanentes y Transitorias (ITC-BT-52)</li>
-                            <li><strong>Sección de Cable Sugerida:</strong> ${seccion} (Cobre, libre de halógenos)</li>
-                        </ul>
-                    `;
-
-                    document.getElementById('contenido-resultado-ve').innerHTML = html;
-                    document.getElementById('resultado-ve').classList.remove('oculto');
-                });
-            }
-
-            const btnFV = document.getElementById('btn-calcular-fv');
-            if (btnFV) {
-                btnFV.addEventListener('click', () => {
-                    const consumo = parseFloat(document.getElementById('fv-consumo').value) || 0;
-                    const potenciaPanel = parseFloat(document.getElementById('fv-potencia-panel').value) || 500;
-                    const tipo = document.getElementById('fv-tipo').value;
-
-                    const hsp = 4.8;
-                    const generacionDiariaRequerida = (consumo / 30) / 0.8;
-                    const potenciaPicoTotal = (generacionDiariaRequerida / hsp) * 1000;
-                    const numPaneles = Math.ceil(potenciaPicoTotal / potenciaPanel);
-
-                    const html = `
-                        <ul>
-                            <li><strong>Potencia Fotovoltaica Mínima:</strong> ${(potenciaPicoTotal / 1000).toFixed(2)} kWp</li>
-                            <li><strong>Número de Paneles Recomendado:</strong> ${numPaneles} paneles de ${potenciaPanel} Wp</li>
-                            <li><strong>Inversor Sugerido:</strong> Inversor ${tipo.includes('bateria') ? 'Híbrido' : 'On-Grid'} de ${(potenciaPicoTotal / 1000).toFixed(1)} kW</li>
-                            <li><strong>Protección DC:</strong> Seccionador 1000V DC + Protecciones Transitorias Tipo II</li>
-                            <li><strong>Protección AC:</strong> Diferencial Clase A (30mA) + Magnetotérmico según salida de inversor</li>
-                        </ul>
-                    `;
-
-                    document.getElementById('contenido-resultado-fv').innerHTML = html;
-                    document.getElementById('resultado-fv').classList.remove('oculto');
-                });
-            }
-
-            const btnCalcularFactura = document.getElementById('btn-calcular-factura');
-            const btnImprimirFactura = document.getElementById('btn-imprimir-factura');
-
-            if (btnCalcularFactura) {
-                btnCalcularFactura.addEventListener('click', () => {
-                    const cliente = document.getElementById('fac-cliente').value.trim() || 'Cliente General';
-                    const nif = document.getElementById('fac-nif').value.trim() || 'N/A';
-                    const concepto = document.getElementById('fac-concepto').value.trim() || 'Servicios Técnicos Eléctricos';
-                    const precioBase = parseFloat(document.getElementById('fac-precio').value) || 0;
-
-                    const iva = precioBase * 0.21;
-                    const total = precioBase + iva;
-
-                    document.getElementById('total-base').innerText = precioBase.toFixed(2);
-                    document.getElementById('total-iva').innerText = iva.toFixed(2);
-                    document.getElementById('total-factura').innerText = total.toFixed(2);
-
-                    const borradorHTML = `
-                        <p><strong>Cliente:</strong> ${cliente} | <strong>NIF/CIF:</strong> ${nif}</p>
-                        <p><strong>Concepto:</strong> ${concepto}</p>
-                        <p><strong>Base Imponible:</strong> ${precioBase.toFixed(2)} € | <strong>IVA (21%):</strong> ${iva.toFixed(2)} €</p>
-                        <p style="font-size: 1.1rem; color: var(--verde-ia);"><strong>TOTAL A PAGAR: ${total.toFixed(2)} €</strong></p>
-                    `;
-
-                    document.getElementById('contenido-borrador').innerHTML = borradorHTML;
-                    document.getElementById('vista-previa-factura').classList.remove('oculto');
-                });
-            }
-
-            if (btnImprimirFactura) {
-                btnImprimirFactura.addEventListener('click', () => {
-                    window.print();
-                });
-            }
-
-            const btnCalcularTarifa = document.getElementById('btn-calcular-tarifa');
-            if (btnCalcularTarifa) {
-                btnCalcularTarifa.addEventListener('click', () => {
-                    const horas = parseFloat(document.getElementById('tarifa-horas').value) || 0;
-                    const precioHora = parseFloat(document.getElementById('tarifa-precio-hora').value) || 35;
-                    const desplazamiento = parseFloat(document.getElementById('tarifa-desplazamiento').value) || 0;
-
-                    const subtotalHoras = horas * precioHora;
-                    const totalEstimado = subtotalHoras + desplazamiento;
-
-                    document.getElementById('subtotal-horas').innerText = subtotalHoras.toFixed(2);
-                    document.getElementById('subtotal-desplazamiento').innerText = desplazamiento.toFixed(2);
-                    document.getElementById('total-estimado').innerText = totalEstimado.toFixed(2);
-                });
-            }
-        }
-
-        function inicializarSimulador() {
-            const btnParo = document.getElementById('sim-btn-paro');
-            const btnMarcha = document.getElementById('sim-btn-marcha');
-            const estadoS1 = document.getElementById('estado-s1');
-            const estadoS2 = document.getElementById('estado-s2');
-            const estadoKm1Aux = document.getElementById('estado-km1-aux');
-            const estadoBobina = document.getElementById('estado-bobina');
-            const pilotoMotor = document.getElementById('piloto-motor');
-
-            let enclavado = false;
-
-            if (btnMarcha && btnParo) {
-                btnMarcha.addEventListener('click', () => {
-                    enclavado = true;
-                    actualizarSimulador();
-                });
-
-                btnParo.addEventListener('click', () => {
-                    enclavado = false;
-                    actualizarSimulador();
-                });
-            }
-
-            function actualizarSimulador() {
-                if (enclavado) {
-                    estadoS1.innerText = "CERRADO (NC)";
-                    estadoS1.style.color = "#68d391";
-                    estadoS2.innerText = "PRESIONADO (NA)";
-                    estadoS2.style.color = "#68d391";
-                    estadoKm1Aux.innerText = "CERRADO (13-14)";
-                    estadoKm1Aux.style.color = "#68d391";
-                    estadoBobina.innerText = "ACTIVADA (230V)";
-                    estadoBobina.style.color = "#68d391";
-
-                    pilotoMotor.style.backgroundColor = "#10b981";
-                    pilotoMotor.style.boxShadow = "0 0 20px #10b981";
-                } else {
-                    estadoS1.innerText = "CERRADO (NC)";
-                    estadoS1.style.color = "#68d391";
-                    estadoS2.innerText = "ABIERTO (NA)";
-                    estadoS2.style.color = "#fc8181";
-                    estadoKm1Aux.innerText = "ABIERTO";
-                    estadoKm1Aux.style.color = "#fc8181";
-                    estadoBobina.innerText = "DESACTIVADA";
-                    estadoBobina.style.color = "#718096";
-
-                    pilotoMotor.style.backgroundColor = "#2a3441";
-                    pilotoMotor.style.boxShadow = "none";
-                }
-            }
         }
     </script>
 </body>
