@@ -61,7 +61,7 @@
         .seccion-bloque, .tarjeta-modulo { background-color: var(--panel-bg); border: 1px solid var(--bordes); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
         
         .portada-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-        .tarjeta-modulo { cursor: pointer; border: 1px solid var(--bordes); transition: 0.2s; }
+        .tarjeta-modulo { cursor: pointer; border: 1px solid var(--bordes); transition: 0.2s; user-select: none; }
         .tarjeta-modulo:hover { border-color: var(--azul-brillante); background-color: #182838; }
 
         input, select, button, textarea {
@@ -91,7 +91,7 @@
     <div class="contenedor" id="app-principal">
 
         <aside class="sidebar-izquierda">
-            <div class="encabezado-sidebar" id="menu-inicio" onclick="mostrarSeccion('vista-inicio')" style="cursor: pointer;">
+            <div class="encabezado-sidebar" id="menu-inicio" onclick="mostrarSeccion(event, 'vista-inicio')" style="cursor: pointer;">
                 <h2>Servicio y Gestión SM</h2>
                 <p style="color: #8a99ad; font-size: 0.9rem;">Menú Principal</p>
             </div>
@@ -100,21 +100,21 @@
                 <div class="menu-section">
                     <h3 style="color: var(--azul-brillante); font-size: 0.85rem; margin-top: 20px;">📚 APRENDIZAJE Y NORMATIVA</h3>
                     <ul>
-                        <li><a href="#" id="menu-asesor-voz" onclick="mostrarSeccion('vista-asesor-voz')">🗣️ Asesor de Voz (REBT / RITE)</a></li>
-                        <li><a href="#" id="menu-rebt" onclick="mostrarSeccion('vista-rebt')">⚖️ Buscador REBT / RITE (IA)</a></li>
-                        <li><a href="#" id="menu-ict" onclick="mostrarSeccion('vista-ict')">📡 Consultas ICT (Telecom)</a></li>
-                        <li><a href="#" id="menu-industrial" onclick="mostrarSeccion('vista-industrial')">⚡ Automatismos Potencia</a></li>
-                        <li><a href="#" id="menu-ve" onclick="mostrarSeccion('vista-ve')">🚗 Vehículo Eléctrico (ITC-BT-52)</a></li>
-                        <li><a href="#" id="menu-knx" onclick="mostrarSeccion('vista-knx')">🟢 Métodos Fáciles KNX</a></li>
-                        <li><a href="#" id="menu-solar" onclick="mostrarSeccion('vista-solar')">🌞 Solar Fotovoltaica (ITC-BT-40)</a></li>
+                        <li><a href="#" id="menu-asesor-voz" onclick="mostrarSeccion(event, 'vista-asesor-voz')">🗣️ Asesor de Voz (REBT / RITE)</a></li>
+                        <li><a href="#" id="menu-rebt" onclick="mostrarSeccion(event, 'vista-rebt')">⚖️ Buscador REBT / RITE (IA)</a></li>
+                        <li><a href="#" id="menu-ict" onclick="mostrarSeccion(event, 'vista-ict')">📡 Consultas ICT (Telecom)</a></li>
+                        <li><a href="#" id="menu-industrial" onclick="mostrarSeccion(event, 'vista-industrial')">⚡ Automatismos Potencia</a></li>
+                        <li><a href="#" id="menu-ve" onclick="mostrarSeccion(event, 'vista-ve')">🚗 Vehículo Eléctrico (ITC-BT-52)</a></li>
+                        <li><a href="#" id="menu-knx" onclick="mostrarSeccion(event, 'vista-knx')">🟢 Métodos Fáciles KNX</a></li>
+                        <li><a href="#" id="menu-solar" onclick="mostrarSeccion(event, 'vista-solar')">🌞 Solar Fotovoltaica (ITC-BT-40)</a></li>
                     </ul>
                 </div>
 
                 <div class="menu-section">
                     <h3 style="color: var(--azul-brillante); font-size: 0.85rem; margin-top: 20px;">💰 MONETIZACIÓN Y NEGOCIO</h3>
                     <ul>
-                        <li><a href="#" id="menu-facturas" onclick="mostrarSeccion('vista-facturas')">📄 Generar Facturas</a></li>
-                        <li><a href="#" id="menu-precios" onclick="mostrarSeccion('vista-precios')">📊 Tarifas y Precios</a></li>
+                        <li><a href="#" id="menu-facturas" onclick="mostrarSeccion(event, 'vista-facturas')">📄 Generar Facturas</a></li>
+                        <li><a href="#" id="menu-precios" onclick="mostrarSeccion(event, 'vista-precios')">📊 Tarifas y Precios</a></li>
                     </ul>
                 </div>
             </nav>
@@ -130,55 +130,55 @@
                 </header>
 
                 <div class="portada-grid">
-                    <div class="tarjeta-modulo" id="card-asesor-voz" onclick="mostrarSeccion('vista-asesor-voz')">
+                    <div class="tarjeta-modulo" id="card-asesor-voz" onclick="mostrarSeccion(event, 'vista-asesor-voz')">
                         <div style="font-size: 2rem; margin-bottom: 12px;">🗣️</div>
                         <h3>Asesor Parlante de Voz</h3>
                         <p style="color: #a0aec0;">Consulta interactiva por micrófono sobre normativas y diferenciales.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-rebt" onclick="mostrarSeccion('vista-rebt')">
+                    <div class="tarjeta-modulo" id="card-rebt" onclick="mostrarSeccion(event, 'vista-rebt')">
                         <div style="font-size: 2rem; margin-bottom: 12px;">⚖️</div>
                         <h3>Buscador REBT / RITE</h3>
                         <p style="color: #a0aec0;">Consulta rápida de normativas de baja tensión asistida por IA.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-ict" onclick="mostrarSeccion('vista-ict')">
+                    <div class="tarjeta-modulo" id="card-ict" onclick="mostrarSeccion(event, 'vista-ict')">
                         <div style="font-size: 2rem; margin-bottom: 12px;">📡</div>
                         <h3>Consultas ICT</h3>
                         <p style="color: #a0aec0;">Infraestructuras comunes de telecomunicación (RD 346/2011), registros y tomas.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-industrial" onclick="mostrarSeccion('vista-industrial')">
+                    <div class="tarjeta-modulo" id="card-industrial" onclick="mostrarSeccion(event, 'vista-industrial')">
                         <div style="font-size: 2rem; margin-bottom: 12px;">⚡</div>
                         <h3>Automatismos</h3>
                         <p style="color: #a0aec0;">Calculadora de motores trifásicos, esquemas de campo y averías.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-ve" onclick="mostrarSeccion('vista-ve')">
+                    <div class="tarjeta-modulo" id="card-ve" onclick="mostrarSeccion(event, 'vista-ve')">
                         <div style="font-size: 2rem; margin-bottom: 12px;">🚗</div>
                         <h3>Puntos de Recarga VE</h3>
                         <p style="color: #a0aec0;">Calculadora técnica de protecciones, esquemas y cableado según ITC-BT-52.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-knx" onclick="mostrarSeccion('vista-knx')">
+                    <div class="tarjeta-modulo" id="card-knx" onclick="mostrarSeccion(event, 'vista-knx')">
                         <div style="font-size: 2rem; margin-bottom: 12px;">🟢</div>
                         <h3>Domótica KNX</h3>
                         <p style="color: #a0aec0;">Direccionamientos lógicos, topologías físicas y apuntes del estándar.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-solar" onclick="mostrarSeccion('vista-solar')">
+                    <div class="tarjeta-modulo" id="card-solar" onclick="mostrarSeccion(event, 'vista-solar')">
                         <div style="font-size: 2rem; margin-bottom: 12px;">🌞</div>
                         <h3>Solar Fotovoltaica</h3>
                         <p style="color: #a0aec0;">Cálculo de dimensionamiento, inversores y protecciones ITC-BT-40.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-facturas" onclick="mostrarSeccion('vista-facturas')">
+                    <div class="tarjeta-modulo" id="card-facturas" onclick="mostrarSeccion(event, 'vista-facturas')">
                         <div style="font-size: 2rem; margin-bottom: 12px;">📄</div>
                         <h3>Facturación</h3>
                         <p style="color: #a0aec0;">Cálculo ágil de presupuestos, bases imponibles e IVA para clientes.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-precios" onclick="mostrarSeccion('vista-precios')">
+                    <div class="tarjeta-modulo" id="card-precios" onclick="mostrarSeccion(event, 'vista-precios')">
                         <div style="font-size: 2rem; margin-bottom: 12px;">📊</div>
                         <h3>Tarifas y Precios</h3>
                         <p style="color: #a0aec0;">Cálculo de margen comercial y cuadro tarifario por horas.</p>
@@ -423,7 +423,27 @@
         </main>
     </div>
 
-    <!-- SCRIPT DE PWA Y LÓGICA VÍA APP.JS -->
+    <!-- FUNCIÓN DE NAVEGACIÓN GARANTIZADA -->
+    <script>
+        function mostrarSeccion(event, idSeccion) {
+            if (event) {
+                event.preventDefault();
+            }
+            
+            // Ocultar todas las secciones
+            const secciones = document.querySelectorAll('.vista-section');
+            secciones.forEach(sec => sec.classList.add('oculto'));
+
+            // Mostrar la sección seleccionada
+            const seccionObjetivo = document.getElementById(idSeccion);
+            if (seccionObjetivo) {
+                seccionObjetivo.classList.remove('oculto');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+    </script>
+
+    <!-- SCRIPT DE PWA Y LÓGICA EXTERNA VÍA APP.JS -->
     <script src="./app.js"></script>
     <script>
         if ('serviceWorker' in navigator) {

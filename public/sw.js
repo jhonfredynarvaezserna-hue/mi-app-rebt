@@ -1,21 +1,28 @@
-const CACHE_NAME = 'sg-sm-v2'; // Subimos la versión para invalidar el caché viejo
+const CACHE_NAME = 'sg-sm-v2';
 const assets = [
   './',
   './index.html',
+  './app.js',
   './manifest.json'
 ];
 
-// Instalar el Service Worker y guardar en caché lo básico
+// Instalar el Service Worker guardando recurso por recurso para evitar bloqueos por 404
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(assets);
+    caches.open(CACHE_NAME).then(async cache => {
+      for (const asset of assets) {
+        try {
+          await cache.add(asset);
+        } catch (err) {
+          console.warn(`No se pudo cachear ${asset}:`, err);
+        }
+      }
     })
   );
-  self.skipWaiting(); // Activa inmediatamente la versión v2
+  self.skipWaiting();
 });
 
-// Activar y eliminar la versión 'sg-sm-v1' antigua de la memoria
+// Activar y eliminar cachés antiguas (v1)
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys => {
@@ -26,32 +33,35 @@ self.addEventListener('activate', e => {
       );
     })
   );
-  self.clients.claim(); // Toma el control de la app abierta
+  self.clients.claim();
 });
 
 // Estrategia inteligente de red/caché
 self.addEventListener('fetch', e => {
-  // Ignorar peticiones a la API del backend (puerto 5000 / chat)
+  // Ignorar peticiones a las APIs del backend
   if (e.request.url.includes(':5000') || e.request.url.includes('/api/')) {
     return;
   }
 
-  // Network First para el index.html y navegación principal (siempre intenta traer lo nuevo)
+  // Network First para la navegación (index.html)
   if (e.request.mode === 'navigate' || e.request.url.endsWith('index.html')) {
     e.respondWith(
       fetch(e.request)
         .then(networkResponse => {
-          return caches.open(CACHE_NAME).then(cache => {
-            cache.put(e.request, networkResponse.clone());
-            return networkResponse;
-          });
+          if (networkResponse && networkResponse.status === 200) {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put(e.request, responseToCache);
+            });
+          }
+          return networkResponse;
         })
-        .catch(() => caches.match(e.request)) // Si no hay red, carga la versión en caché
+        .catch(() => caches.match(e.request))
     );
     return;
   }
 
-  // Cache First para recursos estáticos secundarios
+  // Cache First para recursos estáticos con fallback a red
   e.respondWith(
     caches.match(e.request).then(cachedResponse => {
       return cachedResponse || fetch(e.request);

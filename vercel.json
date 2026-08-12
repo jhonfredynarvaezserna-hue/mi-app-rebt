@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/api/chat",
+      "destination": "/api/chat.js"
+    },
+    {
+      "source": "/api/chat-cliente",
+      "destination": "/api/chat-cliente.js"
+    },
+    {
+      "source": "/api/generar-knx",
+      "destination": "/api/generar-knx.js"
+    },
+    {
+      "source": "/((?!api/|_next/|_static/|[\\w-]+\\.\\w+).*)" ,
+      "destination": "/index.html"
+    }
+  ]
+}
