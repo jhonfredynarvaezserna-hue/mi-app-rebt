@@ -83,7 +83,6 @@ function inicializarAsesorVoz() {
         const promptVoz = `[ASISTENTE DE VOZ REBT/RITE]: ${textoEscuchado}`;
 
         try {
-            // CORREGIDO: Ajustada la ruta a /api/chat
             const data = await hacerPeticionSeguraIA('/api/chat', { prompt: promptVoz });
 
             if (!data) {
@@ -201,7 +200,7 @@ async function solicitarSuscripcionPro() {
 }
 
 // ----------------------------------------------------
-// 4. NAVEGACIÓN Y VISTAS
+// 4. NAVEGACIÓN Y VISTAS (MAPA EXPLÍCITO CORREGIDO)
 // ----------------------------------------------------
 function inicializarNavegacion() {
     const enlacesMenu = document.querySelectorAll('.menu-sidebar a');
@@ -209,19 +208,38 @@ function inicializarNavegacion() {
     const secciones = document.querySelectorAll('.vista-section');
     const menuInicio = document.getElementById('menu-inicio');
 
+    const mapaNavegacion = {
+        'card-asesor-voz': 'vista-asesor-voz',
+        'menu-asesor-voz': 'vista-asesor-voz',
+        'card-rebt': 'vista-rebt',
+        'menu-rebt': 'vista-rebt',
+        'card-ict': 'vista-ict',
+        'menu-ict': 'vista-ict',
+        'card-industrial': 'vista-industrial',
+        'menu-industrial': 'vista-industrial',
+        'card-ve': 'vista-ve',
+        'menu-ve': 'vista-ve',
+        'card-knx': 'vista-knx',
+        'menu-knx': 'vista-knx',
+        'card-solar': 'vista-solar',
+        'menu-solar': 'vista-solar',
+        'card-facturas': 'vista-facturas',
+        'menu-facturas': 'vista-facturas',
+        'card-precios': 'vista-precios',
+        'menu-precios': 'vista-precios'
+    };
+
     function mostrarSeccion(idSeccion) {
         secciones.forEach(sec => sec.classList.add('oculto'));
         const seccionObjetivo = document.getElementById(idSeccion);
         if (seccionObjetivo) {
             seccionObjetivo.classList.remove('oculto');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        enlacesMenu.forEach(link => {
-            link.classList.remove('activo');
-            if (link.getAttribute('id') === `menu-${idSeccion.replace('vista-', '')}`) {
-                link.classList.add('activo');
-            }
-        });
+        enlacesMenu.forEach(link => link.classList.remove('activo'));
+        const enlaceActivo = document.getElementById(`menu-${idSeccion.replace('vista-', '')}`);
+        if (enlaceActivo) enlaceActivo.classList.add('activo');
     }
 
     if (menuInicio) {
@@ -231,15 +249,15 @@ function inicializarNavegacion() {
     enlacesMenu.forEach(enlace => {
         enlace.addEventListener('click', (e) => {
             e.preventDefault();
-            const targetId = enlace.id.replace('menu-', 'vista-');
-            mostrarSeccion(targetId);
+            const destino = mapaNavegacion[enlace.id] || enlace.id.replace('menu-', 'vista-');
+            mostrarSeccion(destino);
         });
     });
 
     tarjetasModulos.forEach(tarjeta => {
         tarjeta.addEventListener('click', () => {
-            const targetId = tarjeta.id.replace('card-', 'vista-');
-            mostrarSeccion(targetId);
+            const destino = mapaNavegacion[tarjeta.id] || tarjeta.id.replace('card-', 'vista-');
+            mostrarSeccion(destino);
         });
     });
 }
@@ -260,7 +278,6 @@ function inicializarBusquedasIA() {
             resultadosBusqueda.innerHTML = "<p style='color: #a0aec0;'>Consultando normativa con la IA...</p>";
 
             try {
-                // CORREGIDO: Ajustada la ruta a /api/chat
                 const data = await hacerPeticionSeguraIA('/api/chat', { prompt });
                 if (data) {
                     resultadosBusqueda.innerHTML = data.text || data.respuesta || "Sin respuesta.";
@@ -277,11 +294,11 @@ function inicializarBusquedasIA() {
     const botonesRapidos = document.querySelectorAll('.btn-guia-rapida');
 
     async function ejecutarConsultaNormativa(prompt) {
+        if (!resultadoNormativaPro) return;
         resultadoNormativaPro.classList.remove('oculto');
         resultadoNormativaPro.innerHTML = "<p style='color: #a0aec0;'>Procesando consulta reglamentaria...</p>";
 
         try {
-            // CORREGIDO: Ajustada la ruta a /api/chat
             const data = await hacerPeticionSeguraIA('/api/chat', { prompt });
             if (data) {
                 resultadoNormativaPro.innerHTML = data.text || data.respuesta || "Sin respuesta.";
@@ -302,7 +319,7 @@ function inicializarBusquedasIA() {
         btn.addEventListener('click', () => {
             const prompt = btn.getAttribute('data-prompt');
             if (prompt) {
-                inputNormativaPro.value = prompt;
+                if (inputNormativaPro) inputNormativaPro.value = prompt;
                 ejecutarConsultaNormativa(prompt);
             }
         });
@@ -339,7 +356,6 @@ function inicializarBusquedasIA() {
 
     async function enviarPeticionCliente(prompt, imagenBase64, mimeType) {
         try {
-            // CORREGIDO: Ajustada la ruta a /api/chat-cliente
             const data = await hacerPeticionSeguraIA('/api/chat-cliente', { prompt, imagenBase64, mimeType });
             if (data) {
                 diagnosticoPrevio.innerHTML = data.text || data.respuesta || "Sin diagnóstico generado.";
@@ -373,7 +389,6 @@ function inicializarBusquedasIA() {
             resultadoIaKnx.innerHTML = "<p style='color: #a0aec0;'>Generando estructura ETS y direcciones de grupo...</p>";
 
             try {
-                // CORREGIDO: Ajustada la ruta a /api/generar-knx
                 const data = await hacerPeticionSeguraIA('/api/generar-knx', { consultaKnx });
                 if (data) {
                     resultadoIaKnx.innerHTML = data.text || data.respuesta || "Error al estructurar proyecto KNX.";
