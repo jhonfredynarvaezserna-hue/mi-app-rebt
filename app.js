@@ -4,7 +4,8 @@
 
 let vozFemeninaSeleccionada = null;
 
-document.addEventListener('DOMContentLoaded', () => {
+// Inicialización segura tras la carga completa del DOM y recursos
+window.addEventListener('load', () => {
     verificarEstadoAutenticacion();
     inicializarNavegacion();
     cargarVocesFemeninas();
@@ -255,7 +256,9 @@ function inicializarNavegacion() {
     });
 
     tarjetasModulos.forEach(tarjeta => {
-        tarjeta.addEventListener('click', () => {
+        tarjeta.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             const destino = mapaNavegacion[tarjeta.id] || tarjeta.id.replace('card-', 'vista-');
             mostrarSeccion(destino);
         });
