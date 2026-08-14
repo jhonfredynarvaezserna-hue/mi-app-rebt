@@ -2,7 +2,7 @@
 <html lang="es" style="background-color: #0a1118; color-scheme: dark;">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Servicio y Gestión SM</title>
 
     <!-- CONFIGURACIÓN PWA Y PANTALLA COMPLETA -->
@@ -29,6 +29,11 @@
             --oro-candado: #f59e0b;
         }
 
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         html, body {
             background-color: #0a1118 !important;
             color: var(--texto-principal);
@@ -49,7 +54,6 @@
             background-color: var(--sidebar-bg); 
             border-right: 1px solid var(--bordes); 
             padding: 20px; 
-            box-sizing: border-box; 
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
@@ -58,15 +62,38 @@
 
         .encabezado-sidebar h2 { color: var(--azul-brillante); font-size: 1.3rem; margin: 0; }
         .menu-sidebar ul { list-style: none; padding: 0; margin: 0; }
-        .menu-sidebar a { color: var(--texto-principal); text-decoration: none; display: flex; align-items: center; justify-content: space-between; padding: 10px; border-radius: 6px; }
+        .menu-sidebar a { 
+            color: var(--texto-principal); 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 12px 10px; 
+            border-radius: 6px; 
+            cursor: pointer;
+            touch-action: manipulation;
+        }
         .menu-sidebar a:hover, .menu-sidebar a.activo { background-color: var(--azul-tecnico); color: #fff; }
 
-        .panel-tecnico { flex-grow: 1; padding: 30px; background-color: var(--bg-principal); box-sizing: border-box; }
-        .seccion-bloque, .tarjeta-modulo { background-color: var(--panel-bg); border: 1px solid var(--bordes); border-radius: 8px; padding: 20px; margin-bottom: 20px; position: relative; }
+        .panel-tecnico { flex-grow: 1; padding: 30px; background-color: var(--bg-principal); }
+        .seccion-bloque, .tarjeta-modulo { 
+            background-color: var(--panel-bg); 
+            border: 1px solid var(--bordes); 
+            border-radius: 8px; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            position: relative; 
+        }
         
         .portada-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-        .tarjeta-modulo { cursor: pointer; border: 1px solid var(--bordes); transition: 0.2s; user-select: none; }
-        .tarjeta-modulo:hover { border-color: var(--azul-brillante); background-color: #182838; }
+        .tarjeta-modulo { 
+            cursor: pointer; 
+            border: 1px solid var(--bordes); 
+            transition: 0.2s; 
+            user-select: none; 
+            touch-action: manipulation;
+        }
+        .tarjeta-modulo:hover, .tarjeta-modulo:active { border-color: var(--azul-brillante); background-color: #182838; }
 
         .insignia-candado {
             position: absolute;
@@ -87,20 +114,21 @@
             color: var(--texto-brillante);
             padding: 10px 14px;
             border-radius: 6px;
-            box-sizing: border-box;
             font-size: 1rem;
         }
-        button { background-color: var(--azul-tecnico); color: white; cursor: pointer; font-weight: bold; }
+        button { background-color: var(--azul-tecnico); color: white; cursor: pointer; font-weight: bold; touch-action: manipulation; }
         button:hover { background-color: var(--azul-brillante); }
 
         .btn-volver {
             background-color: var(--bordes);
             color: var(--texto-principal);
-            padding: 6px 14px;
-            font-size: 0.85rem;
+            padding: 8px 16px;
+            font-size: 0.9rem;
             border-radius: 4px;
             margin-bottom: 15px;
             display: inline-block;
+            cursor: pointer;
+            touch-action: manipulation;
         }
         .btn-volver:hover { background-color: var(--azul-tecnico); color: #fff; }
 
@@ -113,6 +141,7 @@
             font-size: 0.9rem;
             cursor: pointer;
             transition: 0.2s;
+            touch-action: manipulation;
         }
         .btn-lib-ind:hover, .btn-video:hover, .btn-video.activo {
             background-color: var(--azul-tecnico);
@@ -120,7 +149,6 @@
             border-color: var(--azul-brillante);
         }
 
-        /* Efecto pulsante y luminoso cuando la Asesora habla */
         #avatar-femenino-box.hablando {
             border-color: #10b981 !important;
             box-shadow: 0 0 25px #10b981, 0 0 45px rgba(24, 143, 167, 0.6) !important;
@@ -157,21 +185,21 @@
                     <div class="menu-section">
                         <h3 style="color: var(--azul-brillante); font-size: 0.85rem; margin-top: 20px;">📚 APRENDIZAJE Y NORMATIVA</h3>
                         <ul>
-                            <li><a href="#" id="menu-asesor-voz" onclick="solicitarAccesoSeccion(event, 'vista-asesor-voz', false)"><span>🗣️ Asesor de Voz (REBT/RITE)</span></a></li>
-                            <li><a href="#" id="menu-rebt" onclick="solicitarAccesoSeccion(event, 'vista-rebt', false)"><span>⚖️ Buscador REBT / RITE</span></a></li>
-                            <li><a href="#" id="menu-ict" onclick="solicitarAccesoSeccion(event, 'vista-ict', false)"><span>📡 Consultas ICT (Telecom)</span></a></li>
-                            <li><a href="#" id="menu-industrial" onclick="solicitarAccesoSeccion(event, 'vista-industrial', true)"><span>⚡ Automatismos</span> <span>🔒</span></a></li>
-                            <li><a href="#" id="menu-ve" onclick="solicitarAccesoSeccion(event, 'vista-ve', true)"><span>🚗 Vehículo Eléctrico</span> <span>🔒</span></a></li>
-                            <li><a href="#" id="menu-knx" onclick="solicitarAccesoSeccion(event, 'vista-knx', true)"><span>🟢 Domótica KNX</span> <span>🔒</span></a></li>
-                            <li><a href="#" id="menu-solar" onclick="solicitarAccesoSeccion(event, 'vista-solar', true)"><span>🌞 Solar Fotovoltaica</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" id="menu-asesor-voz" onclick="solicitarAccesoSeccion(event, 'vista-asesor-voz', false)"><span>🗣️ Asesor de Voz (REBT/RITE)</span></a></li>
+                            <li><a href="javascript:void(0)" id="menu-rebt" onclick="solicitarAccesoSeccion(event, 'vista-rebt', false)"><span>⚖️ Buscador REBT / RITE</span></a></li>
+                            <li><a href="javascript:void(0)" id="menu-ict" onclick="solicitarAccesoSeccion(event, 'vista-ict', false)"><span>📡 Consultas ICT (Telecom)</span></a></li>
+                            <li><a href="javascript:void(0)" id="menu-industrial" onclick="solicitarAccesoSeccion(event, 'vista-industrial', true)"><span>⚡ Automatismos</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" id="menu-ve" onclick="solicitarAccesoSeccion(event, 'vista-ve', true)"><span>🚗 Vehículo Eléctrico</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" id="menu-knx" onclick="solicitarAccesoSeccion(event, 'vista-knx', true)"><span>🟢 Domótica KNX</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" id="menu-solar" onclick="solicitarAccesoSeccion(event, 'vista-solar', true)"><span>🌞 Solar Fotovoltaica</span> <span>🔒</span></a></li>
                         </ul>
                     </div>
 
                     <div class="menu-section">
                         <h3 style="color: var(--azul-brillante); font-size: 0.85rem; margin-top: 20px;">💰 MONETIZACIÓN Y NEGOCIO</h3>
                         <ul>
-                            <li><a href="#" id="menu-facturas" onclick="solicitarAccesoSeccion(event, 'vista-facturas', true)"><span>📄 Generar Facturas</span> <span>🔒</span></a></li>
-                            <li><a href="#" id="menu-precios" onclick="solicitarAccesoSeccion(event, 'vista-precios', false)"><span>📊 Tarifas y Precios</span></a></li>
+                            <li><a href="javascript:void(0)" id="menu-facturas" onclick="solicitarAccesoSeccion(event, 'vista-facturas', true)"><span>📄 Generar Facturas</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" id="menu-precios" onclick="solicitarAccesoSeccion(event, 'vista-precios', false)"><span>📊 Tarifas y Precios</span></a></li>
                         </ul>
                     </div>
                 </nav>
@@ -179,7 +207,7 @@
 
             <!-- BOTÓN ESTADO DE LICENCIA -->
             <div style="padding-top: 20px; border-top: 1px solid var(--bordes); margin-top: 20px; text-align: center;">
-                <button type="button" onclick="gestionarLicenciaModal()" id="btn-estado-licencia" style="width: 100%; font-size: 0.8rem; padding: 8px; background-color: var(--input-bg); border: 1px solid var(--bordes); color: #94a3b8;">🔑 Activar Licencia Pro</button>
+                <button type="button" onclick="gestionarLicenciaModal()" id="btn-estado-licencia" style="width: 100%; font-size: 0.85rem; padding: 10px; background-color: var(--input-bg); border: 1px solid var(--bordes); color: #94a3b8; border-radius: 6px;">🔑 Activar Licencia Pro</button>
             </div>
         </aside>
 
@@ -406,11 +434,11 @@
                             </select>
                         </div>
                         <div>
-                            <label>Cos $\varphi$ (Factor Potencia):</label>
+                            <label>Cos &phi; (Factor Potencia):</label>
                             <input type="number" id="ind-cos-phi" value="0.85" step="0.01" style="width: 100%;">
                         </div>
                         <div>
-                            <label>Rendimiento ($\eta$):</label>
+                            <label>Rendimiento (&eta;):</label>
                             <input type="number" id="ind-rendimiento" value="0.88" step="0.01" style="width: 100%;">
                         </div>
                     </div>
@@ -596,9 +624,8 @@
         </div>
     </div>
 
-    <!-- FUNCIÓN DE NAVEGACIÓN Y VALIDACIÓN DE ACCESO -->
+    <!-- NAVEGACIÓN Y CONTROL DE SEGURIDAD ROBUSTO -->
     <script>
-        // Claves autorizadas
         const CLAVE_MAESTRA = "SM-ADMIN-7788";
         const CLAVES_AUTORIZADAS = ["SM-PRO-2026", "SM-CLIENTE-01", "SM-CLIENTE-02"];
 
@@ -625,35 +652,39 @@
             }
         }
 
-        function solicitarAccesoSeccion(event, idSeccion, requiereLicencia) {
-            if (event && event.preventDefault) event.preventDefault();
+        function solicitarAccesoSeccion(e, idSeccion, requiereLicencia) {
+            if (e) {
+                if (e.preventDefault) e.preventDefault();
+                if (e.stopPropagation) e.stopPropagation();
+            }
 
             if (requiereLicencia && !tieneLicenciaActiva()) {
                 seccionPendienteDesbloqueo = idSeccion;
                 document.getElementById('input-clave-licencia').value = '';
                 document.getElementById('error-clave-licencia').style.display = 'none';
                 document.getElementById('modal-licencia').style.display = 'flex';
-                return;
+                return false;
             }
 
-            mostrarSeccion(event, idSeccion);
+            mostrarSeccion(e, idSeccion);
+            return false;
         }
 
-        function mostrarSeccion(event, idSeccion) {
-            if (event && event.preventDefault) event.preventDefault();
+        function mostrarSeccion(e, idSeccion) {
+            if (e) {
+                if (e.preventDefault) e.preventDefault();
+                if (e.stopPropagation) e.stopPropagation();
+            }
             
-            // Ocultar todas las secciones
             const secciones = document.querySelectorAll('.vista-section');
             secciones.forEach(sec => sec.classList.add('oculto'));
 
-            // Mostrar la sección seleccionada
             const seccionObjetivo = document.getElementById(idSeccion);
             if (seccionObjetivo) {
                 seccionObjetivo.classList.remove('oculto');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
 
-            // Marcar activo en el sidebar
             const enlacesMenu = document.querySelectorAll('.menu-sidebar a');
             enlacesMenu.forEach(link => link.classList.remove('activo'));
             const enlaceActivo = document.getElementById(`menu-${idSeccion.replace('vista-', '')}`);
@@ -685,7 +716,7 @@
 
         function gestionarLicenciaModal() {
             if (tieneLicenciaActiva()) {
-                if (confirm("¿Deseas cerrar la sesión y bloquear los módulos Pro en este dispositivo?")) {
+                if (confirm("¿Deseas cerrar la sesión y volver a bloquear los módulos protegidos?")) {
                     localStorage.removeItem("licencia_sm_activa");
                     actualizarBotonLicencia();
                     mostrarSeccion(null, 'vista-inicio');
@@ -697,7 +728,6 @@
             }
         }
 
-        // Inicializar estado del botón de licencia al cargar
         window.addEventListener('DOMContentLoaded', () => {
             actualizarBotonLicencia();
         });
