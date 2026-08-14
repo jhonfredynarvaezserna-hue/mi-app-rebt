@@ -1,5 +1,15 @@
 {
+  "name": "servicio-gestion-sm",
+  "version": "1.0.0",
+  "description": "Plataforma Integral de Normativa, Ingeniería y Gestión Eléctrica (REBT, RITE, ICT-2, KNX, Fotovoltaica)",
+  "scripts": {
+    "start": "npx live-server --port=8080",
+    "dev": "npx live-server --port=8080"
+  },
   "dependencies": {
-    "@google/generative-ai": "^0.24.1"
+    "@google/generative-ai": "^0.24.0"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
   }
 }

@@ -76,6 +76,45 @@
         button { background-color: var(--azul-tecnico); color: white; cursor: pointer; font-weight: bold; }
         button:hover { background-color: var(--azul-brillante); }
 
+        .btn-volver {
+            background-color: var(--bordes);
+            color: var(--texto-principal);
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        .btn-volver:hover { background-color: var(--azul-tecnico); color: #fff; }
+
+        .btn-lib-ind, .btn-video {
+            background-color: var(--input-bg);
+            border: 1px solid var(--bordes);
+            color: var(--texto-principal);
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-lib-ind:hover, .btn-video:hover, .btn-video.activo {
+            background-color: var(--azul-tecnico);
+            color: #fff;
+            border-color: var(--azul-brillante);
+        }
+
+        /* Efecto pulsante y luminoso cuando la Asesora habla */
+        #avatar-femenino-box.hablando {
+            border-color: #10b981 !important;
+            box-shadow: 0 0 25px #10b981, 0 0 45px rgba(24, 143, 167, 0.6) !important;
+            animation: pulsoFotoVoz 1s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulsoFotoVoz {
+            0% { transform: scale(1.02); box-shadow: 0 0 15px #10b981; }
+            100% { transform: scale(1.08); box-shadow: 0 0 35px #10b981, 0 0 50px #188fa7; }
+        }
+
         .oculto { display: none !important; }
 
         @media (max-width: 768px) {
@@ -211,23 +250,50 @@
                 </div>
             </section>
 
-            <!-- VISTA ASESOR DE VOZ -->
+            <!-- VISTA ASESOR DE VOZ Y VIDEOTECA TÉCNICA -->
             <section id="vista-asesor-voz" class="vista-section oculto">
                 <header>
-                    <h1>🗣️ Asesor Parlante de Voz</h1>
-                    <p style="color: #a0aec0;">Consulta la normativa hablando directamente con tu asistente técnico</p>
+                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
+                    <h1>🗣️ Asesora Técnica SM y Videoteca Práctica</h1>
+                    <p style="color: #a0aec0;">Consulta por voz con la asistente o visualiza videotutoriales técnicos especializados</p>
                 </header>
-                <div class="seccion-bloque" style="text-align: center; padding: 40px 20px;">
-                    <div id="avatar-femenino-box" style="width: 100px; height: 100px; border-radius: 50%; background: var(--azul-tecnico); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">🎙️</div>
-                    <button type="button" id="btn-hablar-asesor" style="font-size: 1.2rem; padding: 15px 30px; border-radius: 30px;">Presionar para Hablar</button>
+
+                <!-- CUADRO DE LA ASESORA (FOTO PROFESIONAL) -->
+                <div class="seccion-bloque" style="text-align: center; padding: 30px 20px;">
+                    <div id="avatar-femenino-box" style="width: 130px; height: 130px; border-radius: 50%; margin: 0 auto 15px; border: 4px solid var(--azul-brillante); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: all 0.3s ease; position: relative;">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80" alt="Ingeniera Asistente" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                    </div>
+                    <h3 style="margin-top: 0; color: var(--texto-brillante);">Ingeniera Asistente (Voz y Reglamentos)</h3>
+                    <button type="button" id="btn-hablar-asesor" style="font-size: 1.1rem; padding: 12px 28px; border-radius: 30px; background-color: var(--azul-tecnico);">🎙️ Presionar para Hablar</button>
                     <p id="status-voz" style="color: #a0aec0; margin-top: 15px;">Haz clic en el botón e indica tu duda reglamentaria.</p>
-                    <div id="respuesta-voz-box" class="oculto" style="margin-top: 20px; text-align: left; padding: 20px; background: var(--input-bg); border-radius: 8px;"></div>
+                    <div id="respuesta-voz-box" class="oculto" style="margin-top: 20px; text-align: left; padding: 18px; background: var(--input-bg); border-radius: 8px;"></div>
+                </div>
+
+                <!-- VIDEOTECA TÉCNICA DE YOUTUBE -->
+                <div class="seccion-bloque" style="margin-top: 20px;">
+                    <h2>📺 Videoteca Técnica Especializada (YouTube)</h2>
+                    <p style="color: #a0aec0;">Selecciona una categoría para ver clases prácticas y esquemas en vídeo:</p>
+                    
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+                        <button type="button" class="btn-video activo" data-yt="bxauH1vg98A" data-titulo="⚡ Automatismos: Esquema Marcha-Paro y Enclavamiento">⚡ Automatismos</button>
+                        <button type="button" class="btn-video" data-yt="h6qJQLrPeKM" data-titulo="🟢 Domótica KNX: Dispositivos y Funciones">🟢 Domótica KNX</button>
+                        <button type="button" class="btn-video" data-yt="gX5uwprwG38" data-titulo="📡 Telecom (ICT-2): Recintos RITI y RITS">📡 Telecom (ICT-2)</button>
+                        <button type="button" class="btn-video" data-yt="pEpWIASbrr4" data-titulo="🌞 Solar Fotovoltaica: Paneles, Inversores y Dimensionamiento">🌞 Fotovoltaica</button>
+                    </div>
+
+                    <div style="background: var(--input-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--bordes);">
+                        <h3 id="video-titulo" style="margin-top: 0; color: var(--azul-brillante);">⚡ Automatismos: Esquema Marcha-Paro y Enclavamiento</h3>
+                        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 6px;">
+                            <iframe id="reproductor-youtube" style="position: absolute; top:0; left: 0; width: 100%; height: 100%; border: none;" src="https://www.youtube-nocookie.com/embed/bxauH1vg98A" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <!-- VISTA REBT -->
             <section id="vista-rebt" class="vista-section oculto">
                 <header>
+                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
                     <h1>Buscador de Reglamento (REBT / RITE)</h1>
                     <p style="color: #a0aec0;">Consultas de Normativa Asistida por IA</p>
                 </header>
@@ -246,6 +312,7 @@
             <!-- VISTA ICT -->
             <section id="vista-ict" class="vista-section oculto">
                 <header>
+                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
                     <h1>📡 Infraestructuras Comunes de Telecomunicaciones (ICT)</h1>
                     <p style="color: #a0aec0;">Reglamento Real Decreto 346/2011 y normativa técnica de ICT-2</p>
                 </header>
@@ -261,16 +328,18 @@
                 </div>
             </section>
 
-            <!-- VISTA AUTOMATISMOS -->
+            <!-- VISTA AUTOMATISMOS Y ELECTRICIDAD INDUSTRIAL -->
             <section id="vista-industrial" class="vista-section oculto">
                 <header>
-                    <h1>⚡ Automatismos y Potencia Industrial</h1>
-                    <p style="color: #a0aec0;">Cálculos rápidos en planta, esquemas de borneras y diagnóstico de averías</p>
+                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
+                    <h1>⚡ Automatismos y Electricidad Industrial</h1>
+                    <p style="color: #a0aec0;">Simulación de maniobra, esquemas funcionales, cálculo de motores y diagnóstico en campo</p>
                 </header>
 
+                <!-- SIMULADOR MARCHA / PARO -->
                 <div class="seccion-bloque">
                     <h2>🎮 Simulador Virtual de Circuito de Maniobra (Marcha/Paro)</h2>
-                    <p style="color: #a0aec0;">Prueba el funcionamiento eléctrico del enclavamiento de contactos haciendo clic en los pulsadores virtuales.</p>
+                    <p style="color: #a0aec0;">Prueba el funcionamiento eléctrico del enclavamiento de contactos auxiliares (13-14 de KM1).</p>
 
                     <div style="display: flex; justify-content: space-around; align-items: center; background-color: var(--input-bg); padding: 20px; border-radius: 8px; border: 1px solid var(--bordes); margin-top: 15px; flex-wrap: wrap; gap: 20px;">
                         <div style="display: flex; flex-direction: column; gap: 15px;">
@@ -291,11 +360,55 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- CALCULADORA DE MOTORES Y PROTECCIONES -->
+                <div class="seccion-bloque">
+                    <h2>📐 Calculadora de Motores Trifásicos y Protecciones</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 15px;">
+                        <div>
+                            <label>Potencia Motor (kW):</label>
+                            <input type="number" id="ind-potencia-motor" value="5.5" step="0.5" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label>Tensión de Red (V):</label>
+                            <select id="ind-tension-red" style="width: 100%;">
+                                <option value="400">400 V (Trifásico)</option>
+                                <option value="230">230 V (Trifásico)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Cos $\varphi$ (Factor Potencia):</label>
+                            <input type="number" id="ind-cos-phi" value="0.85" step="0.01" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label>Rendimiento ($\eta$):</label>
+                            <input type="number" id="ind-rendimiento" value="0.88" step="0.01" style="width: 100%;">
+                        </div>
+                    </div>
+                    <button type="button" id="btn-calcular-motor" style="margin-top: 15px; width: 100%;">⚡ Calcular Intensidad Nominal y Guardamotor</button>
+                    <div id="resultado-calculo-motor" class="oculto" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;"></div>
+                </div>
+
+                <!-- BIBLIOTECA TÉCNICA DE AUTOMATISMOS -->
+                <div class="seccion-bloque">
+                    <h2>📚 Biblioteca de Esquemas, Borneras y Averías en Campo</h2>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+                        <button type="button" class="btn-lib-ind" data-tema="arranque-directo">Arranque Directo</button>
+                        <button type="button" class="btn-lib-ind" data-tema="estrella-triangulo">Estrella - Triángulo</button>
+                        <button type="button" class="btn-lib-ind" data-tema="inversion-giro">Inversión de Giro</button>
+                        <button type="button" class="btn-lib-ind" data-tema="rele-termico">Borna 95-96 / 97-98</button>
+                        <button type="button" class="btn-lib-ind" data-tema="averias-frecuentes">Averías Típicas</button>
+                    </div>
+                    <div id="visor-biblioteca-industrial" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px; border-left: 4px solid var(--azul-brillante);">
+                        <p style="color: #a0aec0;">Selecciona un tema para consultar el esquema funcional, conexionado y diagnóstico.</p>
+                    </div>
+                </div>
             </section>
 
             <!-- VISTA VEHÍCULO ELÉCTRICO -->
             <section id="vista-ve" class="vista-section oculto">
                 <header>
+                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
                     <h1>🚗 Puntos de Recarga de Vehículo Eléctrico (ITC-BT-52)</h1>
                     <p style="color: #a0aec0;">Cálculo de líneas, protecciones e IGA recomendado</p>
                 </header>
@@ -322,6 +435,7 @@
             <!-- VISTA KNX -->
             <section id="vista-knx" class="vista-section oculto">
                 <header>
+                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
                     <h1>🟢 Domótica KNX</h1>
                     <p style="color: #a0aec0;">Estructurador de Direcciones Físicas y Asistente ETS</p>
                 </header>
@@ -342,6 +456,7 @@
             <!-- VISTA SOLAR -->
             <section id="vista-solar" class="vista-section oculto">
                 <header>
+                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
                     <h1>🌞 Solar Fotovoltaica (ITC-BT-40)</h1>
                     <p style="color: #a0aec0;">Calculadora de Dimensionamiento e Inversores</p>
                 </header>
@@ -367,6 +482,7 @@
             <!-- VISTA FACTURAS -->
             <section id="vista-facturas" class="vista-section oculto">
                 <header>
+                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
                     <h1>📄 Sistema de Facturación</h1>
                     <p style="color: #a0aec0;">Crea y calcula de forma rápida presupuestos y facturas</p>
                 </header>
@@ -399,6 +515,7 @@
             <!-- VISTA TARIFAS Y PRECIOS -->
             <section id="vista-precios" class="vista-section oculto">
                 <header>
+                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
                     <h1>📊 Tarifas y Cuadro de Precios</h1>
                     <p style="color: #a0aec0;">Calculadora de margen comercial y servicios técnicos por hora</p>
                 </header>
@@ -426,7 +543,7 @@
     <!-- FUNCIÓN DE NAVEGACIÓN GARANTIZADA -->
     <script>
         function mostrarSeccion(event, idSeccion) {
-            if (event) {
+            if (event && event.preventDefault) {
                 event.preventDefault();
             }
             
@@ -440,10 +557,16 @@
                 seccionObjetivo.classList.remove('oculto');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+
+            // Marcar activo en el sidebar
+            const enlacesMenu = document.querySelectorAll('.menu-sidebar a');
+            enlacesMenu.forEach(link => link.classList.remove('activo'));
+            const enlaceActivo = document.getElementById(`menu-${idSeccion.replace('vista-', '')}`);
+            if (enlaceActivo) enlaceActivo.classList.add('activo');
         }
     </script>
 
-    <!-- SCRIPT DE PWA Y LÓGICA EXTERNA VÍA MAIN.JS -->
+    <!-- SCRIPT PRINCIPAL Y SERVICE WORKER -->
     <script src="./main.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
