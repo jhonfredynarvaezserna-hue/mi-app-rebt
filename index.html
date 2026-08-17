@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Servicio y Gestión SM - Plataforma Técnica</title>
+    <title>Servicio y Gestión SM - Plataforma Técnica Integral</title>
 
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#1e6091">
@@ -223,6 +223,7 @@
 
     <div class="contenedor" id="app-principal">
 
+        <!-- SIDEBAR DE NAVEGACIÓN -->
         <aside class="sidebar-izquierda">
             <div>
                 <div class="encabezado-sidebar" onclick="abrirModuloDirecto('vista-inicio')" style="cursor: pointer;">
@@ -253,6 +254,14 @@
                     </div>
 
                     <div class="menu-section">
+                        <h3 style="color: var(--azul-brillante); font-size: 0.8rem; margin: 15px 0 10px 0;">💼 GESTIÓN Y ADMINISTRACIÓN</h3>
+                        <ul>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-facturacion')"><span>🧾 Generador de Facturas</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-tarifas')"><span>💶 Tarifas y Presupuestos</span></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
                         <h3 style="color: var(--azul-brillante); font-size: 0.8rem; margin: 15px 0 10px 0;">📞 SOPORTE TÉCNICO</h3>
                         <ul>
                             <li>
@@ -270,6 +279,7 @@
             </div>
         </aside>
 
+        <!-- PANEL PRINCIPAL -->
         <main class="panel-tecnico">
 
             <!-- VISTA INICIO -->
@@ -279,11 +289,16 @@
                     <p style="color: #a0aec0; font-size: 1rem; margin: 0;">Plataforma Técnica Integral para Instaladores e Ingenieros</p>
                 </header>
 
-                <!-- GESTOR TÉCNICO E INTÉRPRETE MULTIMODAL -->
+                <!-- GESTOR TÉCNICO E INTÉRPRETE MULTIMODAL CON ELENA -->
                 <div class="seccion-bloque">
-                    <h3 style="display: flex; align-items: center; gap: 8px; margin-top: 0; color: var(--azul-brillante);">
-                        <span>🤖</span> Gestor Técnico e Intérprete Multimodal
-                    </h3>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80" alt="Elena Ingeniera" style="width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--azul-brillante);">
+                        <div>
+                            <h3 style="margin: 0; color: var(--azul-brillante);">Gestor Técnico e Intérprete Multimodal</h3>
+                            <p style="color: #94a3b8; font-size: 0.85rem; margin: 3px 0 0 0;">Asesoría técnica oficial con Elena & Gemini</p>
+                        </div>
+                    </div>
+
                     <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">
                         Escribe tu duda técnica o avería de la instalación para recibir un diagnóstico de Elena con Gemini o enviarla a WhatsApp:
                     </p>
@@ -304,7 +319,7 @@
 
                         <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 5px;">
                             <button type="button" onclick="diagnosticarConIA()" style="flex: 2; background-color: var(--verde-ia); padding: 12px; font-size: 1rem; border-radius: 6px;">
-                                💬 Diagnosticar con IA
+                                💬 Diagnosticar con Elena
                             </button>
                             <button type="button" onclick="enviarConsultaWhatsApp()" style="flex: 1; background-color: var(--verde-wa); padding: 12px; font-size: 1rem; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 6px;">
                                 📱 Enviar por WhatsApp
@@ -317,8 +332,10 @@
 
                 <div class="portada-grid">
                     <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-asesor-voz')">
-                        <div style="font-size: 2rem; margin-bottom: 10px;">🗣️</div>
-                        <h3>Asesor de Voz IA</h3>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80" alt="Elena" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--azul-brillante);">
+                            <h3 style="margin: 0;">Asesor de Voz</h3>
+                        </div>
                         <p style="color: #a0aec0; font-size: 0.9rem;">Consultas verbales en directo sobre normativas, cálculos y dudas con Elena.</p>
                     </div>
 
@@ -370,14 +387,18 @@
                 </div>
             </section>
 
-            <!-- VISTA ASESOR DE VOZ -->
+            <!-- VISTA ASESOR DE VOZ CON FOTO REAL DE ELENA -->
             <section id="vista-asesor-voz" class="vista-section oculto">
                 <header>
                     <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
                     <h1>🗣️ Asesor Técnico Parlante</h1>
                 </header>
                 <div class="seccion-bloque" style="text-align: center; padding: 30px;">
-                    <div style="font-size: 2.8rem; margin-bottom: 8px;">👩‍💼⚡</div>
+                    <div style="display: flex; justify-content: center; margin-bottom: 15px;">
+                        <div id="elena-avatar-container" style="position: relative; width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--azul-brillante); box-shadow: 0 0 20px rgba(24, 143, 167, 0.4); overflow: hidden; background: #131e2b; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                            <img id="avatar-elena-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80" alt="Elena Ingeniera Técnica" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    </div>
                     <h3 style="color: var(--azul-brillante); margin-bottom: 5px;">Elena · Ingeniera Técnica Virtual</h3>
                     <p style="color: #94a3b8; max-width: 600px; margin: 0 auto 20px auto;">
                         Consulta por voz sobre REBT, RITE, ITC-BT-52, caídas de tensión y esquemas eléctricos.
@@ -416,31 +437,34 @@
                 </div>
             </section>
 
-            <!-- VISTA CONSULTAS ICT-2 -->
+            <!-- VISTA CONSULTOR TÉCNICO NORMATIVO E ICT-2 -->
             <section id="vista-ict" class="vista-section oculto">
                 <header>
                     <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>📡 Consultor de Telecomunicaciones ICT-2 (RD 346/2011)</h1>
+                    <h1>📡 Consultor Técnico de Infraestructuras & Normativa ICT-2 / REBT</h1>
                 </header>
+
                 <div class="seccion-bloque">
-                    <div class="calc-grid">
-                        <div class="calc-field">
-                            <label>Elemento o Recinto a Consultar:</label>
-                            <select id="ict-selector" onchange="mostrarInfoICT()">
-                                <option value="riti">RITI (Recinto Inferior - Telefonía/Fibra)</option>
-                                <option value="rits">RITS (Recinto Superior - RTV/Satélite)</option>
-                                <option value="ritu">RITU (Recinto Único - Inmuebles ≤ 10 PAU)</option>
-                                <option value="pau">PAU (Punto de Acceso al Usuario)</option>
-                                <option value="coaxial">Distribución Coaxial y Frecuencias</option>
-                                <option value="fibra">Red de Fibra Óptica (ICT-2)</option>
-                            </select>
-                        </div>
+                    <h3 style="color: var(--azul-brillante); margin-top: 0;">🔍 Buscador Normativo y Resolución de Averías en Edificación</h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">
+                        Introduce cualquier consulta sobre telecomunicaciones, cuadros de servicios, recintos o problemas de señal para que Elena consulte la base técnica:
+                    </p>
+
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <input type="text" id="ict-busqueda-input" placeholder="Ej: no tengo señal de antena en PAU, dimensiones mínimas RITI, atenuación fibra SC/APC..." style="flex-grow: 1;">
+                        <button type="button" onclick="consultarICTConIA()">🔍 Analizar Caso</button>
                     </div>
-                    <div id="ict-resultado-box" class="resultado-caja">
-                        <h4 style="margin: 0 0 10px 0; color: var(--azul-brillante);">RITI (Recinto de Instalación de Telecomunicación Inferior):</h4>
-                        <p>• <strong>Ubicación:</strong> Zona común de la parte baja del inmueble (planta baja o sótano), protegido de humedades.</p>
-                        <p>• <strong>Uso:</strong> Alberga los registros principales de los operadores de telefonía, par trenzado, cable coaxial y fibra óptica.</p>
-                        <p>• <strong>Equipamiento obligatorio:</strong> Cuadro de protección eléctrica exclusivo, toma de tierra general y canalizaciones de enlace hacia la canalización principal.</p>
+
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Requisitos y canalizaciones para RITI y RITS en ICT-2')">🏢 RITI / RITS / RITU</button>
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Niveles de señal en toma de usuario coaxial dBµV y filtros LTE 5G')">📶 Niveles de Señal & Filtros 5G</button>
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Protocolo de pruebas y pérdidas máximas en fibra óptica monomodo ICT-2')">💡 Red de Fibra Óptica</button>
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Dimensionamiento de cuadro eléctrico y tomas de corriente en RITI según REBT')">⚡ Cuadro Eléctrico RITI</button>
+                    </div>
+
+                    <div id="ict-ia-resultado" class="resultado-caja">
+                        <h4 style="margin-top: 0; color: var(--verde-ia);">📋 Dictamen Técnico Oficial:</h4>
+                        <p style="color: #94a3b8;">Introduce tu consulta técnica o pulsa en uno de los accesos directos para generar el informe con normativa y soluciones.</p>
                     </div>
                 </div>
             </section>
@@ -685,6 +709,60 @@
                     </div>
                     <button type="button" onclick="generarKNX()" style="width: 100%;">Generar Direcciones KNX / ETS</button>
                     <div id="knx-res-box" class="resultado-caja oculto"></div>
+                </div>
+            </section>
+
+            <!-- VISTA FACTURACIÓN -->
+            <section id="vista-facturacion" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>🧾 Generador de Facturas y Presupuestos</h1>
+                </header>
+                <div class="seccion-bloque">
+                    <h3>Cálculo de Base e IVA (21%)</h3>
+                    <div class="calc-grid">
+                        <div class="calc-field">
+                            <label>Importe Base Imponible (€):</label>
+                            <input type="number" id="fac-precio" value="150" step="1">
+                        </div>
+                    </div>
+                    <button type="button" id="btn-calcular-factura" style="width: 100%;">Calcular Total Factura</button>
+                    <div class="resultado-caja" style="margin-top: 15px;">
+                        <p>• <strong>Base Imponible:</strong> <span id="total-base">0.00 €</span></p>
+                        <p>• <strong>IVA (21%):</strong> <span id="total-iva">0.00 €</span></p>
+                        <p>• <strong>Total Factura:</strong> <span id="total-factura" style="color: var(--verde-ia); font-weight: bold; font-size: 1.1rem;">0.00 €</span></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA TARIFAS -->
+            <section id="vista-tarifas" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>💶 Tarifas y Estimación de Mano de Obra</h1>
+                </header>
+                <div class="seccion-bloque">
+                    <h3>Cálculo por Horas y Desplazamiento</h3>
+                    <div class="calc-grid">
+                        <div class="calc-field">
+                            <label>Horas de Trabajo:</label>
+                            <input type="number" id="tarifa-horas" value="3" step="0.5">
+                        </div>
+                        <div class="calc-field">
+                            <label>Precio por Hora (€):</label>
+                            <input type="number" id="tarifa-precio-hora" value="45" step="1">
+                        </div>
+                        <div class="calc-field">
+                            <label>Plus Desplazamiento (€):</label>
+                            <input type="number" id="tarifa-desplazamiento" value="30" step="1">
+                        </div>
+                    </div>
+                    <button type="button" id="btn-calcular-tarifa" style="width: 100%;">Calcular Presupuesto</button>
+                    <div class="resultado-caja" style="margin-top: 15px;">
+                        <p>• <strong>Subtotal Mano de Obra:</strong> <span id="subtotal-horas">0.00 €</span></p>
+                        <p>• <strong>Desplazamiento:</strong> <span id="subtotal-desplazamiento">0.00 €</span></p>
+                        <p>• <strong>Total Estimado:</strong> <span id="total-estimado" style="color: var(--verde-ia); font-weight: bold; font-size: 1.1rem;">0.00 €</span></p>
+                    </div>
                 </div>
             </section>
 
