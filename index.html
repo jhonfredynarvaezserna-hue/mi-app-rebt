@@ -285,7 +285,7 @@
                         <span>🤖</span> Gestor Técnico e Intérprete Multimodal
                     </h3>
                     <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">
-                        Escribe tu duda técnica o describe la avería de tu instalación para recibir un diagnóstico previo o enviarla por WhatsApp:
+                        Escribe tu duda técnica o avería de la instalación para recibir un diagnóstico de Elena con Gemini o enviarla a WhatsApp:
                     </p>
 
                     <div style="display: flex; flex-direction: column; gap: 12px;">
@@ -319,13 +319,13 @@
                     <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-asesor-voz')">
                         <div style="font-size: 2rem; margin-bottom: 10px;">🗣️</div>
                         <h3>Asesor de Voz IA</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">Consultas verbales en directo sobre normativas, cálculos y dudas.</p>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Consultas verbales en directo sobre normativas, cálculos y dudas con Elena.</p>
                     </div>
 
                     <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-rebt')">
                         <div style="font-size: 2rem; margin-bottom: 10px;">⚖️</div>
                         <h3>Buscador REBT / RITE</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">Motor de consultas normativas completas con resolución técnica.</p>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Motor de consultas normativas completas con resolución técnica oficial.</p>
                     </div>
 
                     <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-caida')">
@@ -377,10 +377,13 @@
                     <h1>🗣️ Asesor Técnico Parlante</h1>
                 </header>
                 <div class="seccion-bloque" style="text-align: center; padding: 30px;">
-                    <h3>Consulta Técnica por Micrófono</h3>
-                    <p style="color: #94a3b8; max-width: 600px; margin: 0 auto 20px auto;">Haz preguntas como "¿Qué diferencial exige la ITC-BT-52?" o "¿Cuál es la caída máxima de una derivación individual?".</p>
-                    <button type="button" id="btn-hablar-asesor" style="font-size: 1.1rem; padding: 14px 30px; border-radius: 30px; background-color: var(--azul-tecnico);">🎙️ Presionar para Hablar</button>
-                    <p id="status-voz" style="color: #a0aec0; margin-top: 15px;">Micrófono listo.</p>
+                    <div style="font-size: 2.8rem; margin-bottom: 8px;">👩‍💼⚡</div>
+                    <h3 style="color: var(--azul-brillante); margin-bottom: 5px;">Elena · Ingeniera Técnica Virtual</h3>
+                    <p style="color: #94a3b8; max-width: 600px; margin: 0 auto 20px auto;">
+                        Consulta por voz sobre REBT, RITE, ITC-BT-52, caídas de tensión y esquemas eléctricos.
+                    </p>
+                    <button type="button" id="btn-hablar-asesor" style="font-size: 1.1rem; padding: 14px 30px; border-radius: 30px; background-color: var(--azul-tecnico);">🎙️ Hablar con Elena</button>
+                    <p id="status-voz" style="color: #a0aec0; margin-top: 15px;">Pulsa para realizar tu consulta verbal.</p>
                     <div id="respuesta-voz-box" class="oculto resultado-caja" style="text-align: left;"></div>
                 </div>
             </section>
@@ -392,23 +395,23 @@
                     <h1>⚖️ Buscador y Consultor REBT / RITE</h1>
                 </header>
                 <div class="seccion-bloque">
-                    <p style="color: #94a3b8; font-size: 0.9rem;">Consulta cualquier artículo, instrucción técnica o genera una duda para resolverla con normativa en mano:</p>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">Escribe cualquier pregunta o duda técnica para que Elena la resuelva consultando Gemini:</p>
                     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <input type="text" id="entrada-busqueda" placeholder="Ej: ITC-BT-25 circuitos, ITC-BT-19 caidas, RITE ventilacion IDA, diferenciales..." style="flex-grow: 1;">
+                        <input type="text" id="entrada-busqueda" placeholder="Ej: dime algo sobre los diferenciales tipo f, ITC-BT-19 caidas, RITE IDA 2..." style="flex-grow: 1;">
                         <button type="button" onclick="ejecutarBusquedaNormativa()">🔍 Consultar</button>
                     </div>
 
                     <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px;">
-                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('ITC-BT-15')">ITC-BT-15 (DI)</button>
-                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('ITC-BT-19')">ITC-BT-19 (Interiores)</button>
-                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('ITC-BT-25')">ITC-BT-25 (Viviendas)</button>
-                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('ITC-BT-52')">ITC-BT-52 (VE)</button>
-                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('RITE')">RITE (Ventilación)</button>
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Qué requisitos y caídas de tensión exige la ITC-BT-15?')">ITC-BT-15 (DI)</button>
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Cuáles son las caídas de tensión máximas según la ITC-BT-19?')">ITC-BT-19 (Interiores)</button>
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Qué circuitos mínimos y secciones exige la ITC-BT-25 para una vivienda?')">ITC-BT-25 (Viviendas)</button>
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Qué protecciones diferenciales y esquemas define la ITC-BT-52 para vehículos eléctricos?')">ITC-BT-52 (VE)</button>
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Cuáles son las categorías de calidad de aire interior IDA en el RITE?')">RITE (Ventilación)</button>
                     </div>
 
                     <div id="resultados-busqueda" class="resultado-caja">
                         <h4 style="margin-top:0; color: var(--azul-brillante);">Base de Respuestas Técnicas:</h4>
-                        <p style="color: #94a3b8;">Escribe tu duda técnica o selecciona una ITC para ver los requisitos oficiales.</p>
+                        <p style="color: #94a3b8;">Escribe tu duda técnica o haz clic en uno de los accesos rápidos para obtener la respuesta oficial de Elena.</p>
                     </div>
                 </div>
             </section>
@@ -451,7 +454,7 @@
 
                 <div class="seccion-bloque">
                     <h3>🎮 Simulador de Maniobra Marcha / Paro (Retención KM1)</h3>
-                    <p style="color: #94a3b8; font-size: 0.88rem;">Haz clic y mantén pulsado los pulsadores para verificar la retención del contacto auxiliar 13-14 de KM1:</p>
+                    <p style="color: #94a3b8; font-size: 0.88rem;">Haz clic para activar o detener la maniobra del contactor KM1:</p>
 
                     <div class="cade-cuadro">
                         <div class="circuito-grid">
@@ -461,7 +464,7 @@
                                     <button type="button" id="sim-btn-marcha" style="background-color: #10b981; width: 75px; height: 75px; border-radius: 50%; font-size: 11px; font-weight: bold;">S2 (MARCHA)</button>
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 12px;">
-                                    <div id="piloto-motor" style="width: 45px; height: 45px; border-radius: 50%; background-color: #334155; border: 3px solid #1e293b;"></div>
+                                    <div id="piloto-motor" style="width: 45px; height: 45px; border-radius: 50%; background-color: #334155; border: 3px solid #1e293b; transition: all 0.3s;"></div>
                                     <span id="motor-estado-txt" style="font-weight: bold; color: #94a3b8;">MOTOR DETENIDO</span>
                                 </div>
                             </div>
@@ -733,420 +736,7 @@
         </div>
     </div>
 
-    <!-- MOTOR DE CÁLCULO Y FUNCIONALIDAD COMPLETA -->
-    <script>
-        const CLAVE_MAESTRA = "SM-ADMIN-7788";
-        const CLAVES_VALIDAS = ["SM-PRO-2026", "SM-CLIENTE-01", "SM-CLIENTE-02"];
-        const TELEFONO_WHATSAPP = "34642269680";
-        let destinoPendiente = null;
-
-        // SISTEMA DE LICENCIAS PRO
-        function tieneLicencia() {
-            const clave = localStorage.getItem("licencia_sm_activa");
-            return (clave === CLAVE_MAESTRA || CLAVES_VALIDAS.includes(clave));
-        }
-
-        function verificarYEntrar(idVista) {
-            if (tieneLicencia()) {
-                abrirModuloDirecto(idVista);
-            } else {
-                destinoPendiente = idVista;
-                document.getElementById('input-clave-licencia').value = '';
-                document.getElementById('error-clave-licencia').style.display = 'none';
-                document.getElementById('modal-licencia').style.display = 'flex';
-            }
-        }
-
-        function abrirModuloDirecto(idVista) {
-            document.querySelectorAll('.vista-section').forEach(sec => sec.classList.add('oculto'));
-            const destino = document.getElementById(idVista);
-            if (destino) destino.classList.remove('oculto');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function cerrarModalLicencia() {
-            document.getElementById('modal-licencia').style.display = 'none';
-            destinoPendiente = null;
-        }
-
-        function validarClaveAcceso() {
-            const val = document.getElementById('input-clave-licencia').value.trim();
-            const err = document.getElementById('error-clave-licencia');
-
-            if (val === CLAVE_MAESTRA || CLAVES_VALIDAS.includes(val)) {
-                localStorage.setItem("licencia_sm_activa", val);
-                document.getElementById('modal-licencia').style.display = 'none';
-                actualizarBotonEstado();
-                if (destinoPendiente) {
-                    abrirModuloDirecto(destinoPendiente);
-                    destinoPendiente = null;
-                }
-            } else {
-                err.style.display = 'block';
-            }
-        }
-
-        function gestionarBotonLicencia() {
-            if (tieneLicencia()) {
-                if (confirm("¿Deseas cerrar sesión y bloquear los módulos de nuevo?")) {
-                    localStorage.removeItem("licencia_sm_activa");
-                    actualizarBotonEstado();
-                    abrirModuloDirecto('vista-inicio');
-                }
-            } else {
-                verificarYEntrar('vista-ve');
-            }
-        }
-
-        function actualizarBotonEstado() {
-            const b = document.getElementById('btn-estado-licencia');
-            if (b) {
-                b.innerHTML = tieneLicencia() ? '🟢 Licencia Activa (Cerrar)' : '🔑 Activar Licencia Pro';
-                b.style.color = tieneLicencia() ? '#10b981' : '#94a3b8';
-            }
-        }
-
-        // ENVÍO DE FORMULARIO A WHATSAPP
-        function enviarConsultaWhatsApp() {
-            const nombre = document.getElementById('gestor-nombre').value.trim() || 'Cliente';
-            const tipo = document.getElementById('gestor-tipo').value;
-            const mensaje = document.getElementById('gestor-mensaje').value.trim() || 'Sin detalles adicionales.';
-
-            const textoWhatsApp = `*CONSULTA TÉCNICA - GESTIÓN SM*%0A` +
-                `👤 *Nombre:* ${encodeURIComponent(nombre)}%0A` +
-                `🏷️ *Tipo:* ${encodeURIComponent(tipo)}%0A` +
-                `📝 *Detalle:* ${encodeURIComponent(mensaje)}`;
-
-            const url = `https://wa.me/${TELEFONO_WHATSAPP}?text=${textoWhatsApp}`;
-            window.open(url, '_blank');
-        }
-
-        // DIAGNÓSTICO CON IA (/api/chat)
-        async function diagnosticarConIA() {
-            const nombre = document.getElementById('gestor-nombre').value.trim();
-            const tipo = document.getElementById('gestor-tipo').value;
-            const mensaje = document.getElementById('gestor-mensaje').value.trim();
-            const resBox = document.getElementById('gestor-ia-resultado');
-
-            if (!mensaje) {
-                alert("Por favor, describe tu consulta o avería.");
-                return;
-            }
-
-            resBox.classList.remove('oculto');
-            resBox.innerHTML = `<em>Analizando consulta técnica con IA...</em>`;
-
-            const promptCompleto = `Consulta: ${tipo}. Descripción: ${mensaje}. Responde como instalador técnico profesional con normativas REBT y RITE aplicables.`;
-
-            try {
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: promptCompleto })
-                });
-
-                const data = await res.json();
-                const respuesta = data.text || data.respuesta || "Diagnóstico completado.";
-
-                resBox.innerHTML = `
-                    <h4 style="margin: 0 0 10px 0; color: var(--verde-ia);">📋 Diagnóstico Técnico:</h4>
-                    <p style="line-height: 1.6;">${respuesta}</p>
-                `;
-            } catch (err) {
-                console.error("Error en diagnóstico IA:", err);
-                resBox.innerHTML = `<p style="color: #ef4444;">No se pudo procesar la IA. Puedes pulsar en <strong>Enviar por WhatsApp</strong> para atenderte directamente.</p>`;
-            }
-        }
-
-        // BUSCADOR NORMATIVO REBT / RITE
-        function buscarTermino(term) {
-            document.getElementById('entrada-busqueda').value = term;
-            ejecutarBusquedaNormativa();
-        }
-
-        function ejecutarBusquedaNormativa() {
-            const q = document.getElementById('entrada-busqueda').value.toLowerCase().trim();
-            const res = document.getElementById('resultados-busqueda');
-
-            if (!q) {
-                res.innerHTML = "<p>Introduce un término de búsqueda.</p>";
-                return;
-            }
-
-            const baseDatos = [
-                { k: "itc-bt-15", t: "ITC-BT-15: Derivaciones Individuales", d: "Caída máxima de tensión permitida: 1,5% para contadores totalmente centralizados en un único punto, y 0,5% para contadores individuales. Conductor mínimo: 6 mm² Cu libre de halógenos (LSHF)." },
-                { k: "itc-bt-19", t: "ITC-BT-19: Instalaciones Interiores - Prescripciones Generales", d: "Caídas máximas de tensión: 3% para receptores de alumbrado y 5% para receptores de fuerza motriz y otros usos. En instalaciones industriales alimentadas desde transformador propio: 4,5% y 6,5% respectivamente." },
-                { k: "itc-bt-25", t: "ITC-BT-25: Circuitos Interiores en Viviendas", d: "Electrificación básica (mínimo 5.750W a 230V): C1 (Iluminación 10A, 1.5mm²), C2 (Tomas uso general 16A, 2.5mm²), C3 (Cocina/Horno 25A, 6mm²), C4 (Lavadora/Lavavajillas/Termo 20A, 4mm²), C5 (Baños y cocina 16A, 2.5mm²)." },
-                { k: "itc-bt-52", t: "ITC-BT-52: Infraestructura para Vehículos Eléctricos", d: "Exige protección diferencial Clase A o Clase B con detección de fugas de corriente continua superiores a 6 mA DC ($I_{\\Delta n} \\ge 6\\text{ mA DC}$). Protección contra sobretensiones transitorias y permanentes obligatoria." },
-                { k: "rite", t: "RITE IT 1.1.4: Calidad del Aire Interior (Ventilación)", d: "Caudales mínimos de aire exterior: IDA 1 (Óptima - Hospitales/Guarderías: 20 dm³/s por persona), IDA 2 (Buena - Oficinas/Residencias: 12,5 dm³/s), IDA 3 (Media: 8 dm³/s), IDA 4 (Baja: 5 dm³/s)." },
-                { k: "diferencial", t: "ITC-BT-24: Protección contra Contactos Indirectos", d: "Corte automático mediante interruptores diferenciales de alta sensibilidad ($I_{\\Delta n} \\le 30\\text{ mA}$). En circuitos con variadores o electrónica de potencia se recomienda tipo Superinmunizado o Tipo F/B." },
-                { k: "caida", t: "Caídas de Tensión Normalizadas (REBT)", d: "Línea General de Alimentación (LGA): 0,5% centralizado, 1,5% repartido. Derivación Individual (DI): 1,5% centralizado, 0,5% individual. Circuitos interiores: 3% alumbrado, 5% fuerza." }
-            ];
-
-            const matches = baseDatos.filter(item => item.k.includes(q) || item.t.toLowerCase().includes(q) || item.d.toLowerCase().includes(q));
-
-            if (matches.length > 0) {
-                res.innerHTML = matches.map(m => `
-                    <div style="padding: 10px 0;">
-                        <strong style="color: var(--azul-brillante); font-size: 1.05rem;">${m.t}</strong>
-                        <p style="margin: 6px 0 0 0; color: #cbd5e1; font-size: 0.92rem; line-height: 1.5;">${m.d}</p>
-                    </div>
-                `).join('<hr style="border-color: var(--bordes); margin: 12px 0;">');
-            } else {
-                res.innerHTML = `<p style="color: #a0aec0;">No hay resultados en la base rápida para "${q}". Puedes usar el <strong>Asesor de Voz IA</strong> para una consulta abierta.</p>`;
-            }
-        }
-
-        // CONSULTOR ICT-2
-        function mostrarInfoICT() {
-            const val = document.getElementById('ict-selector').value;
-            const res = document.getElementById('ict-resultado-box');
-
-            const datosICT = {
-                riti: { t: "RITI (Recinto Inferior - RD 346/2011)", d: "Ubicado en planta baja o sótano. Aloja los registros de operadores de fibra óptica, par de cobre y coaxial. Obligatorio cuadro de luz exclusivo con IGA, diferencial y tomas de corriente schuko." },
-                rits: { t: "RITS (Recinto Superior)", d: "Ubicado en la cubierta o bajo cubierta. Aloja las cabeceras de amplificación de RTV terrestre y satélite. Debe contar con ventilación natural o forzada y acceso directo a las torretas de antenas." },
-                ritu: { t: "RITU (Recinto Único)", d: "Permitido exclusivamente en edificios o conjuntos residenciales de hasta 10 PAU o en viviendas unifamiliares, unificando funciones de RITI y RITS en un solo armario técnico." },
-                pau: { t: "PAU (Punto de Acceso al Usuario)", d: "Caja de registro ubicada en el interior de cada vivienda. Distribuye el cableado coaxial, pares trenzados categoría 6 y tomas de fibra a todas las estancias habitables." },
-                coaxial: { t: "Red de Cable Coaxial y Frecuencias", d: "Banda RTV terrestre: 470 a 790 MHz (con filtros de rechazo 5G/700MHz). FI Satélite: 950 a 2150 MHz. Niveles de señal en toma de usuario: entre 45 y 70 dBµV." },
-                fibra: { t: "Red de Fibra Óptica en Edificación", d: "Cada vivienda dispondrá como mínimo de 2 fibras ópticas monomodo desde el RITI hasta el PAU, terminadas con conectores estandarizados SC/APC." }
-            };
-
-            const actual = datosICT[val];
-            res.innerHTML = `
-                <h4 style="margin: 0 0 10px 0; color: var(--azul-brillante);">${actual.t}</h4>
-                <p style="line-height: 1.6; color: #cbd5e1;">${actual.d}</p>
-            `;
-        }
-
-        // SIMULADOR MARCH/PARO (CADE SIMU)
-        const simBtnParo = document.getElementById('sim-btn-paro');
-        const simBtnMarcha = document.getElementById('sim-btn-marcha');
-        let km1Retenido = false;
-        let s1Pulsado = false;
-        let s2Pulsado = false;
-
-        function actualizarCircuitoManiobra() {
-            const s1NC = !s1Pulsado; // S1 es normalmente cerrado
-            const s2NA = s2Pulsado;  // S2 es normalmente abierto
-
-            if (s1NC && (s2NA || km1Retenido)) {
-                km1Retenido = true;
-            } else {
-                km1Retenido = false;
-            }
-
-            const estS1 = document.getElementById('estado-s1');
-            const estS2 = document.getElementById('estado-s2');
-            const estKm1 = document.getElementById('estado-km1-aux');
-            const estBobina = document.getElementById('estado-bobina');
-            const piloto = document.getElementById('piloto-motor');
-            const txtMotor = document.getElementById('motor-estado-txt');
-
-            estS1.innerHTML = s1NC ? "CERRADO (NC)" : "ABIERTO (PULSADO)";
-            estS1.style.color = s1NC ? "#10b981" : "#ef4444";
-
-            estS2.innerHTML = s2NA ? "CERRADO (PULSADO)" : "ABIERTO (NA)";
-            estS2.style.color = s2NA ? "#10b981" : "#ef4444";
-
-            if (km1Retenido) {
-                estKm1.innerHTML = "CERRADO (RETENIDO 13-14)";
-                estKm1.style.color = "#10b981";
-                estBobina.innerHTML = "ACTIVADA (230V A1-A2)";
-                estBobina.style.color = "#10b981";
-                piloto.style.backgroundColor = "#10b981";
-                txtMotor.innerHTML = "⚡ MOTOR EN MARCHA";
-                txtMotor.style.color = "#10b981";
-            } else {
-                estKm1.innerHTML = "ABIERTO";
-                estKm1.style.color = "#ef4444";
-                estBobina.innerHTML = "DESACTIVADA (0V)";
-                estBobina.style.color = "#94a3b8";
-                piloto.style.backgroundColor = "#334155";
-                txtMotor.innerHTML = "MOTOR DETENIDO";
-                txtMotor.style.color = "#94a3b8";
-            }
-        }
-
-        if (simBtnMarcha && simBtnParo) {
-            simBtnMarcha.addEventListener('mousedown', () => { s2Pulsado = true; actualizarCircuitoManiobra(); });
-            simBtnMarcha.addEventListener('mouseup', () => { s2Pulsado = false; actualizarCircuitoManiobra(); });
-            simBtnMarcha.addEventListener('touchstart', (e) => { e.preventDefault(); s2Pulsado = true; actualizarCircuitoManiobra(); });
-            simBtnMarcha.addEventListener('touchend', (e) => { e.preventDefault(); s2Pulsado = false; actualizarCircuitoManiobra(); });
-
-            simBtnParo.addEventListener('mousedown', () => { s1Pulsado = true; actualizarCircuitoManiobra(); });
-            simBtnParo.addEventListener('mouseup', () => { s1Pulsado = false; actualizarCircuitoManiobra(); });
-            simBtnParo.addEventListener('touchstart', (e) => { e.preventDefault(); s1Pulsado = true; actualizarCircuitoManiobra(); });
-            simBtnParo.addEventListener('touchend', (e) => { e.preventDefault(); s1Pulsado = false; actualizarCircuitoManiobra(); });
-        }
-
-        // CÁLCULO DE CAÍDA DE TENSIÓN
-        function calcularSeccionCable() {
-            const sistema = document.getElementById('calc-sistema').value;
-            const P = parseFloat(document.getElementById('calc-potencia').value);
-            const L = parseFloat(document.getElementById('calc-longitud').value);
-            const conductividad = parseFloat(document.getElementById('calc-material').value);
-            const ePorc = parseFloat(document.getElementById('calc-porcentaje-max').value);
-
-            const V = (sistema === 'mono') ? 230 : 400;
-            const eVoltios = (V * ePorc) / 100;
-            let seccionCalculada = (sistema === 'mono') ? ((2 * L * P) / (conductividad * eVoltios * V)) : ((L * P) / (conductividad * eVoltios * V));
-
-            const seccionesNormalizadas = [1.5, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95, 120, 150, 185, 240];
-            const seccionComercial = seccionesNormalizadas.find(s => s >= seccionCalculada) || "Superior a 240 mm²";
-
-            const resBox = document.getElementById('resultado-caida-box');
-            resBox.classList.remove('oculto');
-            resBox.innerHTML = `
-                <h4 style="margin: 0 0 10px 0; color: var(--verde-ia);">⚡ Resultados del Cálculo:</h4>
-                <p>• <strong>Sección Teórica:</strong> ${seccionCalculada.toFixed(2)} mm²</p>
-                <p>• <strong>Sección Comercial:</strong> <span style="color: var(--azul-brillante); font-size: 1.15rem; font-weight: bold;">${seccionComercial} mm²</span></p>
-                <p>• <strong>Caída Admisible:</strong> ${eVoltios.toFixed(2)} V (${ePorc}%)</p>
-            `;
-        }
-
-        // CÁLCULO FOTOVOLTAICA
-        function calcularSolar() {
-            const wPanel = parseFloat(document.getElementById('solar-w-panel').value);
-            const numPaneles = parseInt(document.getElementById('solar-num-paneles').value);
-            const voc = parseFloat(document.getElementById('solar-voc').value);
-
-            const potPicoTotal = (wPanel * numPaneles) / 1000;
-            const tensionVocString = (voc * numPaneles);
-
-            const box = document.getElementById('solar-res-box');
-            box.classList.remove('oculto');
-            box.innerHTML = `
-                <h4 style="margin:0 0 10px 0; color: var(--verde-ia);">☀️ Resultados Fotovoltaica:</h4>
-                <p>• <strong>Potencia Pico Total:</strong> ${potPicoTotal.toFixed(2)} kWp</p>
-                <p>• <strong>Tensión Voc String:</strong> ${tensionVocString.toFixed(1)} V DC</p>
-                <p>• <strong>Protección DC:</strong> Fusibles gPV y descargador Sobretensiones Tipo 2 DC (1000V DC).</p>
-            `;
-        }
-
-        // CÁLCULO AUTOMATISMOS / MOTOR
-        function calcularMotor() {
-            const kw = parseFloat(document.getElementById('motor-kw').value);
-            const v = parseFloat(document.getElementById('motor-voltaje').value);
-            const fp = parseFloat(document.getElementById('motor-fp').value);
-            const rend = parseFloat(document.getElementById('motor-rend').value);
-
-            const potenciaW = kw * 1000;
-            const iNominal = potenciaW / (Math.sqrt(3) * v * fp * rend);
-            const iRegulacionMin = (iNominal * 0.9).toFixed(1);
-            const iRegulacionMax = (iNominal * 1.15).toFixed(1);
-
-            const box = document.getElementById('motor-res-box');
-            box.classList.remove('oculto');
-            box.innerHTML = `
-                <h4 style="margin:0 0 10px 0; color: var(--verde-ia);">⚙️ Resultados Motor:</h4>
-                <p>• <strong>Intensidad Nominal ($I_n$):</strong> <span style="color: var(--azul-brillante); font-weight: bold;">${iNominal.toFixed(2)} A</span></p>
-                <p>• <strong>Ajuste Guardamotor:</strong> ${iRegulacionMin} A - ${iRegulacionMax} A</p>
-                <p>• <strong>Arranque recomendado:</strong> ${kw > 5.5 ? 'Estrella-Triángulo o Arrancador Suave' : 'Arranque Directo'}</p>
-            `;
-        }
-
-        // CÁLCULO KNX
-        function generarKNX() {
-            const area = document.getElementById('knx-area').value;
-            const linea = document.getElementById('knx-linea').value;
-            const disp = document.getElementById('knx-dispositivo').value;
-
-            const dirFisica = `${area}.${linea}.${disp}`;
-            const box = document.getElementById('knx-res-box');
-            box.classList.remove('oculto');
-            box.innerHTML = `
-                <h4 style="margin:0 0 10px 0; color: var(--verde-ia);">🟢 Parámetros ETS Generados:</h4>
-                <p>• <strong>Dirección Física Individual:</strong> <span style="color: var(--azul-brillante); font-weight: bold; font-size: 1.1rem;">${dirFisica}</span></p>
-                <p>• <strong>Esquema de Grupos sugerido:</strong> 1/1/${disp}</p>
-                <p>• <strong>Cable de Bus:</strong> Par trenzado apantallado verde certificado ($2 \\times 2 \\times 0.8\\text{ mm}$).</p>
-            `;
-        }
-
-        // GESTIÓN DE VIDEOTECA
-        function cargarVideo(id, titulo) {
-            document.getElementById('video-titulo').innerText = titulo;
-            document.getElementById('iframe-video').src = `https://www.youtube-nocookie.com/embed/${id}`;
-        }
-
-        // ASISTENTE DE VOZ CON IA Y SÍNTESIS
-        document.addEventListener('DOMContentLoaded', () => {
-            actualizarBotonEstado();
-
-            const btnVoz = document.getElementById('btn-hablar-asesor');
-            const statusVoz = document.getElementById('status-voz');
-            const respuestaBox = document.getElementById('respuesta-voz-box');
-
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-            if (!SpeechRecognition) {
-                if (statusVoz) statusVoz.innerText = "Reconocimiento de voz no soportado. Usa Google Chrome o Microsoft Edge.";
-                if (btnVoz) btnVoz.disabled = true;
-                return;
-            }
-
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'es-ES';
-            recognition.continuous = false;
-            recognition.interimResults = false;
-
-            recognition.onstart = () => {
-                btnVoz.innerText = "🛑 Escuchando... Habla ahora";
-                btnVoz.style.backgroundColor = "#e53e3e";
-                statusVoz.innerText = "Escuchando consulta...";
-            };
-
-            recognition.onresult = async (event) => {
-                const pregunta = event.results[0][0].transcript;
-                statusVoz.innerText = `Pregunta: "${pregunta}"`;
-                btnVoz.innerText = "⏳ Consultando IA...";
-                btnVoz.style.backgroundColor = "var(--azul-tecnico)";
-
-                respuestaBox.classList.remove('oculto');
-                respuestaBox.innerHTML = `<strong>Tú:</strong> ${pregunta}<br><br><em>Consultando base técnica...</em>`;
-
-                try {
-                    const res = await fetch('/api/chat', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ prompt: pregunta })
-                    });
-
-                    const data = await res.json();
-                    const textoRespuesta = data.text || data.respuesta || "No se obtuvo respuesta del servidor.";
-                    
-                    respuestaBox.innerHTML = `<strong>Tú:</strong> ${pregunta}<br><br><strong>Asesor:</strong> ${textoRespuesta}`;
-                    
-                    const utterance = new SpeechSynthesisUtterance(textoRespuesta);
-                    utterance.lang = 'es-ES';
-                    window.speechSynthesis.speak(utterance);
-                } catch (err) {
-                    console.error("Error al consultar la API:", err);
-                    respuestaBox.innerHTML = `<strong>Error:</strong> No se pudo conectar con el endpoint /api/chat.`;
-                } finally {
-                    btnVoz.innerText = "🎙️ Presionar para Hablar";
-                    btnVoz.style.backgroundColor = "var(--azul-tecnico)";
-                }
-            };
-
-            recognition.onerror = (event) => {
-                console.error("Error de voz:", event.error);
-                statusVoz.innerText = `Error: ${event.error}`;
-                btnVoz.innerText = "🎙️ Presionar para Hablar";
-                btnVoz.style.backgroundColor = "var(--azul-tecnico)";
-            };
-
-            recognition.onend = () => {
-                if (btnVoz.innerText.includes("Escuchando")) {
-                    btnVoz.innerText = "🎙️ Presionar para Hablar";
-                    btnVoz.style.backgroundColor = "var(--azul-tecnico)";
-                }
-            };
-
-            btnVoz.addEventListener('click', () => {
-                window.speechSynthesis.cancel();
-                recognition.start();
-            });
-        });
-    </script>
+    <!-- ENLACE AL ARCHIVO JAVASCRIPT PRINCIPAL -->
+    <script src="main.js"></script>
 </body>
 </html>
