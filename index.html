@@ -5,14 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Servicio y Gestión SM</title>
 
-    <!-- CONFIGURACIÓN PWA Y PANTALLA COMPLETA -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#4b96e6">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Gestión SM">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/567/567041.png">
 
     <style>
         :root {
@@ -29,10 +25,7 @@
             --oro-candado: #f59e0b;
         }
 
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         html, body {
             background-color: #0a1118 !important;
@@ -43,11 +36,7 @@
             min-height: 100vh;
         }
 
-        .contenedor { 
-            display: flex; 
-            min-height: 100vh; 
-            background-color: var(--bg-principal); 
-        }
+        .contenedor { display: flex; min-height: 100vh; background-color: var(--bg-principal); }
 
         .sidebar-izquierda { 
             width: 280px; 
@@ -71,7 +60,6 @@
             padding: 12px 10px; 
             border-radius: 6px; 
             cursor: pointer;
-            touch-action: manipulation;
         }
         .menu-sidebar a:hover, .menu-sidebar a.activo { background-color: var(--azul-tecnico); color: #fff; }
 
@@ -86,13 +74,7 @@
         }
         
         .portada-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-        .tarjeta-modulo { 
-            cursor: pointer; 
-            border: 1px solid var(--bordes); 
-            transition: 0.2s; 
-            user-select: none; 
-            touch-action: manipulation;
-        }
+        .tarjeta-modulo { cursor: pointer; border: 1px solid var(--bordes); transition: 0.2s; user-select: none; }
         .tarjeta-modulo:hover, .tarjeta-modulo:active { border-color: var(--azul-brillante); background-color: #182838; }
 
         .insignia-candado {
@@ -116,7 +98,7 @@
             border-radius: 6px;
             font-size: 1rem;
         }
-        button { background-color: var(--azul-tecnico); color: white; cursor: pointer; font-weight: bold; touch-action: manipulation; }
+        button { background-color: var(--azul-tecnico); color: white; cursor: pointer; font-weight: bold; }
         button:hover { background-color: var(--azul-brillante); }
 
         .btn-volver {
@@ -128,7 +110,6 @@
             margin-bottom: 15px;
             display: inline-block;
             cursor: pointer;
-            touch-action: manipulation;
         }
         .btn-volver:hover { background-color: var(--azul-tecnico); color: #fff; }
 
@@ -141,23 +122,11 @@
             font-size: 0.9rem;
             cursor: pointer;
             transition: 0.2s;
-            touch-action: manipulation;
         }
         .btn-lib-ind:hover, .btn-video:hover, .btn-video.activo {
             background-color: var(--azul-tecnico);
             color: #fff;
             border-color: var(--azul-brillante);
-        }
-
-        #avatar-femenino-box.hablando {
-            border-color: #10b981 !important;
-            box-shadow: 0 0 25px #10b981, 0 0 45px rgba(24, 143, 167, 0.6) !important;
-            animation: pulsoFotoVoz 1s infinite alternate ease-in-out;
-        }
-
-        @keyframes pulsoFotoVoz {
-            0% { transform: scale(1.02); box-shadow: 0 0 15px #10b981; }
-            100% { transform: scale(1.08); box-shadow: 0 0 35px #10b981, 0 0 50px #188fa7; }
         }
 
         .oculto { display: none !important; }
@@ -170,13 +139,13 @@
         }
     </style>
 </head>
-<body suppressHydrationWarning="true">
+<body>
 
     <div class="contenedor" id="app-principal">
 
         <aside class="sidebar-izquierda">
             <div>
-                <div class="encabezado-sidebar" id="menu-inicio" onclick="mostrarSeccion(event, 'vista-inicio')" style="cursor: pointer;">
+                <div class="encabezado-sidebar" onclick="abrirModuloDirecto('vista-inicio')" style="cursor: pointer;">
                     <h2>Servicio y Gestión SM</h2>
                     <p style="color: #8a99ad; font-size: 0.9rem;">Menú Principal</p>
                 </div>
@@ -185,29 +154,28 @@
                     <div class="menu-section">
                         <h3 style="color: var(--azul-brillante); font-size: 0.85rem; margin-top: 20px;">📚 APRENDIZAJE Y NORMATIVA</h3>
                         <ul>
-                            <li><a href="javascript:void(0)" id="menu-asesor-voz" onclick="solicitarAccesoSeccion(event, 'vista-asesor-voz', false)"><span>🗣️ Asesor de Voz (REBT/RITE)</span></a></li>
-                            <li><a href="javascript:void(0)" id="menu-rebt" onclick="solicitarAccesoSeccion(event, 'vista-rebt', false)"><span>⚖️ Buscador REBT / RITE</span></a></li>
-                            <li><a href="javascript:void(0)" id="menu-ict" onclick="solicitarAccesoSeccion(event, 'vista-ict', false)"><span>📡 Consultas ICT (Telecom)</span></a></li>
-                            <li><a href="javascript:void(0)" id="menu-industrial" onclick="solicitarAccesoSeccion(event, 'vista-industrial', true)"><span>⚡ Automatismos</span> <span>🔒</span></a></li>
-                            <li><a href="javascript:void(0)" id="menu-ve" onclick="solicitarAccesoSeccion(event, 'vista-ve', true)"><span>🚗 Vehículo Eléctrico</span> <span>🔒</span></a></li>
-                            <li><a href="javascript:void(0)" id="menu-knx" onclick="solicitarAccesoSeccion(event, 'vista-knx', true)"><span>🟢 Domótica KNX</span> <span>🔒</span></a></li>
-                            <li><a href="javascript:void(0)" id="menu-solar" onclick="solicitarAccesoSeccion(event, 'vista-solar', true)"><span>🌞 Solar Fotovoltaica</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-asesor-voz')"><span>🗣️ Asesor de Voz</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-rebt')"><span>⚖️ Buscador REBT / RITE</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-ict')"><span>📡 Consultas ICT</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-industrial')"><span>⚡ Automatismos</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-ve')"><span>🚗 Vehículo Eléctrico</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-knx')"><span>🟢 Domótica KNX</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-solar')"><span>🌞 Solar Fotovoltaica</span> <span>🔒</span></a></li>
                         </ul>
                     </div>
 
                     <div class="menu-section">
-                        <h3 style="color: var(--azul-brillante); font-size: 0.85rem; margin-top: 20px;">💰 MONETIZACIÓN Y NEGOCIO</h3>
+                        <h3 style="color: var(--azul-brillante); font-size: 0.85rem; margin-top: 20px;">💰 GESTIÓN Y NEGOCIO</h3>
                         <ul>
-                            <li><a href="javascript:void(0)" id="menu-facturas" onclick="solicitarAccesoSeccion(event, 'vista-facturas', true)"><span>📄 Generar Facturas</span> <span>🔒</span></a></li>
-                            <li><a href="javascript:void(0)" id="menu-precios" onclick="solicitarAccesoSeccion(event, 'vista-precios', false)"><span>📊 Tarifas y Precios</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-facturas')"><span>📄 Generar Facturas</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-precios')"><span>📊 Tarifas y Precios</span></a></li>
                         </ul>
                     </div>
                 </nav>
             </div>
 
-            <!-- BOTÓN ESTADO DE LICENCIA -->
             <div style="padding-top: 20px; border-top: 1px solid var(--bordes); margin-top: 20px; text-align: center;">
-                <button type="button" onclick="gestionarLicenciaModal()" id="btn-estado-licencia" style="width: 100%; font-size: 0.85rem; padding: 10px; background-color: var(--input-bg); border: 1px solid var(--bordes); color: #94a3b8; border-radius: 6px;">🔑 Activar Licencia Pro</button>
+                <button type="button" onclick="gestionarBotonLicencia()" id="btn-estado-licencia" style="width: 100%; font-size: 0.85rem; padding: 10px; background-color: var(--input-bg); border: 1px solid var(--bordes); color: #94a3b8; border-radius: 6px;">🔑 Activar Licencia Pro</button>
             </div>
         </aside>
 
@@ -221,147 +189,94 @@
                 </header>
 
                 <div class="portada-grid">
-                    <div class="tarjeta-modulo" id="card-asesor-voz" onclick="solicitarAccesoSeccion(event, 'vista-asesor-voz', false)">
+                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-asesor-voz')">
                         <div style="font-size: 2rem; margin-bottom: 12px;">🗣️</div>
                         <h3>Asesor Parlante de Voz</h3>
-                        <p style="color: #a0aec0;">Consulta interactiva por micrófono sobre normativas y diferenciales.</p>
+                        <p style="color: #a0aec0;">Consulta interactiva por micrófono sobre normativas.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-rebt" onclick="solicitarAccesoSeccion(event, 'vista-rebt', false)">
+                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-rebt')">
                         <div style="font-size: 2rem; margin-bottom: 12px;">⚖️</div>
                         <h3>Buscador REBT / RITE</h3>
                         <p style="color: #a0aec0;">Consulta rápida de normativas de baja tensión asistida por IA.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-ict" onclick="solicitarAccesoSeccion(event, 'vista-ict', false)">
+                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-ict')">
                         <div style="font-size: 2rem; margin-bottom: 12px;">📡</div>
                         <h3>Consultas ICT</h3>
-                        <p style="color: #a0aec0;">Infraestructuras comunes de telecomunicación (RD 346/2011), registros y tomas.</p>
+                        <p style="color: #a0aec0;">Infraestructuras de telecomunicación (RD 346/2011).</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-industrial" onclick="solicitarAccesoSeccion(event, 'vista-industrial', true)">
+                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-industrial')">
                         <span class="insignia-candado">🔒 PRO</span>
                         <div style="font-size: 2rem; margin-bottom: 12px;">⚡</div>
                         <h3>Automatismos</h3>
-                        <p style="color: #a0aec0;">Calculadora de motores trifásicos, esquemas de campo y averías.</p>
+                        <p style="color: #a0aec0;">Calculadora de motores trifásicos y esquemas de maniobra.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-ve" onclick="solicitarAccesoSeccion(event, 'vista-ve', true)">
+                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-ve')">
                         <span class="insignia-candado">🔒 PRO</span>
                         <div style="font-size: 2rem; margin-bottom: 12px;">🚗</div>
                         <h3>Puntos de Recarga VE</h3>
-                        <p style="color: #a0aec0;">Calculadora técnica de protecciones, esquemas y cableado según ITC-BT-52.</p>
+                        <p style="color: #a0aec0;">Cálculo de protecciones según ITC-BT-52.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-knx" onclick="solicitarAccesoSeccion(event, 'vista-knx', true)">
+                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-knx')">
                         <span class="insignia-candado">🔒 PRO</span>
                         <div style="font-size: 2rem; margin-bottom: 12px;">🟢</div>
                         <h3>Domótica KNX</h3>
-                        <p style="color: #a0aec0;">Direccionamientos lógicos, topologías físicas y apuntes del estándar.</p>
+                        <p style="color: #a0aec0;">Direccionamientos y topologías físicas del estándar.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-solar" onclick="solicitarAccesoSeccion(event, 'vista-solar', true)">
+                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-solar')">
                         <span class="insignia-candado">🔒 PRO</span>
                         <div style="font-size: 2rem; margin-bottom: 12px;">🌞</div>
                         <h3>Solar Fotovoltaica</h3>
-                        <p style="color: #a0aec0;">Cálculo de dimensionamiento, inversores y protecciones ITC-BT-40.</p>
+                        <p style="color: #a0aec0;">Cálculo de dimensionamiento e inversores ITC-BT-40.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-facturas" onclick="solicitarAccesoSeccion(event, 'vista-facturas', true)">
+                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-facturas')">
                         <span class="insignia-candado">🔒 PRO</span>
                         <div style="font-size: 2rem; margin-bottom: 12px;">📄</div>
                         <h3>Facturación</h3>
-                        <p style="color: #a0aec0;">Cálculo ágil de presupuestos, bases imponibles e IVA para clientes.</p>
+                        <p style="color: #a0aec0;">Cálculo de presupuestos, bases e IVA para clientes.</p>
                     </div>
 
-                    <div class="tarjeta-modulo" id="card-precios" onclick="solicitarAccesoSeccion(event, 'vista-precios', false)">
+                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-precios')">
                         <div style="font-size: 2rem; margin-bottom: 12px;">📊</div>
                         <h3>Tarifas y Precios</h3>
-                        <p style="color: #a0aec0;">Cálculo de margen comercial y cuadro tarifario por horas.</p>
+                        <p style="color: #a0aec0;">Cálculo de margen comercial y cuadro por horas.</p>
                     </div>
-                </div>
-
-                <!-- GESTOR MULTIMODAL EN INICIO -->
-                <div class="seccion-bloque" style="margin-top: 30px;">
-                    <h3>🤖 Gestor Técnico e Intérprete Multimodal</h3>
-                    <p style="color: #a0aec0;">Escribe tu duda o sube una foto de tu instalación (climatización, suelo radiante, cargador VE, cuadro eléctrico o registros ICT).</p>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                        <input type="text" id="cliente-nombre" placeholder="Nombre completo">
-                        <select id="tipo-servicio">
-                            <option value="Avería Urgente">Avería Urgente</option>
-                            <option value="Instalación Eléctrica">Instalación Eléctrica</option>
-                            <option value="Climatización RITE">Climatización / RITE</option>
-                            <option value="Consulta ICT">Consulta Telecomunicaciones / ICT</option>
-                        </select>
-                        <textarea id="descripcion-servicio" placeholder="Describe brevemente la consulta..." rows="3"></textarea>
-                        <input type="file" id="input-imagen-gestor" accept="image/*">
-                        
-                        <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
-                            <button type="button" id="btn-consultar-ia-cliente" style="background-color: var(--verde-ia); flex-grow: 1;">💬 Diagnosticar con IA</button>
-                            <button type="button" id="btn-enviar-instalador" style="background-color: #25d366; color: white;">📱 Enviar por WhatsApp</button>
-                        </div>
-                    </div>
-
-                    <div id="diagnostico-previo" class="oculto" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;"></div>
                 </div>
             </section>
 
-            <!-- VISTA ASESOR DE VOZ Y VIDEOTECA TÉCNICA -->
+            <!-- VISTA ASESOR DE VOZ -->
             <section id="vista-asesor-voz" class="vista-section oculto">
                 <header>
-                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
-                    <h1>🗣️ Asesora Técnica SM y Videoteca Práctica</h1>
-                    <p style="color: #a0aec0;">Consulta por voz con la asistente o visualiza videotutoriales técnicos especializados</p>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>🗣️ Asesor de Voz y Videoteca</h1>
                 </header>
-
-                <!-- CUADRO DE LA ASESORA (FOTO PROFESIONAL) -->
-                <div class="seccion-bloque" style="text-align: center; padding: 30px 20px;">
-                    <div id="avatar-femenino-box" style="width: 130px; height: 130px; border-radius: 50%; margin: 0 auto 15px; border: 4px solid var(--azul-brillante); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: all 0.3s ease; position: relative;">
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80" alt="Ingeniera Asistente" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-                    </div>
-                    <h3 style="margin-top: 0; color: var(--texto-brillante);">Ingeniera Asistente (Voz y Reglamentos)</h3>
-                    <button type="button" id="btn-hablar-asesor" style="font-size: 1.1rem; padding: 12px 28px; border-radius: 30px; background-color: var(--azul-tecnico);">🎙️ Presionar para Hablar</button>
-                    <p id="status-voz" style="color: #a0aec0; margin-top: 15px;">Haz clic en el botón e indica tu duda reglamentaria.</p>
+                <div class="seccion-bloque" style="text-align: center; padding: 30px;">
+                    <h3>Asistente de Normativa Eléctrica</h3>
+                    <button type="button" id="btn-hablar-asesor" style="font-size: 1.1rem; padding: 12px 28px; border-radius: 30px;">🎙️ Presionar para Hablar</button>
+                    <p id="status-voz" style="color: #a0aec0; margin-top: 15px;">Pulsa para realizar una consulta por voz.</p>
                     <div id="respuesta-voz-box" class="oculto" style="margin-top: 20px; text-align: left; padding: 18px; background: var(--input-bg); border-radius: 8px;"></div>
-                </div>
-
-                <!-- VIDEOTECA TÉCNICA DE YOUTUBE -->
-                <div class="seccion-bloque" style="margin-top: 20px;">
-                    <h2>📺 Videoteca Técnica Especializada (YouTube)</h2>
-                    <p style="color: #a0aec0;">Selecciona una categoría para ver clases prácticas y esquemas en vídeo:</p>
-                    
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
-                        <button type="button" class="btn-video activo" data-yt="bxauH1vg98A" data-titulo="⚡ Automatismos: Esquema Marcha-Paro y Enclavamiento">⚡ Automatismos</button>
-                        <button type="button" class="btn-video" data-yt="h6qJQLrPeKM" data-titulo="🟢 Domótica KNX: Dispositivos y Funciones">🟢 Domótica KNX</button>
-                        <button type="button" class="btn-video" data-yt="gX5uwprwG38" data-titulo="📡 Telecom (ICT-2): Recintos RITI y RITS">📡 Telecom (ICT-2)</button>
-                        <button type="button" class="btn-video" data-yt="pEpWIASbrr4" data-titulo="🌞 Solar Fotovoltaica: Paneles, Inversores y Dimensionamiento">🌞 Fotovoltaica</button>
-                    </div>
-
-                    <div style="background: var(--input-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--bordes);">
-                        <h3 id="video-titulo" style="margin-top: 0; color: var(--azul-brillante);">⚡ Automatismos: Esquema Marcha-Paro y Enclavamiento</h3>
-                        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 6px;">
-                            <iframe id="reproductor-youtube" style="position: absolute; top:0; left: 0; width: 100%; height: 100%; border: none;" src="https://www.youtube-nocookie.com/embed/bxauH1vg98A" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                    </div>
                 </div>
             </section>
 
             <!-- VISTA REBT -->
             <section id="vista-rebt" class="vista-section oculto">
                 <header>
-                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
-                    <h1>Buscador de Reglamento (REBT / RITE)</h1>
-                    <p style="color: #a0aec0;">Consultas de Normativa Asistida por IA</p>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>Buscador REBT / RITE</h1>
                 </header>
                 <div class="seccion-bloque">
-                    <h2>Consulta de Normativa</h2>
-                    <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                        <input type="text" id="entrada-busqueda" placeholder="Ej: caida de tension, seccion, contador, diferencial..." style="flex-grow: 1; min-width: 200px;">
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="entrada-busqueda" placeholder="Ej: caida de tension, seccion, cuadro..." style="flex-grow: 1;">
                         <button type="button" id="btn-buscar">Buscar</button>
                     </div>
                     <div id="resultados-busqueda" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;">
-                        <p class="placeholder-text" style="color: #a0aec0;">Los resultados de la búsqueda aparecerán aquí.</p>
+                        <p style="color: #a0aec0;">Escribe tu consulta y pulsa Buscar.</p>
                     </div>
                 </div>
             </section>
@@ -369,95 +284,34 @@
             <!-- VISTA ICT -->
             <section id="vista-ict" class="vista-section oculto">
                 <header>
-                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
-                    <h1>📡 Infraestructuras Comunes de Telecomunicaciones (ICT)</h1>
-                    <p style="color: #a0aec0;">Reglamento Real Decreto 346/2011 y normativa técnica de ICT-2</p>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>📡 Consultas ICT (RD 346/2011)</h1>
                 </header>
                 <div class="seccion-bloque">
-                    <h2>Consulta Técnica de Telecomunicaciones</h2>
-                    <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                        <input type="text" id="entrada-busqueda-ict" placeholder="Ej: riti, rits, pau, tomas, fibra, coaxial, registro..." style="flex-grow: 1; min-width: 200px;">
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="entrada-busqueda-ict" placeholder="Ej: riti, rits, pau, tomas..." style="flex-grow: 1;">
                         <button type="button" id="btn-buscar-ict">Buscar ICT</button>
                     </div>
                     <div id="resultados-busqueda-ict" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;">
-                        <p class="placeholder-text" style="color: #a0aec0;">Introduce un término como "riti", "pau", "tomas" o "fibra" para consultar la normativa ICT.</p>
+                        <p style="color: #a0aec0;">Resultados de telecomunicaciones aquí.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- VISTA AUTOMATISMOS Y ELECTRICIDAD INDUSTRIAL -->
+            <!-- VISTA AUTOMATISMOS -->
             <section id="vista-industrial" class="vista-section oculto">
                 <header>
-                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
-                    <h1>⚡ Automatismos y Electricidad Industrial</h1>
-                    <p style="color: #a0aec0;">Simulación de maniobra, esquemas funcionales, cálculo de motores y diagnóstico en campo</p>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>⚡ Automatismos Industriales</h1>
                 </header>
-
-                <!-- SIMULADOR MARCHA / PARO -->
                 <div class="seccion-bloque">
-                    <h2>🎮 Simulador Virtual de Circuito de Maniobra (Marcha/Paro)</h2>
-                    <p style="color: #a0aec0;">Prueba el funcionamiento eléctrico del enclavamiento de contactos auxiliares (13-14 de KM1).</p>
-
-                    <div style="display: flex; justify-content: space-around; align-items: center; background-color: var(--input-bg); padding: 20px; border-radius: 8px; border: 1px solid var(--bordes); margin-top: 15px; flex-wrap: wrap; gap: 20px;">
-                        <div style="display: flex; flex-direction: column; gap: 15px;">
-                            <button type="button" id="sim-btn-paro" style="background-color: #e53e3e; color: white; padding: 15px; border-radius: 50%; font-weight: bold; border: 3px solid #9b2c2c; cursor: pointer; width: 80px; height: 80px; font-size: 11px;">S1 (PARO)</button>
-                            <button type="button" id="sim-btn-marcha" style="background-color: #38a169; color: white; padding: 15px; border-radius: 50%; font-weight: bold; border: 3px solid #22543d; cursor: pointer; width: 80px; height: 80px; font-size: 11px;">S2 (MARCHA)</button>
-                        </div>
-
-                        <div style="color: white; font-family: monospace; font-size: 14px; display: flex; flex-direction: column; gap: 10px;">
-                            <p>• Contacto S1 (Paro): <span id="estado-s1" style="color: #68d391; font-weight: bold;">CERRADO (NC)</span></p>
-                            <p>• Contacto S2 (Marcha): <span id="estado-s2" style="color: #fc8181; font-weight: bold;">ABIERTO (NA)</span></p>
-                            <p>• Enclavamiento KM1 (13-14): <span id="estado-km1-aux" style="color: #fc8181; font-weight: bold;">ABIERTO</span></p>
-                            <p>• Bobina Contactor KM1 (A1-A2): <span id="estado-bobina" style="color: #718096; font-weight: bold;">DESACTIVADA</span></p>
-                        </div>
-
-                        <div style="text-align: center;">
-                            <div id="piloto-motor" style="width: 60px; height: 60px; border-radius: 50%; background-color: #2a3441; border: 4px solid #1a232e; margin: 0 auto; transition: background-color 0.2s, box-shadow 0.2s;"></div>
-                            <p style="margin-top: 8px; font-size: 12px; font-weight: bold; color: #ffffff;">MOTOR</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- CALCULADORA DE MOTORES Y PROTECCIONES -->
-                <div class="seccion-bloque">
-                    <h2>📐 Calculadora de Motores Trifásicos y Protecciones</h2>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 15px;">
+                    <h2>🎮 Simulador Marcha / Paro</h2>
+                    <div style="display: flex; justify-content: space-around; align-items: center; background-color: var(--input-bg); padding: 20px; border-radius: 8px;">
                         <div>
-                            <label>Potencia Motor (kW):</label>
-                            <input type="number" id="ind-potencia-motor" value="5.5" step="0.5" style="width: 100%;">
+                            <button type="button" id="sim-btn-paro" style="background-color: #e53e3e; width: 70px; height: 70px; border-radius: 50%; font-size: 11px;">PARO</button>
+                            <button type="button" id="sim-btn-marcha" style="background-color: #38a169; width: 70px; height: 70px; border-radius: 50%; font-size: 11px; margin-left: 10px;">MARCHA</button>
                         </div>
-                        <div>
-                            <label>Tensión de Red (V):</label>
-                            <select id="ind-tension-red" style="width: 100%;">
-                                <option value="400">400 V (Trifásico)</option>
-                                <option value="230">230 V (Trifásico)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Cos &phi; (Factor Potencia):</label>
-                            <input type="number" id="ind-cos-phi" value="0.85" step="0.01" style="width: 100%;">
-                        </div>
-                        <div>
-                            <label>Rendimiento (&eta;):</label>
-                            <input type="number" id="ind-rendimiento" value="0.88" step="0.01" style="width: 100%;">
-                        </div>
-                    </div>
-                    <button type="button" id="btn-calcular-motor" style="margin-top: 15px; width: 100%;">⚡ Calcular Intensidad Nominal y Guardamotor</button>
-                    <div id="resultado-calculo-motor" class="oculto" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;"></div>
-                </div>
-
-                <!-- BIBLIOTECA TÉCNICA DE AUTOMATISMOS -->
-                <div class="seccion-bloque">
-                    <h2>📚 Biblioteca de Esquemas, Borneras y Averías en Campo</h2>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
-                        <button type="button" class="btn-lib-ind" data-tema="arranque-directo">Arranque Directo</button>
-                        <button type="button" class="btn-lib-ind" data-tema="estrella-triangulo">Estrella - Triángulo</button>
-                        <button type="button" class="btn-lib-ind" data-tema="inversion-giro">Inversión de Giro</button>
-                        <button type="button" class="btn-lib-ind" data-tema="rele-termico">Borna 95-96 / 97-98</button>
-                        <button type="button" class="btn-lib-ind" data-tema="averias-frecuentes">Averías Típicas</button>
-                    </div>
-                    <div id="visor-biblioteca-industrial" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px; border-left: 4px solid var(--azul-brillante);">
-                        <p style="color: #a0aec0;">Selecciona un tema para consultar el esquema funcional, conexionado y diagnóstico.</p>
+                        <div id="piloto-motor" style="width: 50px; height: 50px; border-radius: 50%; background-color: #2a3441; border: 3px solid #1a232e;"></div>
                     </div>
                 </div>
             </section>
@@ -465,284 +319,159 @@
             <!-- VISTA VEHÍCULO ELÉCTRICO -->
             <section id="vista-ve" class="vista-section oculto">
                 <header>
-                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
-                    <h1>🚗 Puntos de Recarga de Vehículo Eléctrico (ITC-BT-52)</h1>
-                    <p style="color: #a0aec0;">Cálculo de líneas, protecciones e IGA recomendado</p>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>🚗 Vehículo Eléctrico (ITC-BT-52)</h1>
                 </header>
                 <div class="seccion-bloque">
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <label>Esquema de Instalación (ITC-BT-52)</label>
-                        <select id="ve-esquema">
-                            <option value="2">Esquema 2 (Contador Principal Único)</option>
-                            <option value="1a">Esquema 1a (Contador Principal + Secundario)</option>
-                            <option value="4a">Esquema 4a (Circuito dedicado vivienda)</option>
-                        </select>
-                        <label>Potencia de Recarga (kW)</label>
-                        <input type="number" id="ve-potencia" value="7.4" step="0.1">
-                        <label>Distancia aproximada (metros)</label>
-                        <input type="number" id="ve-distancia" value="20">
-                        <button type="button" id="btn-calcular-ve" style="margin-top: 10px;">⚡ Calcular Protecciones y Cable</button>
-                    </div>
-                    <div id="resultado-ve" class="oculto" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;">
-                        <div id="contenido-resultado-ve"></div>
-                    </div>
+                    <p>Módulo de dimensionamiento de cargadores y protecciones.</p>
                 </div>
             </section>
 
             <!-- VISTA KNX -->
             <section id="vista-knx" class="vista-section oculto">
                 <header>
-                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
                     <h1>🟢 Domótica KNX</h1>
-                    <p style="color: #a0aec0;">Estructurador de Direcciones Físicas y Asistente ETS</p>
                 </header>
                 <div class="seccion-bloque">
-                    <h3>Generador Manual de Dirección Física</h3>
-                    <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
-                        <input type="number" id="knx-area" placeholder="Área (Ej: 1)" style="width: 100px;">
-                        <input type="number" id="knx-linea" placeholder="Línea (Ej: 1)" style="width: 100px;">
-                        <input type="number" id="knx-dispositivo" placeholder="Aparato (Ej: 10)" style="width: 120px;">
-                        <button type="button" id="btn-generar-knx">Generar</button>
-                    </div>
-                    <div id="resultado-knx" class="oculto" style="margin-top: 10px; padding: 10px; background: var(--input-bg);">
-                        <p>Dirección Física Resultante: <strong id="knx-direccion-result" style="color: var(--verde-ia);"></strong></p>
-                    </div>
+                    <p>Generador de direcciones y configuración ETS.</p>
                 </div>
             </section>
 
             <!-- VISTA SOLAR -->
             <section id="vista-solar" class="vista-section oculto">
                 <header>
-                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
-                    <h1>🌞 Solar Fotovoltaica (ITC-BT-40)</h1>
-                    <p style="color: #a0aec0;">Calculadora de Dimensionamiento e Inversores</p>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>🌞 Solar Fotovoltaica</h1>
                 </header>
                 <div class="seccion-bloque">
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <label>Consumo Promedio Mensual (kWh)</label>
-                        <input type="number" id="fv-consumo" value="350">
-                        <label>Potencia de cada Panel (Wp)</label>
-                        <input type="number" id="fv-potencia-panel" value="500">
-                        <label>Tipo de Instalación</label>
-                        <select id="fv-tipo">
-                            <option value="red">Conectada a Red (On-Grid)</option>
-                            <option value="bateria">Híbrida con Baterías</option>
-                        </select>
-                        <button type="button" id="btn-calcular-fv">☀️ Calcular Generación</button>
-                    </div>
-                    <div id="resultado-fv" class="oculto" style="margin-top: 15px; padding: 15px; background: var(--input-bg); border-radius: 6px;">
-                        <div id="contenido-resultado-fv"></div>
-                    </div>
+                    <p>Cálculo de paneles e inversores ITC-BT-40.</p>
                 </div>
             </section>
 
             <!-- VISTA FACTURAS -->
             <section id="vista-facturas" class="vista-section oculto">
                 <header>
-                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
-                    <h1>📄 Sistema de Facturación</h1>
-                    <p style="color: #a0aec0;">Crea y calcula de forma rápida presupuestos y facturas</p>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>📄 Facturación y Presupuestos</h1>
                 </header>
                 <div class="seccion-bloque">
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <h3>Datos del Cliente</h3>
-                        <input type="text" id="fac-cliente" placeholder="Nombre del Cliente">
-                        <input type="text" id="fac-nif" placeholder="DNI / NIF / CIF">
-
-                        <h3>Concepto del Trabajo</h3>
-                        <input type="text" id="fac-concepto" placeholder="Ej: Mantenimiento cuadro">
-                        <input type="number" id="fac-precio" placeholder="Precio Base (€)">
-                    </div>
-
-                    <div style="margin-top: 20px; padding: 15px; background: var(--input-bg); border-radius: 6px;">
-                        <p>Base Imponible: <span id="total-base">0.00</span> €</p>
-                        <p>IVA (21%): <span id="total-iva">0.00</span> €</p>
-                        <h3 style="color: var(--verde-ia);">Total Factura: <span id="total-factura">0.00</span> €</h3>
-                    </div>
-                    <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <button type="button" id="btn-calcular-factura" style="flex-grow: 1;">📊 Calcular Totales</button>
-                        <button type="button" id="btn-imprimir-factura">🖨️ Imprimir</button>
-                    </div>
-                    <div id="vista-previa-factura" class="oculto" style="margin-top: 15px; padding: 15px; background: #fff; color: #000; border-radius: 6px;">
-                        <div id="contenido-borrador"></div>
-                    </div>
+                    <p>Generador de facturas y control de presupuestos.</p>
                 </div>
             </section>
 
-            <!-- VISTA TARIFAS Y PRECIOS -->
+            <!-- VISTA PRECIOS -->
             <section id="vista-precios" class="vista-section oculto">
                 <header>
-                    <button type="button" class="btn-volver" onclick="mostrarSeccion(event, 'vista-inicio')">⬅ Volver al Menú Principal</button>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
                     <h1>📊 Tarifas y Cuadro de Precios</h1>
-                    <p style="color: #a0aec0;">Calculadora de margen comercial y servicios técnicos por hora</p>
                 </header>
                 <div class="seccion-bloque">
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <label>Horas Estimadas de Trabajo</label>
-                        <input type="number" id="tarifa-horas" value="2">
-                        <label>Precio / Hora (€/h)</label>
-                        <input type="number" id="tarifa-precio-hora" value="35">
-                        <label>Desplazamiento / Salida (€)</label>
-                        <input type="number" id="tarifa-desplazamiento" value="25">
-                        <button type="button" id="btn-calcular-tarifa" style="margin-top: 10px;">💶 Calcular Presupuesto Estimado</button>
-                    </div>
-                    <div style="margin-top: 20px; padding: 15px; background: var(--input-bg); border-radius: 6px;">
-                        <p>Subtotal Mano de Obra: <span id="subtotal-horas">0.00</span> €</p>
-                        <p>Desplazamiento: <span id="subtotal-desplazamiento">0.00</span> €</p>
-                        <h3 style="color: var(--verde-ia);">Total Estimado: <span id="total-estimado">0.00</span> €</h3>
-                    </div>
+                    <p>Cálculo de tarifas por hora y margen de instalación.</p>
                 </div>
             </section>
 
         </main>
     </div>
 
-    <!-- MODAL DE BLOQUEO POR CLAVE / LICENCIA PRO -->
-    <div id="modal-licencia" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(6px);">
-        <div style="background: #131e2b; border: 1px solid var(--bordes); border-radius: 14px; padding: 25px; max-width: 420px; width: 90%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6); color: var(--texto-principal);">
-            
+    <!-- MODAL DE CLAVE / CANDADO -->
+    <div id="modal-licencia" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999999; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
+        <div style="background: #131e2b; border: 1px solid var(--bordes); border-radius: 14px; padding: 25px; max-width: 400px; width: 90%; text-align: center; color: var(--texto-principal);">
             <div style="font-size: 3rem; margin-bottom: 8px;">🔒</div>
-            <h3 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 6px; color: var(--azul-brillante);">Módulo Protegido</h3>
-            <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 20px;">
-                Esta función requiere una clave de activación o licencia profesional de <strong>Servicio y Gestión SM</strong>.
-            </p>
+            <h3 style="font-size: 1.3rem; margin-bottom: 8px; color: var(--azul-brillante);">Módulo Protegido</h3>
+            <p style="font-size: 0.88rem; color: #94a3b8; margin-bottom: 20px;">Introduce tu clave de acceso para desbloquear este módulo:</p>
 
-            <div style="margin-bottom: 20px; text-align: left;">
-                <label style="display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 6px;">Introduce tu clave de acceso:</label>
-                <input type="password" id="input-clave-licencia" placeholder="Ej: SM-PRO-2026" style="width: 100%; box-sizing: border-box; padding: 10px 14px; border-radius: 6px; border: 1px solid var(--bordes); background: var(--input-bg); color: var(--texto-brillante); font-size: 1rem; outline: none;">
-                <p id="error-clave-licencia" style="display: none; color: #ef4444; font-size: 0.8rem; margin-top: 8px; font-weight: 600;">❌ Clave incorrecta o caducada</p>
-            </div>
+            <input type="password" id="input-clave-licencia" placeholder="Ej: SM-PRO-2026" style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--bordes); background: var(--input-bg); color: #fff; font-size: 1rem; margin-bottom: 12px; outline: none;">
+            <p id="error-clave-licencia" style="display: none; color: #ef4444; font-size: 0.82rem; margin-bottom: 12px; font-weight: bold;">❌ Clave incorrecta</p>
 
             <div style="display: flex; gap: 10px;">
-                <button type="button" onclick="cerrarModalLicencia()" style="flex: 1; padding: 10px; background: var(--bordes); color: #e2e8f0; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Cancelar</button>
-                <button type="button" onclick="validarClaveAcceso()" style="flex: 1; padding: 10px; background: var(--azul-tecnico); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Desbloquear</button>
-            </div>
-
-            <div style="margin-top: 20px; border-top: 1px solid var(--bordes); padding-top: 12px;">
-                <a href="https://wa.me/" target="_blank" style="color: var(--azul-brillante); font-size: 0.85rem; text-decoration: none; font-weight: 500;">¿No tienes clave? Solicitar licencia por WhatsApp ➔</a>
+                <button type="button" onclick="cerrarModalLicencia()" style="flex: 1; padding: 10px; background: var(--bordes); border: none; border-radius: 6px;">Cancelar</button>
+                <button type="button" onclick="validarClaveAcceso()" style="flex: 1; padding: 10px; background: var(--azul-tecnico); border: none; border-radius: 6px;">Desbloquear</button>
             </div>
         </div>
     </div>
 
-    <!-- NAVEGACIÓN Y CONTROL DE SEGURIDAD ROBUSTO -->
+    <!-- MOTOR DE CONTROL DIRECTO (SIN DEPENDENCIAS) -->
     <script>
         const CLAVE_MAESTRA = "SM-ADMIN-7788";
-        const CLAVES_AUTORIZADAS = ["SM-PRO-2026", "SM-CLIENTE-01", "SM-CLIENTE-02"];
+        const CLAVES_VALIDAS = ["SM-PRO-2026", "SM-CLIENTE-01", "SM-CLIENTE-02"];
+        let destinoPendiente = null;
 
-        let seccionPendienteDesbloqueo = null;
-
-        function tieneLicenciaActiva() {
-            const claveGuardada = localStorage.getItem("licencia_sm_activa");
-            if (!claveGuardada) return false;
-            return claveGuardada === CLAVE_MAESTRA || CLAVES_AUTORIZADAS.includes(claveGuardada);
+        function tieneLicencia() {
+            const clave = localStorage.getItem("licencia_sm_activa");
+            return (clave === CLAVE_MAESTRA || CLAVES_VALIDAS.includes(clave));
         }
 
-        function actualizarBotonLicencia() {
-            const btn = document.getElementById('btn-estado-licencia');
-            if (btn) {
-                if (tieneLicenciaActiva()) {
-                    btn.innerHTML = '🟢 Licencia Activa (Cerrar Sesión)';
-                    btn.style.color = '#10b981';
-                    btn.style.borderColor = '#10b981';
-                } else {
-                    btn.innerHTML = '🔑 Activar Licencia Pro';
-                    btn.style.color = '#94a3b8';
-                    btn.style.borderColor = 'var(--bordes)';
-                }
-            }
-        }
-
-        function solicitarAccesoSeccion(e, idSeccion, requiereLicencia) {
-            if (e) {
-                if (e.preventDefault) e.preventDefault();
-                if (e.stopPropagation) e.stopPropagation();
-            }
-
-            if (requiereLicencia && !tieneLicenciaActiva()) {
-                seccionPendienteDesbloqueo = idSeccion;
+        function verificarYEntrar(idVista) {
+            if (tieneLicencia()) {
+                abrirModuloDirecto(idVista);
+            } else {
+                destinoPendiente = idVista;
                 document.getElementById('input-clave-licencia').value = '';
                 document.getElementById('error-clave-licencia').style.display = 'none';
                 document.getElementById('modal-licencia').style.display = 'flex';
-                return false;
             }
-
-            mostrarSeccion(e, idSeccion);
-            return false;
         }
 
-        function mostrarSeccion(e, idSeccion) {
-            if (e) {
-                if (e.preventDefault) e.preventDefault();
-                if (e.stopPropagation) e.stopPropagation();
-            }
-            
-            const secciones = document.querySelectorAll('.vista-section');
-            secciones.forEach(sec => sec.classList.add('oculto'));
-
-            const seccionObjetivo = document.getElementById(idSeccion);
-            if (seccionObjetivo) {
-                seccionObjetivo.classList.remove('oculto');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-
-            const enlacesMenu = document.querySelectorAll('.menu-sidebar a');
-            enlacesMenu.forEach(link => link.classList.remove('activo'));
-            const enlaceActivo = document.getElementById(`menu-${idSeccion.replace('vista-', '')}`);
-            if (enlaceActivo) enlaceActivo.classList.add('activo');
+        function abrirModuloDirecto(idVista) {
+            document.querySelectorAll('.vista-section').forEach(sec => sec.classList.add('oculto'));
+            const destino = document.getElementById(idVista);
+            if (destino) destino.classList.remove('oculto');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function cerrarModalLicencia() {
             document.getElementById('modal-licencia').style.display = 'none';
-            seccionPendienteDesbloqueo = null;
+            destinoPendiente = null;
         }
 
         function validarClaveAcceso() {
-            const input = document.getElementById('input-clave-licencia').value.trim();
-            const errorMsg = document.getElementById('error-clave-licencia');
+            const val = document.getElementById('input-clave-licencia').value.trim();
+            const err = document.getElementById('error-clave-licencia');
 
-            if (input === CLAVE_MAESTRA || CLAVES_AUTORIZADAS.includes(input)) {
-                localStorage.setItem("licencia_sm_activa", input);
+            if (val === CLAVE_MAESTRA || CLAVES_VALIDAS.includes(val)) {
+                localStorage.setItem("licencia_sm_activa", val);
                 document.getElementById('modal-licencia').style.display = 'none';
-                actualizarBotonLicencia();
-
-                if (seccionPendienteDesbloqueo) {
-                    mostrarSeccion(null, seccionPendienteDesbloqueo);
-                    seccionPendienteDesbloqueo = null;
+                actualizarBotonEstado();
+                if (destinoPendiente) {
+                    abrirModuloDirecto(destinoPendiente);
+                    destinoPendiente = null;
                 }
             } else {
-                errorMsg.style.display = 'block';
+                err.style.display = 'block';
             }
         }
 
-        function gestionarLicenciaModal() {
-            if (tieneLicenciaActiva()) {
-                if (confirm("¿Deseas cerrar la sesión y volver a bloquear los módulos protegidos?")) {
+        function gestionarBotonLicencia() {
+            if (tieneLicencia()) {
+                if (confirm("¿Deseas cerrar sesión y bloquear los módulos de nuevo?")) {
                     localStorage.removeItem("licencia_sm_activa");
-                    actualizarBotonLicencia();
-                    mostrarSeccion(null, 'vista-inicio');
+                    actualizarBotonEstado();
+                    abrirModuloDirecto('vista-inicio');
                 }
             } else {
-                document.getElementById('input-clave-licencia').value = '';
-                document.getElementById('error-clave-licencia').style.display = 'none';
-                document.getElementById('modal-licencia').style.display = 'flex';
+                verificarYEntrar('vista-industrial');
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            actualizarBotonLicencia();
-        });
-    </script>
+        function actualizarBotonEstado() {
+            const b = document.getElementById('btn-estado-licencia');
+            if (b) {
+                b.innerHTML = tieneLicencia() ? '🟢 Licencia Activa (Cerrar)' : '🔑 Activar Licencia Pro';
+                b.style.color = tieneLicencia() ? '#10b981' : '#94a3b8';
+            }
+        }
 
-    <!-- SCRIPT PRINCIPAL Y SERVICE WORKER -->
-    <script src="./main.js"></script>
-    <script>
+        // LIMPIADOR RADICAL DE SERVICE WORKER ANTIGUO
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker registrado:', reg.scope))
-                    .catch(err => console.error('Error Service Worker:', err));
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
             });
         }
+
+        document.addEventListener('DOMContentLoaded', actualizarBotonEstado);
     </script>
 </body>
 </html>
