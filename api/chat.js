@@ -1,4 +1,13 @@
+// ==========================================
+// SERVICIO Y GESTIÓN SM - API DE ELENA
+// Gemini API mediante REST
+// ==========================================
+
 export default async function handler(req, res) {
+
+  // ------------------------------------------
+  // CORS
+  // ------------------------------------------
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -7,67 +16,207 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
+  // ------------------------------------------
+  // Solo permitimos POST
+  // ------------------------------------------
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
+    return res.status(405).json({
+      error: 'Método no permitido'
+    });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_KEY;
+  // ------------------------------------------
+  // API KEY
+  // ------------------------------------------
+  const apiKey =
+    process.env.GEMINI_API_KEY ||
+    process.env.GEMINI_KEY;
 
   if (!apiKey) {
-    return res.status(500).json({ error: 'Falta configurar GEMINI_API_KEY en Vercel' });
+    console.error('ERROR: No existe GEMINI_API_KEY');
+
+    return res.status(500).json({
+      error: 'Falta configurar GEMINI_API_KEY en Vercel.'
+    });
   }
 
   try {
-    const { prompt } = req.body || {};
+
+    // ------------------------------------------
+    // RECIBIR PROMPT
+    // ------------------------------------------
+    const body = req.body || {};
+    const prompt = typeof body.prompt === 'string'
+      ? body.prompt.trim()
+      : '';
 
     if (!prompt) {
-      return res.status(400).json({ error: 'El mensaje está vacío' });
+      return res.status(400).json({
+        error: 'El mensaje está vacío.'
+      });
     }
 
-    const sistemaInstruccion = `Eres Elena, ingeniera técnica industrial y eléctrica de la empresa "Servicio y Gestión SM" en España.
-Asesoras a instaladores autorizados, electricistas y técnicos en REBT, RITE, ITC-BT-52, ITC-BT-40 e ICT-2.
-Hablas siempre en femenino ("como ingeniera técnica...", "te he calculado la sección...").
-Responde con tono técnico, riguroso, directo y usando formato HTML limpio (<strong>, <br>, <ul>, <li>, <table>).`;
+    // ------------------------------------------
+    // INSTRUCCIONES DE ELENA
+    // ------------------------------------------
+    const sistemaInstruccion = `
+Eres Elena, ingeniera técnica industrial y eléctrica
+de la empresa "Servicio y Gestión SM" en España.
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+Tu función es asesorar a instaladores autorizados,
+electricistas y técnicos.
 
-    const payload = {
-      systemInstruction: {
-        parts: [{ text: sistemaInstruccion }]
-      },
-      contents: [
-        {
-          role: 'user',
-          parts: [{ text: prompt }]
-        }
-      ]
-    };
+Tus especialidades incluyen:
 
-    const response = await fetch(url, {
+- REBT
+- RITE
+- ITC-BT
+- ITC-BT-52
+- ITC-BT-40
+- ICT-2
+- instalaciones eléctricas
+- protecciones
+- diferenciales
+- magnetotérmicos
+- caída de tensión
+- secciones de conductores
+- vehículos eléctricos
+- instalaciones fotovoltaicas
+- telecomunicaciones
+- automatización
+
+Responde siempre en español.
+
+Habla en femenino.
+
+Utiliza un tono técnico, claro, profesional y directo.
+
+Cuando sea necesario, indica la ITC o normativa aplicable.
+
+No inventes artículos ni valores reglamentarios.
+Si no puedes confirmar un dato normativo, indícalo claramente.
+
+Puedes utilizar HTML sencillo para facilitar la lectura:
+
+<strong>
+<br>
+<ul>
+<li>
+
+No utilices Markdown complejo.
+`;
+
+    // ------------------------------------------
+    // URL GEMINI
+    // ------------------------------------------
+    const url =
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+
+    // ------------------------------------------
+    // PETICIÓN A GEMINI
+    // ------------------------------------------
+    const respuestaGemini = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey
+      },
+
+      body: JSON.stringify({
+
+        systemInstruction: {
+          parts: [
+            {
+              text: sistemaInstruccion
+            }
+          ]
+        },
+
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              {
+                text: prompt
+              }
+            ]
+          }
+        ],
+
+        generationConfig: {
+          temperature: 0.3,
+          maxOutputTokens: 2048
+        }
+
+      })
     });
 
-    const data = await response.json();
+    // ------------------------------------------
+    // LEER RESPUESTA DE GOOGLE
+    // ------------------------------------------
+    const datos = await respuestaGemini.json();
 
-    if (!response.ok) {
-      console.error('Error Google API:', data);
-      return res.status(response.status).json({ error: data.error?.message || 'Error en Gemini API' });
+    // ------------------------------------------
+    // SI GEMINI DEVUELVE ERROR
+    // ------------------------------------------
+    if (!respuestaGemini.ok) {
+
+      console.error(
+        'Error de Gemini:',
+        JSON.stringify(datos, null, 2)
+      );
+
+      const mensajeGoogle =
+        datos?.error?.message ||
+        'Error desconocido de Gemini';
+
+      return res.status(respuestaGemini.status).json({
+        error: 'Gemini ha rechazado la solicitud.',
+        details: mensajeGoogle
+      });
     }
 
-    const textoRespuesta = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No se pudo generar respuesta.';
+    // ------------------------------------------
+    // EXTRAER TEXTO
+    // ------------------------------------------
+    const textoRespuesta =
+      datos?.candidates?.[0]?.content?.parts
+        ?.map(part => part.text || '')
+        .join('')
+        .trim();
 
+    if (!textoRespuesta) {
+
+      console.error(
+        'Gemini respondió sin texto:',
+        JSON.stringify(datos, null, 2)
+      );
+
+      return res.status(502).json({
+        error: 'Gemini no devolvió texto.',
+        details: 'La respuesta no contiene candidates/content/parts.'
+      });
+    }
+
+    // ------------------------------------------
+    // RESPUESTA FINAL A MAIN.JS
+    // ------------------------------------------
     return res.status(200).json({
       text: textoRespuesta,
       respuesta: textoRespuesta
     });
 
   } catch (error) {
-    console.error('Error servidor:', error);
+
+    console.error(
+      'ERROR INTERNO API ELENA:',
+      error
+    );
+
     return res.status(500).json({
-      error: 'Error interno del servidor',
-      details: error.message
+      error: 'Error interno del servidor.',
+      details: error?.message || String(error)
     });
   }
 }
