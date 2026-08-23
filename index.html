@@ -255,7 +255,6 @@
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-solar')"><span>🌞 Solar Fotovoltaica (BT-40)</span> <span>🔒</span></a></li>
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-industrial')"><span>⚙️ Automatismos CADe SIMU</span> <span>🔒</span></a></li>
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-knx')"><span>🟢 Domótica KNX</span> <span>🔒</span></a></li>
-                            <!-- NUEVO APARTADO AÑADIDO LIMPIAMENTE -->
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-domotica-inalambrica')"><span>🏠 Domótica Inalámbrica & IoT</span> <span>🔒</span></a></li>
                             <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-videoteca')"><span>📺 Videoteca Técnica</span></a></li>
                         </ul>
@@ -321,7 +320,6 @@
                             <option value="Instalación Fotovoltaica">Instalación Fotovoltaica</option>
                             <option value="Punto de Recarga VE">Punto de Recarga VE</option>
                             <option value="Infraestructura ICT">Infraestructura ICT</option>
-                            <!-- NUEVA OPCIÓN AÑADIDA -->
                             <option value="Domótica Inalámbrica (Zigbee/Z-Wave/Google)">Domótica Inalámbrica (Zigbee/Z-Wave/Google)</option>
                         </select>
 
@@ -395,7 +393,6 @@
                         <p style="color: #a0aec0; font-size: 0.9rem;">Topología de bus, límites y direccionamientos ETS.</p>
                     </div>
 
-                    <!-- NUEVA TARJETA AÑADIDA -->
                     <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-domotica-inalambrica')">
                         <span class="insignia-candado">🔒 PRO</span>
                         <div style="font-size: 2rem; margin-bottom: 10px;">🏠</div>
@@ -421,7 +418,11 @@
                     <p style="color: #94a3b8; max-width: 600px; margin: 0 auto 20px auto;">
                         Consulta por voz sobre REBT, RITE, ITC-BT-52, caídas de tensión y esquemas eléctricos.
                     </p>
-                    <button type="button" id="btn-hablar-asesor" style="font-size: 1.1rem; padding: 14px 30px; border-radius: 30px; background-color: var(--azul-tecnico);">🎙️ Hablar con Elena</button>
+                    <!-- BOTONES DE HABLAR Y SILENCIAR AÑADIDOS LIMPIAMENTE -->
+                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                        <button type="button" id="btn-hablar-asesor" style="font-size: 1.1rem; padding: 14px 25px; border-radius: 30px; background-color: var(--azul-tecnico);">🎙️ Hablar con Elena</button>
+                        <button type="button" onclick="silenciarAElena()" style="font-size: 1.1rem; padding: 14px 25px; border-radius: 30px; background-color: #ef4444; border: none; color: white; cursor: pointer; font-weight: bold;">🔇 Callar</button>
+                    </div>
                     <p id="status-voz" style="color: #a0aec0; margin-top: 15px;">Pulsa para realizar tu consulta verbal.</p>
                     <div id="respuesta-voz-box" class="oculto resultado-caja" style="text-align: left;"></div>
                 </div>
@@ -730,9 +731,7 @@
                 </div>
             </section>
 
-            <!-- ========================================== -->
-            <!-- NUEVO MÓDULO AÑADIDO: DOMÓTICA INALÁMBRICA -->
-            <!-- ========================================== -->
+            <!-- VISTA DOMÓTICA INALÁMBRICA -->
             <section id="vista-domotica-inalambrica" class="vista-section oculto">
                 <header>
                     <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
@@ -741,10 +740,6 @@
 
                 <div class="seccion-bloque">
                     <h3 style="color: var(--azul-brillante); margin-top: 0;">🌐 Comparativa de Protocolos Inalámbricos en el Instalador</h3>
-                    <p style="color: #94a3b8; font-size: 0.9rem;">
-                        Guía de integración técnica para seleccionar la tecnología adecuada según el entorno de la instalación:
-                    </p>
-
                     <table class="tabla-normativa">
                         <thead>
                             <tr>
@@ -779,10 +774,6 @@
 
                 <div class="seccion-bloque">
                     <h3 style="color: var(--azul-brillante); margin-top: 0;">⚙️ Arquitectura de Enlace: Dispositivo $\rightarrow$ Pasarela $\rightarrow$ Google</h3>
-                    <p style="color: #94a3b8; font-size: 0.9rem;">
-                        Simula la jerarquía de conexión para verificar el flujo de una luz inteligente o relé Sonoff (Zigbee) hacia la app:
-                    </p>
-
                     <div class="calc-grid">
                         <div class="calc-field">
                             <label>Dispositivo Final:</label>
@@ -816,7 +807,6 @@
                     </div>
                 </div>
             </section>
-            <!-- ========================================== -->
 
             <!-- VISTA FACTURACIÓN -->
             <section id="vista-facturacion" class="vista-section oculto">
@@ -903,19 +893,26 @@
         <span style="font-size: 1.2rem;">💬</span> WhatsApp
     </a>
 
-    <!-- MODAL DE CLAVE / CANDADO -->
+    <!-- MODAL DE CLAVE / CANDADO (CON BOTÓN DE PAGO DE 4 € AÑADIDO) -->
     <div id="modal-licencia" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999999; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
         <div style="background: #131e2b; border: 1px solid var(--bordes); border-radius: 14px; padding: 25px; max-width: 400px; width: 90%; text-align: center; color: var(--texto-principal);">
             <div style="font-size: 3rem; margin-bottom: 8px;">🔒</div>
             <h3 style="font-size: 1.3rem; margin-bottom: 8px; color: var(--azul-brillante);">Módulo Protegido</h3>
-            <p style="font-size: 0.88rem; color: #94a3b8; margin-bottom: 20px;">Introduce tu clave de acceso para desbloquear este módulo:</p>
+            <p style="font-size: 0.88rem; color: #94a3b8; margin-bottom: 20px;">Introduce tu clave de acceso o desbloquea todos los módulos Pro por solo 4 €:</p>
 
             <input type="password" id="input-clave-licencia" placeholder="Ej: SM-PRO-2026" style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--bordes); background: var(--input-bg); color: #fff; font-size: 1rem; margin-bottom: 12px; outline: none;">
             <p id="error-clave-licencia" style="display: none; color: #ef4444; font-size: 0.82rem; margin-bottom: 12px; font-weight: bold;">❌ Clave incorrecta</p>
 
-            <div style="display: flex; gap: 10px;">
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                 <button type="button" onclick="cerrarModalLicencia()" style="flex: 1; padding: 10px; background: var(--bordes); border: none; border-radius: 6px;">Cancelar</button>
                 <button type="button" onclick="validarClaveAcceso()" style="flex: 1; padding: 10px; background: var(--azul-tecnico); border: none; border-radius: 6px;">Desbloquear</button>
+            </div>
+
+            <!-- NUEVO BOTÓN DE PAGO DIRECTO DE 4 € AÑADIDO LIMPIAMENTE -->
+            <div style="border-top: 1px solid var(--bordes); padding-top: 15px;">
+                <a href="https://paypal.me/tuusuario/4" target="_blank" style="display: block; background-color: var(--verde-ia); color: white; text-decoration: none; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; text-align: center;">
+                    💳 Obtener Licencia Pro (4 €)
+                </a>
             </div>
         </div>
     </div>
