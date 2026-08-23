@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Servicio y Gestión SM - Plataforma Técnica Integral</title>
+    <title>J.F - Plataforma Técnica Integral</title>
 
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#1e6091">
@@ -11,6 +11,18 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
     <style>
+        /* Corrección táctil y de rendimiento para móviles */
+        html, body {
+            touch-action: manipulation;
+            -webkit-overflow-scrolling: touch;
+            background-color: var(--bg-principal) !important;
+            color: var(--texto-principal);
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
         :root {
             --bg-principal: #0a1118;
             --panel-bg: #131e2b;
@@ -27,15 +39,6 @@
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        html, body {
-            background-color: var(--bg-principal) !important;
-            color: var(--texto-principal);
-            font-family: system-ui, -apple-system, sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
 
         .contenedor { display: flex; min-height: 100vh; background-color: var(--bg-principal); }
 
@@ -226,9 +229,12 @@
         <!-- SIDEBAR DE NAVEGACIÓN -->
         <aside class="sidebar-izquierda">
             <div>
-                <div class="encabezado-sidebar" onclick="abrirModuloDirecto('vista-inicio')" style="cursor: pointer;">
-                    <h2>⚡ Servicio y Gestión SM</h2>
-                    <p style="color: #8a99ad; font-size: 0.85rem; margin: 4px 0 0 0;">Plataforma Normativa e Ingeniería</p>
+                <div class="encabezado-sidebar" onclick="abrirModuloDirecto('vista-inicio')" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                    <img src="logo.png" alt="Logo J.F" style="width: 40px; height: 40px; object-fit: contain;">
+                    <div>
+                        <h2 style="color: var(--azul-brillante); font-size: 1.3rem; margin: 0;">J.F</h2>
+                        <p style="color: #8a99ad; font-size: 0.75rem; margin: 2px 0 0 0;">Plataforma Técnica</p>
+                    </div>
                 </div>
                 
                 <nav class="menu-sidebar">
@@ -249,6 +255,8 @@
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-solar')"><span>🌞 Solar Fotovoltaica (BT-40)</span> <span>🔒</span></a></li>
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-industrial')"><span>⚙️ Automatismos CADe SIMU</span> <span>🔒</span></a></li>
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-knx')"><span>🟢 Domótica KNX</span> <span>🔒</span></a></li>
+                            <!-- NUEVO APARTADO AÑADIDO LIMPIAMENTE -->
+                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-domotica-inalambrica')"><span>🏠 Domótica Inalámbrica & IoT</span> <span>🔒</span></a></li>
                             <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-videoteca')"><span>📺 Videoteca Técnica</span></a></li>
                         </ul>
                     </div>
@@ -265,7 +273,7 @@
                         <div style="color: var(--azul-brillante); font-size: 0.8rem; font-weight: bold; margin: 15px 0 10px 0;">📞 SOPORTE TÉCNICO</div>
                         <ul>
                             <li>
-                                <a href="https://wa.me/34642269680?text=Hola,%20solicito%20asistencia%20técnica%20sobre%20la%20aplicación%20Servicio%20y%20Gestión%20SM" target="_blank" style="color: #25d366;">
+                                <a href="https://wa.me/34642269680?text=Hola,%20solicito%20asistencia%20técnica%20sobre%20la%20aplicación%20J.F" target="_blank" style="color: #25d366;">
                                     <span>💬 WhatsApp Soporte</span> <span>↗</span>
                                 </a>
                             </li>
@@ -285,7 +293,7 @@
             <!-- VISTA INICIO -->
             <section id="vista-inicio" class="vista-section">
                 <header style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--bordes); padding-bottom: 20px;">
-                    <h1 style="font-size: 2.2rem; margin-bottom: 8px; color: var(--texto-brillante);">Servicio y Gestión SM</h1>
+                    <h1 style="font-size: 2.2rem; margin-bottom: 8px; color: var(--texto-brillante);">J.F</h1>
                     <p style="color: #a0aec0; font-size: 1rem; margin: 0;">Plataforma Técnica Integral para Instaladores e Ingenieros</p>
                 </header>
 
@@ -313,6 +321,8 @@
                             <option value="Instalación Fotovoltaica">Instalación Fotovoltaica</option>
                             <option value="Punto de Recarga VE">Punto de Recarga VE</option>
                             <option value="Infraestructura ICT">Infraestructura ICT</option>
+                            <!-- NUEVA OPCIÓN AÑADIDA -->
+                            <option value="Domótica Inalámbrica (Zigbee/Z-Wave/Google)">Domótica Inalámbrica (Zigbee/Z-Wave/Google)</option>
                         </select>
 
                         <textarea id="gestor-mensaje" rows="3" placeholder="Describe brevemente la consulta técnica..." style="width: 100%; resize: vertical;"></textarea>
@@ -383,6 +393,14 @@
                         <div style="font-size: 2rem; margin-bottom: 10px;">🟢</div>
                         <h3>Domótica KNX</h3>
                         <p style="color: #a0aec0; font-size: 0.9rem;">Topología de bus, límites y direccionamientos ETS.</p>
+                    </div>
+
+                    <!-- NUEVA TARJETA AÑADIDA -->
+                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-domotica-inalambrica')">
+                        <span class="insignia-candado">🔒 PRO</span>
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🏠</div>
+                        <h3>Domótica Inalámbrica & IoT</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Zigbee (2.4 GHz), Z-Wave (868 MHz) y pasarelas con Google Home.</p>
                     </div>
                 </div>
             </section>
@@ -712,6 +730,94 @@
                 </div>
             </section>
 
+            <!-- ========================================== -->
+            <!-- NUEVO MÓDULO AÑADIDO: DOMÓTICA INALÁMBRICA -->
+            <!-- ========================================== -->
+            <section id="vista-domotica-inalambrica" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>🏠 Domótica Inalámbrica & IoT (Zigbee / Z-Wave / Google)</h1>
+                </header>
+
+                <div class="seccion-bloque">
+                    <h3 style="color: var(--azul-brillante); margin-top: 0;">🌐 Comparativa de Protocolos Inalámbricos en el Instalador</h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">
+                        Guía de integración técnica para seleccionar la tecnología adecuada según el entorno de la instalación:
+                    </p>
+
+                    <table class="tabla-normativa">
+                        <thead>
+                            <tr>
+                                <th>Protocolo</th>
+                                <th>Frecuencia</th>
+                                <th>Topología</th>
+                                <th>Ventaja Principal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Zigbee</strong></td>
+                                <td>2.4 GHz</td>
+                                <td>Red en Malla (Mesh)</td>
+                                <td>Económico, gran variedad de sensores y actuadores (Sonoff, Tuya, Aqara).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Z-Wave</strong></td>
+                                <td>868 MHz (UE)</td>
+                                <td>Red en Malla (Mesh)</td>
+                                <td>Libre de interferencias Wi-Fi/Bluetooth, alta seguridad S2 y certificación estricta.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Google Home / Thread</strong></td>
+                                <td>Wi-Fi / 2.4 GHz</td>
+                                <td>Directo / IP Mallada</td>
+                                <td>Control por voz nativo, automatizaciones en la nube y unificación con Matter.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="seccion-bloque">
+                    <h3 style="color: var(--azul-brillante); margin-top: 0;">⚙️ Arquitectura de Enlace: Dispositivo $\rightarrow$ Pasarela $\rightarrow$ Google</h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">
+                        Simula la jerarquía de conexión para verificar el flujo de una luz inteligente o relé Sonoff (Zigbee) hacia la app:
+                    </p>
+
+                    <div class="calc-grid">
+                        <div class="calc-field">
+                            <label>Dispositivo Final:</label>
+                            <select id="dom-dispositivo">
+                                <option value="sonoff-minir2">Relé / Micromódulo Sonoff Zigbee</option>
+                                <option value="sensor-puerta">Sensor Apertura Zigbee</option>
+                                <option value="termostato-zwave">Termostato Z-Wave 868 MHz</option>
+                            </select>
+                        </div>
+                        <div class="calc-field">
+                            <label>Pasarela / Hub:</label>
+                            <select id="dom-pasarela">
+                                <option value="bridge-local">Hub Zigbee / Coordinador USB (Home Assistant)</option>
+                                <option value="bridge-propietario">Pasarela Propietaria (Sonoff ZBBridge / Tuya)</option>
+                            </select>
+                        </div>
+                        <div class="calc-field">
+                            <label>Ecosistema Cloud / Voz:</label>
+                            <select id="dom-eco">
+                                <option value="google-home">Google Home (Control por voz / Nest Hub)</option>
+                                <option value="app-local">App Local Exclusiva</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="verificarArquitecturaIoT()" style="width: 100%;">Validar Esquema de Integración</button>
+                    
+                    <div id="domotica-res-box" class="resultado-caja oculto">
+                        <h4 style="margin-top: 0; color: var(--verde-ia);">✅ Informe de Validación de Red:</h4>
+                        <p id="domotica-texto-resultado" style="color: #94a3b8; margin: 0;"></p>
+                    </div>
+                </div>
+            </section>
+            <!-- ========================================== -->
+
             <!-- VISTA FACTURACIÓN -->
             <section id="vista-facturacion" class="vista-section oculto">
                 <header>
@@ -790,7 +896,7 @@
     </div>
 
     <!-- BOTÓN FLOTANTE WHATSAPP -->
-    <a href="https://wa.me/34642269680?text=Hola,%20solicito%20asistencia%20técnica%20sobre%20la%20aplicación%20Servicio%20y%20Gestión%20SM" 
+    <a href="https://wa.me/34642269680?text=Hola,%20solicito%20asistencia%20técnica%20sobre%20la%20aplicación%20J.F" 
        class="btn-whatsapp-flotante" 
        target="_blank" 
        rel="noopener noreferrer">
