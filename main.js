@@ -3,8 +3,8 @@
 // ==========================================
 
 const TELEFONO_WHATSAPP = "34642269680";
-const CLAVE_MAESTRA = "SM-ADMIN-7788";
-const CLAVES_VALIDAS = ["SM-PRO-2026", "SM-CLIENTE-01", "SM-CLIENTE-02"];
+const CLAVE_MAESTRA = "JF-PRO-2026"; // Cambia aquí tu clave secreta si lo deseas
+const CLAVES_VALIDAS = ["JF-PRO-2026", "SM-PRO-2026"];
 let destinoPendiente = null;
 
 // --- SISTEMA DE LICENCIAS PRO ---
@@ -35,7 +35,8 @@ function cerrarModalLicencia() {
 }
 
 function validarClaveAcceso() {
-    const val = document.getElementById('input-clave-licencia')?.value.trim();
+    const inputEl = document.getElementById('input-clave-licencia');
+    const val = inputEl ? inputEl.value.trim() : '';
     const err = document.getElementById('error-clave-licencia');
 
     if (val === CLAVE_MAESTRA || CLAVES_VALIDAS.includes(val)) {
@@ -47,8 +48,11 @@ function validarClaveAcceso() {
             abrirModuloDirecto(destinoPendiente);
             destinoPendiente = null;
         }
-    } else if (err) {
-        err.style.display = 'block';
+    } else {
+        if (err) {
+            err.textContent = "❌ Clave incorrecta";
+            err.style.display = 'block';
+        }
     }
 }
 
