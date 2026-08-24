@@ -245,6 +245,8 @@
                             <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-rebt')"><span>⚖️ Buscador REBT / RITE</span></a></li>
                             <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-caida')"><span>📏 Caída de Tensión</span></a></li>
                             <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-ict')"><span>📡 Consultas ICT-2</span></a></li>
+                            <!-- NUEVO ACCESO DIRECTO A APUNTES DE ELECTROTECNIA -->
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-electrotecnia')"><span>📖 Apuntes Electrotecnia</span></a></li>
                         </ul>
                     </div>
 
@@ -339,6 +341,13 @@
                 </div>
 
                 <div class="portada-grid">
+                    <!-- ACCESO A APUNTES DE ELECTROTECNIA EN PORTADA -->
+                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-electrotecnia')">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">📖</div>
+                        <h3>Apuntes Electrotecnia</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Magnitudes, Ley de Ohm, corriente alterna/continua y componentes pasivos.</p>
+                    </div>
+
                     <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-asesor-voz')">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                             <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80" alt="Elena" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--azul-brillante);">
@@ -402,6 +411,41 @@
                 </div>
             </section>
 
+            <!-- NUEVA VISTA: APUNTES DE ELECTROTECNIA -->
+            <section id="vista-electrotecnia" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>📖 Apuntes de Electrotecnia & Automatismos</h1>
+                </header>
+
+                <div class="seccion-bloque">
+                    <h2 style="color: var(--azul-brillante); margin-top: 0;">Bloque 1: Magnitudes Eléctricas y Ley de Ohm</h2>
+                    <p>Las magnitudes básicas que rigen cualquier circuito eléctrico explicadas de forma práctica:</p>
+                    <ul>
+                        <li><strong>Tensión o Voltaje ($U$):</strong> Es la <em>presión del agua</em> en una manguera. Cuantos más voltios, más empuje. Se mide en <strong>Voltios (V)</strong>.</li>
+                        <li><strong>Intensidad ($I$):</strong> Es la <em>cantidad de caudal</em> de electrones que circula por el cable por segundo. Se mide en <strong>Amperios (A)</strong>.</li>
+                        <li><strong>Resistencia ($R$):</strong> Es una <em>estrechez o freno</em> que se opone al paso de la corriente. Se mide en <strong>Ohmios ($\Omega$)</strong>.</li>
+                    </ul>
+                    <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; margin-top: 10px; border-left: 4px solid var(--verde-ia);">
+                        <strong>Ley de Ohm:</strong> $U = I \cdot R$ &nbsp;|&nbsp; <em>Para calcular Intensidad:</em> $I = \frac{U}{R}$ &nbsp;|&nbsp; <em>Para calcular Resistencia:</em> $R = \frac{U}{I}$
+                    </div>
+                </div>
+
+                <div class="seccion-bloque">
+                    <h2 style="color: var(--azul-brillante); margin-top: 0;">Bloque 2: Corriente Continua vs. Corriente Alterna</h2>
+                    <p><strong>Corriente Continua (CC / DC):</strong> Los electrones viajan siempre en la misma dirección (ej: pilas, baterías, placas solares).</p>
+                    <p><strong>Corriente Alterna (CA / AC):</strong> Los electrones van y vienen cambiando de sentido constantemente (en Europa a 50 Hz). Es la que llega a los enchufes de casa.</p>
+                    <p><strong>Monofásico vs Trifásico:</strong> En viviendas usamos monofásico (230V con fase y neutro). En industria o climatización grande usamos trifásico (400V entre fases).</p>
+                </div>
+
+                <div class="seccion-bloque">
+                    <h2 style="color: var(--azul-brillante); margin-top: 0;">Bloque 3: Componentes Pasivos y Asociaciones</h2>
+                    <p><strong>Resistencias ($R$):</strong> Frenan la corriente y generan calor (Efecto Joule). En serie se suman ($R_T = R_1 + R_2$). En paralelo baja la resistencia total.</p>
+                    <p><strong>Bobinas ($L$):</strong> Bobinados en espiral que crean campos magnéticos. A la bobina <em>le da pereza</em> el cambio y retrasa la corriente 90°.</p>
+                    <p><strong>Condensadores ($C$):</strong> Almacenan carga estática temporalmente. Adelantan la corriente 90°. ¡En serie se calculan como las resistencias en paralelo, y en paralelo se suman directamente!</p>
+                </div>
+            </section>
+
             <!-- VISTA ASESOR DE VOZ CON FOTO REAL DE ELENA -->
             <section id="vista-asesor-voz" class="vista-section oculto">
                 <header>
@@ -418,7 +462,6 @@
                     <p style="color: #94a3b8; max-width: 600px; margin: 0 auto 20px auto;">
                         Consulta por voz sobre REBT, RITE, ITC-BT-52, caídas de tensión y esquemas eléctricos.
                     </p>
-                    <!-- BOTONES DE HABLAR Y SILENCIAR AÑADIDOS LIMPIAMENTE -->
                     <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                         <button type="button" id="btn-hablar-asesor" style="font-size: 1.1rem; padding: 14px 25px; border-radius: 30px; background-color: var(--azul-tecnico);">🎙️ Hablar con Elena</button>
                         <button type="button" onclick="silenciarAElena()" style="font-size: 1.1rem; padding: 14px 25px; border-radius: 30px; background-color: #ef4444; border: none; color: white; cursor: pointer; font-weight: bold;">🔇 Callar</button>
@@ -893,7 +936,7 @@
         <span style="font-size: 1.2rem;">💬</span> WhatsApp
     </a>
 
-    <!-- MODAL DE CLAVE / CANDADO (CON BOTÓN DE PAGO DE 4 € AÑADIDO) -->
+    <!-- MODAL DE CLAVE / CANDADO -->
     <div id="modal-licencia" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999999; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
         <div style="background: #131e2b; border: 1px solid var(--bordes); border-radius: 14px; padding: 25px; max-width: 400px; width: 90%; text-align: center; color: var(--texto-principal);">
             <div style="font-size: 3rem; margin-bottom: 8px;">🔒</div>
@@ -904,13 +947,12 @@
             <p id="error-clave-licencia" style="display: none; color: #ef4444; font-size: 0.82rem; margin-bottom: 12px; font-weight: bold;">❌ Clave incorrecta</p>
 
             <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button type="button" onclick="cerrarModalLicencia()" style="flex: 1; padding: 10px; background: var(--bordes); border: none; border-radius: 6px;">Cancelar</button>
+                <button type="button" onclick="cerrarModalLicencia()" style="flex: 1; padding: 10px; background: var(--bordes); border: none; border-radius: 6px;">Cancelar</sup></button>
                 <button type="button" onclick="validarClaveAcceso()" style="flex: 1; padding: 10px; background: var(--azul-tecnico); border: none; border-radius: 6px;">Desbloquear</button>
             </div>
 
-            <!-- NUEVO BOTÓN DE PAGO DIRECTO DE 4 € AÑADIDO LIMPIAMENTE -->
             <div style="border-top: 1px solid var(--bordes); padding-top: 15px;">
-                <a href="https://paypal.me/tuusuario/4" target="_blank" style="display: block; background-color: var(--verde-ia); color: white; text-decoration: none; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; text-align: center;">
+                <a href="https://paypal.me/JFMANTENIMIENTO/4" target="_blank" style="display: block; background-color: var(--verde-ia); color: white; text-decoration: none; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; text-align: center;">
                     💳 Obtener Licencia Pro (4 €)
                 </a>
             </div>
