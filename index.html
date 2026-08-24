@@ -411,38 +411,110 @@
                 </div>
             </section>
 
-            <!-- NUEVA VISTA: APUNTES DE ELECTROTECNIA -->
+            <!-- VISTA: APUNTES DE ELECTROTECNIA Y AUTOMATISMOS (EDICIÓN MAESTRA COMPLETA) -->
             <section id="vista-electrotecnia" class="vista-section oculto">
                 <header>
                     <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>📖 Apuntes de Electrotecnia & Automatismos</h1>
+                    <h1>📖 Apuntes de Electrotecnia & Automatismos (Manual Completo)</h1>
                 </header>
 
+                <!-- BLOQUE 1 -->
                 <div class="seccion-bloque">
-                    <h2 style="color: var(--azul-brillante); margin-top: 0;">Bloque 1: Magnitudes Eléctricas y Ley de Ohm</h2>
-                    <p>Las magnitudes básicas que rigen cualquier circuito eléctrico explicadas de forma práctica:</p>
-                    <ul>
-                        <li><strong>Tensión o Voltaje ($U$):</strong> Es la <em>presión del agua</em> en una manguera. Cuantos más voltios, más empuje. Se mide en <strong>Voltios (V)</strong>.</li>
-                        <li><strong>Intensidad ($I$):</strong> Es la <em>cantidad de caudal</em> de electrones que circula por el cable por segundo. Se mide en <strong>Amperios (A)</strong>.</li>
-                        <li><strong>Resistencia ($R$):</strong> Es una <em>estrechez o freno</em> que se opone al paso de la corriente. Se mide en <strong>Ohmios ($\Omega$)</strong>.</li>
-                    </ul>
-                    <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; margin-top: 10px; border-left: 4px solid var(--verde-ia);">
-                        <strong>Ley de Ohm:</strong> $U = I \cdot R$ &nbsp;|&nbsp; <em>Para calcular Intensidad:</em> $I = \frac{U}{R}$ &nbsp;|&nbsp; <em>Para calcular Resistencia:</em> $R = \frac{U}{I}$
+                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>⚡</span> Bloque 1: Magnitudes Eléctricas y Ley de Ohm
+                    </h2>
+                    <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 15px;">
+                        Las bases físicas y matemáticas de la electricidad explicadas de forma práctica:
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 15px;">
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--azul-brillante);">
+                            <strong style="color: var(--texto-brillante);">Tensión ($U$ / $E$):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">La <em>presión o fuerza electromotriz</em>. Voltios (V).</span>
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--verde-ia);">
+                            <strong style="color: var(--texto-brillante);">Intensidad ($I$):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">El <em>caudal de electrones</em> ($Q/t$). Amperios (A).</span>
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--oro-candado);">
+                            <strong style="color: var(--texto-brillante);">Resistencia ($R$):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">La <em>oposición al paso</em> y el Efecto Joule (calor). Ohmios ($\Omega$).</span>
+                        </div>
+                    </div>
+
+                    <div style="background: #0f172a; border: 1px solid var(--azul-brillante); padding: 15px; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 1.1rem; font-weight: bold; color: var(--azul-brillante);">Ley de Ohm y Densidad de Corriente:</span>
+                        <div style="font-size: 1.15rem; font-family: monospace; color: #fff; margin-top: 6px;">U = I · R &nbsp;&nbsp;|&nbsp;&nbsp; J = I / S (A/mm²)</div>
                     </div>
                 </div>
 
+                <!-- BLOQUE 2 -->
                 <div class="seccion-bloque">
-                    <h2 style="color: var(--azul-brillante); margin-top: 0;">Bloque 2: Corriente Continua vs. Corriente Alterna</h2>
-                    <p><strong>Corriente Continua (CC / DC):</strong> Los electrones viajan siempre en la misma dirección (ej: pilas, baterías, placas solares).</p>
-                    <p><strong>Corriente Alterna (CA / AC):</strong> Los electrones van y vienen cambiando de sentido constantemente (en Europa a 50 Hz). Es la que llega a los enchufes de casa.</p>
-                    <p><strong>Monofásico vs Trifásico:</strong> En viviendas usamos monofásico (230V con fase y neutro). En industria o climatización grande usamos trifásico (400V entre fases).</p>
+                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>🔌</span> Bloque 2: Corriente Continua, Alterna y Redes
+                    </h2>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                            <strong>🔋 Corriente Continua (CC / DC):</strong> Flujo unidireccional constante (Pilas, baterías, paneles solares). Conductor positivo rojo, negativo negro.
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                            <strong>〰️ Corriente Alterna (CA / AC):</strong> Onda senoidal que oscila a 50 Hz en Europa. Código de colores: Fase (Marrón/Negro/Gris) y Neutro (Azul).
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                            <strong>🌐 Monofásico (230V) vs Trifásico (400V):</strong> Monofásico usa Fase + Neutro. Trifásico usa tres fases ($L_1, L_2, L_3$) y neutro para alta potencia industrial y climatización.
+                        </div>
+                    </div>
                 </div>
 
+                <!-- BLOQUE 3 -->
                 <div class="seccion-bloque">
-                    <h2 style="color: var(--azul-brillante); margin-top: 0;">Bloque 3: Componentes Pasivos y Asociaciones</h2>
-                    <p><strong>Resistencias ($R$):</strong> Frenan la corriente y generan calor (Efecto Joule). En serie se suman ($R_T = R_1 + R_2$). En paralelo baja la resistencia total.</p>
-                    <p><strong>Bobinas ($L$):</strong> Bobinados en espiral que crean campos magnéticos. A la bobina <em>le da pereza</em> el cambio y retrasa la corriente 90°.</p>
-                    <p><strong>Condensadores ($C$):</strong> Almacenan carga estática temporalmente. Adelantan la corriente 90°. ¡En serie se calculan como las resistencias en paralelo, y en paralelo se suman directamente!</p>
+                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>⚙️</span> Bloque 3: Componentes Pasivos, Impedancia y Factor de Potencia
+                    </h2>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                            <strong>📌 Resistencias ($R$):</strong> Oponen resistencia pura. Generan calor por Efecto Joule ($Q = 0,24 \cdot R \cdot I^2 \cdot t$).
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                            <strong>🌀 Bobinas ($L$) y Condensadores ($C$):</strong> En alterna generan reactancia ($X_L$ y $X_C$) provocando desfases de 90°. La combinación total se llama <strong>Impedancia ($Z$)</strong>.
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--verde-ia);">
+                            <strong>⚡ Factor de Potencia ($\cos \varphi$):</strong> Mide el aprovechamiento real de la energía en alterna. Un $\cos \varphi$ bajo requiere compensación con baterías de condensadores.
+                        </div>
+                    </div>
+
+                    <!-- VÍDEO YOUTUBE 1 -->
+                    <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-bottom: 8px;">📺 Vídeo Explicativo (Reactancia e Impedancia):</h3>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube-nocookie.com/embed/XyZ11223344" title="Factor de Potencia" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- BLOQUE 4 -->
+                <div class="seccion-bloque">
+                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>🔄</span> Bloque 4: Motores y Conexión Estrella - Triángulo
+                    </h2>
+                    <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 15px;">
+                        Sistema de arranque industrial para reducir la intensidad de pico en motores de inducción:
+                    </p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                        <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-top: 3px solid var(--oro-candado);">
+                            <strong style="color: var(--texto-brillante); font-size: 1.05rem;">Conexión Estrella ($\text{Y}$):</strong>
+                            <p style="font-size: 0.88rem; color: #94a3b8; margin: 8px 0 0 0;">
+                                Arranque suave. Reduce la corriente de pico a un tercio de su valor directo.
+                            </p>
+                        </div>
+                        <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-top: 3px solid var(--verde-ia);">
+                            <strong style="color: var(--texto-brillante); font-size: 1.05rem;">Conexión Triángulo ($\Delta$):</strong>
+                            <p style="font-size: 0.88rem; color: #94a3b8; margin: 8px 0 0 0;">
+                                Conmutación automática al alcanzar velocidad nominal. El motor entrega el 100% de su potencia.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- VÍDEO YOUTUBE 2 -->
+                    <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-bottom: 8px;">📺 Vídeo Explicativo (Arranque Estrella-Triángulo):</h3>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube-nocookie.com/embed/L2m6mO5bWrs" title="Arranque Estrella Triángulo" allowfullscreen></iframe>
+                    </div>
                 </div>
             </section>
 
@@ -947,7 +1019,7 @@
             <p id="error-clave-licencia" style="display: none; color: #ef4444; font-size: 0.82rem; margin-bottom: 12px; font-weight: bold;">❌ Clave incorrecta</p>
 
             <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button type="button" onclick="cerrarModalLicencia()" style="flex: 1; padding: 10px; background: var(--bordes); border: none; border-radius: 6px;">Cancelar</sup></button>
+                <button type="button" onclick="cerrarModalLicencia()" style="flex: 1; padding: 10px; background: var(--bordes); border: none; border-radius: 6px;">Cancelar</button>
                 <button type="button" onclick="validarClaveAcceso()" style="flex: 1; padding: 10px; background: var(--azul-tecnico); border: none; border-radius: 6px;">Desbloquear</button>
             </div>
 
