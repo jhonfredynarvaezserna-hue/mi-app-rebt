@@ -1,1845 +1,1069 @@
-// ==========================================
-// SERVICIO Y GESTIÓN SM - LÓGICA PRINCIPAL
-// ==========================================
-
-const TELEFONO_WHATSAPP = "34642269680";
-const CLAVE_MAESTRA = "JF-PRO-2026"; // Clave maestra única de acceso
-let destinoPendiente = null;
-
-// --- SISTEMA DE LICENCIAS PRO ---
-function tieneLicencia() {
-    const clave = localStorage.getItem("licencia_sm_activa");
-    return (clave === CLAVE_MAESTRA);
-}
-
-function verificarYEntrar(idVista) {
-    if (tieneLicencia()) {
-        abrirModuloDirecto(idVista);
-    } else {
-        destinoPendiente = idVista;
-        const inputClave = document.getElementById('input-clave-licencia');
-        const errClave = document.getElementById('error-clave-licencia');
-        const modal = document.getElementById('modal-licencia');
-
-        if (inputClave) inputClave.value = '';
-        if (errClave) errClave.style.display = 'none';
-        if (modal) modal.style.display = 'flex';
-    }
-}
-
-function cerrarModalLicencia() {
-    const modal = document.getElementById('modal-licencia');
-    if (modal) modal.style.display = 'none';
-    destinoPendiente = null;
-}
-
-function validarClaveAcceso() {
-    const inputEl = document.getElementById('input-clave-licencia');
-    const val = inputEl ? inputEl.value.trim() : '';
-    const err = document.getElementById('error-clave-licencia');
-
-    if (val === CLAVE_MAESTRA) {
-        localStorage.setItem("licencia_sm_activa", val);
-        cerrarModalLicencia();
-        actualizarBotonEstado();
-
-        if (destinoPendiente) {
-            abrirModuloDirecto(destinoPendiente);
-            destinoPendiente = null;
-        }
-    } else {
-        if (err) {
-            err.textContent = "❌ Clave incorrecta";
-            err.style.display = 'block';
-        }
-    }
-}
-
-function gestionarBotonLicencia() {
-    if (tieneLicencia()) {
-        if (confirm("¿Deseas cerrar sesión y bloquear los módulos de nuevo?")) {
-            localStorage.removeItem("licencia_sm_activa");
-            actualizarBotonEstado();
-            abrirModuloDirecto('vista-inicio');
-        }
-    } else {
-        verificarYEntrar('vista-ve');
-    }
-}
-
-function actualizarBotonEstado() {
-    const b = document.getElementById('btn-estado-licencia');
-
-    if (b) {
-        b.innerHTML = tieneLicencia()
-            ? '🟢 Licencia Activa (Cerrar)'
-            : '🔑 Activar Licencia Pro';
-
-        b.style.color = tieneLicencia()
-            ? '#10b981'
-            : '#94a3b8';
-    }
-}
-
-
-// --- NAVEGACIÓN ENTRE MÓDULOS ---
-function abrirModuloDirecto(idVista) {
-    document
-        .querySelectorAll('.vista-section')
-        .forEach(sec => sec.classList.add('oculto'));
-
-    const destino = document.getElementById(idVista);
-
-    if (destino) destino.classList.remove('oculto');
-
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
-
-
-// --- SÍNTESIS DE VOZ DE ELENA (INGENIERA TÉCNICA) ---
-function hablarComoElena(texto) {
-
-    if (!('speechSynthesis' in window)) return;
-
-    window.speechSynthesis.cancel();
-
-    const avatarBox =
-        document.getElementById('elena-avatar-container');
-
-    const limpio =
-        texto.replace(/<[^>]*>?/gm, '');
-
-    const utterance =
-        new SpeechSynthesisUtterance(limpio);
-
-    utterance.lang = 'es-ES';
-    utterance.rate = 1.0;
-    utterance.pitch = 1.15;
-
-    utterance.onstart = () => {
-
-        if (avatarBox) {
-
-            avatarBox.style.borderColor =
-                'var(--verde-ia)';
-
-            avatarBox.style.boxShadow =
-                '0 0 25px rgba(16, 185, 129, 0.8)';
-
-            avatarBox.style.transform =
-                'scale(1.05)';
-        }
-    };
-
-    utterance.onend = () => {
-
-        if (avatarBox) {
-
-            avatarBox.style.borderColor =
-                'var(--azul-brillante)';
-
-            avatarBox.style.boxShadow =
-                '0 0 15px rgba(24, 143, 167, 0.4)';
-
-            avatarBox.style.transform =
-                'scale(1)';
-        }
-    };
-
-    const voces =
-        window.speechSynthesis.getVoices();
-
-    const vozFemenina =
-        voces.find(v =>
-            (v.lang.includes('es') || v.lang.includes('ES')) &&
-            (
-                v.name.toLowerCase().includes('female') ||
-                v.name.toLowerCase().includes('monica') ||
-                v.name.toLowerCase().includes('helena') ||
-                v.name.toLowerCase().includes('lucia') ||
-                v.name.toLowerCase().includes('laura') ||
-                v.name.toLowerCase().includes('sofia') ||
-                v.name.toLowerCase().includes('google español')
-            )
-        );
-
-    if (vozFemenina) {
-        utterance.voice = vozFemenina;
-    }
-
-    window.speechSynthesis.speak(utterance);
-}
-
-
-// --- GESTOR TÉCNICO Y WHATSAPP ---
-function enviarConsultaWhatsApp() {
-
-    const nombre =
-        document.getElementById('gestor-nombre')?.value.trim()
-        || 'Cliente';
-
-    const tipo =
-        document.getElementById('gestor-tipo')?.value
-        || 'Consulta General';
-
-    const mensaje =
-        document.getElementById('gestor-mensaje')?.value.trim()
-        || 'Sin detalles adicionales.';
-
-    const textoWhatsApp =
-        `*CONSULTA TÉCNICA - GESTIÓN SM*%0A` +
-        `👤 *Nombre:* ${encodeURIComponent(nombre)}%0A` +
-        `🏷️ *Tipo:* ${encodeURIComponent(tipo)}%0A` +
-        `📝 *Detalle:* ${encodeURIComponent(mensaje)}`;
-
-    const url =
-        `https://wa.me/${TELEFONO_WHATSAPP}?text=${textoWhatsApp}`;
-
-    window.open(url, '_blank');
-}
-
-
-// ==========================================
-// DIAGNÓSTICO CON ELENA
-// ==========================================
-
-async function diagnosticarConIA() {
-
-    const nombre =
-        document.getElementById('gestor-nombre')?.value.trim();
-
-    const tipo =
-        document.getElementById('gestor-tipo')?.value;
-
-    const mensaje =
-        document.getElementById('gestor-mensaje')?.value.trim();
-
-    const resBox =
-        document.getElementById('gestor-ia-resultado');
-
-    if (!mensaje) {
-        alert(
-            "Por favor, escribe una descripción de la avería o consulta técnica."
-        );
-        return;
-    }
-
-    if (resBox) {
-
-        resBox.classList.remove('oculto');
-
-        resBox.innerHTML =
-            `<em>Elena está analizando la consulta técnica con Gemini...</em>`;
-    }
-
-    const promptCompleto =
-        `Consulta técnica: ${tipo}. ` +
-        `Cliente: ${nombre || 'No especificado'}. ` +
-        `Descripción del problema: ${mensaje}`;
-
-    try {
-
-        const res = await fetch('/api/chat', {
-
-            method: 'POST',
-
-            headers: {
-                'Content-Type': 'application/json'
-            },
-
-            body: JSON.stringify({
-                prompt: promptCompleto
-            })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-            throw new Error(
-                data.details ||
-                data.error ||
-                `Error HTTP ${res.status}`
-            );
+<!DOCTYPE html>
+<html lang="es" style="background-color: #0a1118; color-scheme: dark;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>J.F - Plataforma Técnica Integral</title>
+
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1e6091">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <style>
+        /* Corrección táctil y de rendimiento para móviles */
+        html, body {
+            touch-action: manipulation;
+            -webkit-overflow-scrolling: touch;
+            background-color: var(--bg-principal) !important;
+            color: var(--texto-principal);
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
         }
 
-        const respuesta =
-            data.text ||
-            data.respuesta ||
-            "Diagnóstico completado.";
+        :root {
+            --bg-principal: #0a1118;
+            --panel-bg: #131e2b;
+            --sidebar-bg: #0f1923;
+            --azul-tecnico: #1e6091;
+            --azul-brillante: #188fa7;
+            --texto-principal: #e2e8f0;
+            --texto-brillante: #ffffff;
+            --bordes: #223347;
+            --input-bg: #1a2936;
+            --verde-ia: #10b981;
+            --verde-wa: #25d366;
+            --oro-candado: #f59e0b;
+        }
 
-        if (resBox) {
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-            resBox.innerHTML = `
-                <h4 style="
-                    margin: 0 0 10px 0;
-                    color: var(--verde-ia);
-                ">
-                    📋 Diagnóstico Técnico de Elena:
-                </h4>
+        .contenedor { display: flex; min-height: 100vh; background-color: var(--bg-principal); }
 
-                <div style="
-                    line-height: 1.6;
-                    max-height: 450px;
-                    overflow-y: auto;
-                    padding-right: 10px;
-                ">
-                    ${respuesta}
+        .sidebar-izquierda { 
+            width: 280px; 
+            background-color: var(--sidebar-bg); 
+            border-right: 1px solid var(--bordes); 
+            padding: 20px; 
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .encabezado-sidebar h2 { color: var(--azul-brillante); font-size: 1.3rem; margin: 0; }
+        .menu-sidebar ul { list-style: none; padding: 0; margin: 0; }
+        .menu-sidebar a { 
+            color: var(--texto-principal); 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 10px 12px; 
+            border-radius: 6px; 
+            cursor: pointer;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            transition: 0.2s;
+        }
+        .menu-sidebar a:hover, .menu-sidebar a.activo { background-color: var(--azul-tecnico); color: #fff; }
+
+        .panel-tecnico { flex-grow: 1; padding: 30px; background-color: var(--bg-principal); overflow-y: auto; }
+        .seccion-bloque, .tarjeta-modulo { 
+            background-color: var(--panel-bg); 
+            border: 1px solid var(--bordes); 
+            border-radius: 8px; 
+            padding: 22px; 
+            margin-bottom: 25px; 
+            position: relative; 
+        }
+        
+        .portada-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .tarjeta-modulo { cursor: pointer; border: 1px solid var(--bordes); transition: 0.2s; user-select: none; }
+        .tarjeta-modulo:hover { border-color: var(--azul-brillante); background-color: #182838; transform: translateY(-2px); }
+
+        .insignia-candado {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--oro-candado);
+            border: 1px solid var(--oro-candado);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            font-weight: bold;
+        }
+
+        .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px; }
+        .calc-field { display: flex; flex-direction: column; gap: 6px; }
+        .calc-field label { font-size: 0.85rem; color: #94a3b8; font-weight: bold; }
+
+        input, select, button, textarea {
+            background-color: var(--input-bg);
+            border: 1px solid var(--bordes);
+            color: var(--texto-brillante);
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        input:focus, select:focus, textarea:focus { outline: 1px solid var(--azul-brillante); }
+        button { background-color: var(--azul-tecnico); color: white; cursor: pointer; font-weight: bold; transition: 0.2s; border: none; }
+        button:hover { background-color: var(--azul-brillante); }
+
+        .btn-volver {
+            background-color: var(--bordes);
+            color: var(--texto-principal);
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-volver:hover { background-color: var(--azul-tecnico); color: #fff; }
+
+        .resultado-caja {
+            background-color: var(--input-bg);
+            border: 1px solid var(--bordes);
+            border-radius: 6px;
+            padding: 16px;
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+
+        .tabla-normativa {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        .tabla-normativa th, .tabla-normativa td {
+            border: 1px solid var(--bordes);
+            padding: 10px;
+            text-align: left;
+        }
+        .tabla-normativa th { background-color: #1a2a3a; color: var(--azul-brillante); }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid var(--bordes);
+            background: #000;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%; border: 0;
+        }
+
+        .btn-whatsapp-flotante {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: var(--verde-wa);
+            color: white;
+            border-radius: 50px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            z-index: 9999;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .btn-whatsapp-flotante:hover {
+            background-color: #20ba59;
+            transform: scale(1.05);
+            color: white;
+        }
+
+        /* Simulador CADe SIMU */
+        .cade-cuadro {
+            background: #0f172a;
+            border: 2px solid var(--bordes);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        .circuito-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+        .estado-borne {
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: var(--input-bg);
+            font-family: monospace;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            border-left: 4px solid var(--azul-brillante);
+        }
+
+        .oculto { display: none !important; }
+
+        @media (max-width: 768px) {
+            .contenedor { flex-direction: column; }
+            .sidebar-izquierda { width: 100%; border-right: none; border-bottom: 1px solid var(--bordes); padding: 15px; }
+            .panel-tecnico { padding: 15px; }
+            .portada-grid { grid-template-columns: 1fr; }
+            .circuito-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor" id="app-principal">
+
+        <!-- SIDEBAR DE NAVEGACIÓN -->
+        <aside class="sidebar-izquierda">
+            <div>
+                <div class="encabezado-sidebar" onclick="abrirModuloDirecto('vista-inicio')" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                    <img src="logo.png" alt="Logo J.F" style="width: 40px; height: 40px; object-fit: contain;">
+                    <div>
+                        <h2 style="color: var(--azul-brillante); font-size: 1.3rem; margin: 0;">J.F</h2>
+                        <p style="color: #8a99ad; font-size: 0.75rem; margin: 2px 0 0 0;">Plataforma Técnica</p>
+                    </div>
                 </div>
-            `;
-        }
-
-        hablarComoElena(respuesta);
-
-    } catch (err) {
-
-        console.error(
-            "Error en diagnóstico IA:",
-            err
-        );
-
-        if (resBox) {
-
-            resBox.innerHTML = `
-                <p style="color:#ef4444;">
-
-                    <strong>
-                        ❌ Error al conectar con Elena
-                    </strong>
-
-                    <br><br>
-
-                    ${err.message}
-
-                    <br><br>
-
-                    Puedes pulsar en
-                    <strong>Enviar por WhatsApp</strong>
-                    para soporte directo.
-
-                </p>
-            `;
-        }
-    }
-}
-
-
-// --- BUSCADOR NORMATIVO DIRECTO A GEMINI ---
-
-function buscarTermino(term) {
-
-    const input =
-        document.getElementById('entrada-busqueda');
-
-    if (input) {
-        input.value = term;
-    }
-
-    ejecutarBusquedaNormativa();
-}
-
-
-async function ejecutarBusquedaNormativa() {
-
-    const input =
-        document.getElementById('entrada-busqueda');
-
-    const resBox =
-        document.getElementById('resultados-busqueda');
-
-    const query =
-        input ? input.value.trim() : '';
-
-    if (!query || !resBox) {
-
-        alert(
-            "Escribe una consulta técnica o normativa."
-        );
-
-        return;
-    }
-
-    resBox.innerHTML = `
-        <div style="
-            display:flex;
-            align-items:center;
-            gap:10px;
-            color:var(--azul-brillante);
-            padding:10px 0;
-        ">
-            <span>⏳</span>
-
-            <em>
-                Elena está analizando tu consulta
-                en el REBT, RITE e ITCs...
-            </em>
-        </div>
-    `;
-
-    try {
-
-        const res = await fetch('/api/chat', {
-
-            method: 'POST',
-
-            headers: {
-                'Content-Type': 'application/json'
-            },
-
-            body: JSON.stringify({
-                prompt:
-                    `Consulta de normativa técnica REBT/RITE/ICT: "${query}". ` +
-                    `Responde con rigor técnico, citando las ITCs, ` +
-                    `fórmulas, tipos de protección y requisitos legales aplicables.`
-            })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-            throw new Error(
-                data.details ||
-                data.error ||
-                `Error HTTP ${res.status}`
-            );
-        }
-
-        const textoRespuesta =
-            data.text ||
-            data.respuesta ||
-            "No se obtuvo respuesta.";
-
-        resBox.innerHTML = `
-
-            <div style="padding:10px 0;">
-
-                <div style="
-                    display:flex;
-                    align-items:center;
-                    gap:8px;
-                    margin-bottom:12px;
-                ">
-
-                    <span style="font-size:1.3rem;">
-                        👩‍💼⚡
-                    </span>
-
-                    <strong style="
-                        color:var(--verde-ia);
-                        font-size:1.05rem;
-                    ">
-                        Respuesta Oficial de Elena:
-                    </strong>
-
-                </div>
-
-                <div style="
-                    line-height:1.6;
-                    color:var(--texto-principal);
-                    font-size:0.95rem;
-                    max-height:450px;
-                    overflow-y:auto;
-                    padding-right:10px;
-                ">
-                    ${textoRespuesta}
-                </div>
-
-            </div>
-        `;
-
-        hablarComoElena(textoRespuesta);
-
-    } catch (err) {
-
-        console.warn(
-            "Fallo de API, usando base local de respaldo:",
-            err
-        );
-
-        const baseDatos = [
-
-            {
-                k: "diferencial",
-
-                t: "ITC-BT-24 / Tipos de Interruptores Diferenciales",
-
-                d:
-                    "• <strong>Tipo AC:</strong> Solo corriente alterna senoidal." +
-                    "<br>• <strong>Tipo A:</strong> Alterna y continua pulsante (obligatorio en VE y electrónica doméstica)." +
-                    "<br>• <strong>Tipo F:</strong> Para monofásicos con variador de frecuencia (bombas de calor, lavadoras inverter). Detecta frecuencias mixtas hasta 1 kHz." +
-                    "<br>• <strong>Tipo B:</strong> Corriente continua alisada pura (fotovoltaica trifásica, cargadores VE rápidos)."
-            },
-
-            {
-                k: "itc-bt-14",
-
-                t: "ITC-BT-14: Línea General de Alimentación (LGA)",
-
-                d:
-                    "Enlaza la Caja General de Protección (CGP) con la centralización de contadores. Caída de tensión máxima: 0,5% para contadores centralizados y 1,5% para contadores repartidos. Conductores de cobre o aluminio, unipolares y aislados de 0,6/1 kV (LSHF no propagadores de la llama)."
-            },
-
-            {
-                k: "itc-bt-15",
-
-                t: "ITC-BT-15: Derivaciones Individuales",
-
-                d:
-                    "Caída de tensión máxima: 1,5% para contadores centralizados en un único punto y 0,5% para contadores individuales. Conductor mínimo: 6 mm² Cu libre de halógenos."
-            },
-
-            {
-                k: "itc-bt-19",
-
-                t: "ITC-BT-19: Instalaciones Interiores",
-
-                d:
-                    "Caída máxima: 3% para alumbrado y 5% para usos generales y fuerza motriz."
-            },
-
-            {
-                k: "itc-bt-25",
-
-                t: "ITC-BT-25: Circuitos en Viviendas",
-
-                d:
-                    "C1 (Iluminación 10A - 1,5mm²), C2 (Tomas uso general 16A - 2,5mm²), C3 (Cocina/Horno 25A - 6mm²), C4 (Lavadora/Lavavajillas/Termo 20A - 4mm²), C5 (Baños/Cocina 16A - 2,5mm²)."
-            },
-
-            {
-                k: "itc-bt-52",
-
-                t: "ITC-BT-52: Vehículos Eléctricos",
-
-                d:
-                    "Protección diferencial con filtro DC (6mA DC) Clase A o Tipo B, magnetotérmico curva C y protector de sobretensiones permanente y transitoria Tipo 2."
-            },
-
-            {
-                k: "rite",
-
-                t: "RITE IT 1.1.4: Calidad del Aire Interior (IDA)",
-
-                d:
-                    "Caudales mínimos de aire exterior: IDA 1 (20 dm³/s·persona), IDA 2 (12,5 dm³/s·persona), IDA 3 (8 dm³/s·persona), IDA 4 (5 dm³/s·persona)."
-            }
-        ];
-
-        const qMin =
-            query.toLowerCase();
-
-        const matches =
-            baseDatos.filter(item =>
-                item.k.includes(qMin) ||
-                item.t.toLowerCase().includes(qMin) ||
-                item.d.toLowerCase().includes(qMin)
-            );
-
-        if (matches.length > 0) {
-
-            resBox.innerHTML =
-                matches.map(m => `
-
-                    <div style="padding:10px 0;">
-
-                        <strong style="
-                            color:var(--azul-brillante);
-                            font-size:1.05rem;
-                        ">
-                            ${m.t}
-                        </strong>
-
-                        <p style="
-                            margin:6px 0 0 0;
-                            color:#cbd5e1;
-                            font-size:0.92rem;
-                            line-height:1.5;
-                        ">
-                            ${m.d}
-                        </p>
-
+                
+                <nav class="menu-sidebar">
+                    <div class="menu-section">
+                        <div style="color: var(--azul-brillante); font-size: 0.8rem; font-weight: bold; margin: 20px 0 10px 0;">📚 NORMATIVA Y CONSULTAS</div>
+                        <ul>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-asesor-voz')"><span>🗣️ Asesor de Voz</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-rebt')"><span>⚖️ Buscador REBT / RITE</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-caida')"><span>📏 Caída de Tensión</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-ict')"><span>📡 Consultas ICT-2</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-electrotecnia')"><span>📖 Apuntes Electrotecnia</span></a></li>
+                        </ul>
                     </div>
 
-                `).join(
-                    '<hr style="border-color:var(--bordes); margin:12px 0;">'
-                );
+                    <div class="menu-section">
+                        <div style="color: var(--azul-brillante); font-size: 0.8rem; font-weight: bold; margin: 15px 0 10px 0;">⚡ INGENIERÍA E INSTALACIONES</div>
+                        <ul>
+                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-ve')"><span>🚗 Vehículo Eléctrico (BT-52)</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-solar')"><span>🌞 Solar Fotovoltaica (BT-40)</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-industrial')"><span>⚙️ Automatismos CADe SIMU</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-knx')"><span>🟢 Domótica KNX</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-domotica-inalambrica')"><span>🏠 Domótica Inalámbrica & IoT</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-videoteca')"><span>📺 Videoteca Técnica</span></a></li>
+                        </ul>
+                    </div>
 
-        } else {
+                    <div class="menu-section">
+                        <div style="color: var(--azul-brillante); font-size: 0.8rem; font-weight: bold; margin: 15px 0 10px 0;">💼 GESTIÓN Y ADMINISTRACIÓN</div>
+                        <ul>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-facturacion')"><span>🧾 Generador de Facturas</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-tarifas')"><span>💶 Tarifas y Presupuestos</span></a></li>
+                        </ul>
+                    </div>
 
-            resBox.innerHTML = `
+                    <div class="menu-section">
+                        <div style="color: var(--azul-brillante); font-size: 0.8rem; font-weight: bold; margin: 15px 0 10px 0;">📞 SOPORTE TÉCNICO</div>
+                        <ul>
+                            <li>
+                                <a href="https://wa.me/34642269680?text=Hola,%20solicito%20asistencia%20técnica%20sobre%20la%20aplicación%20J.F" target="_blank" style="color: #25d366;">
+                                    <span>💬 WhatsApp Soporte</span> <span>↗</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
 
-                <p style="color:#ef4444;">
+            <div style="padding-top: 15px; border-top: 1px solid var(--bordes); margin-top: 15px; text-align: center;">
+                <button type="button" onclick="gestionarBotonLicencia()" id="btn-estado-licencia" style="width: 100%; font-size: 0.85rem; padding: 10px; background-color: var(--input-bg); border: 1px solid var(--bordes); color: #94a3b8; border-radius: 6px;">🔑 Activar Licencia Pro</button>
+            </div>
+        </aside>
 
-                    <strong>
-                        ❌ No se pudo conectar con Elena.
-                    </strong>
+        <!-- PANEL PRINCIPAL -->
+        <main class="panel-tecnico">
 
-                    <br><br>
+            <!-- VISTA INICIO -->
+            <section id="vista-inicio" class="vista-section">
+                <header style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--bordes); padding-bottom: 20px;">
+                    <h1 style="font-size: 2.2rem; margin-bottom: 8px; color: var(--texto-brillante);">J.F</h1>
+                    <p style="color: #a0aec0; font-size: 1rem; margin: 0;">Plataforma Técnica Integral para Instaladores e Ingenieros</p>
+                </header>
 
-                    <strong>Error:</strong>
-                    ${err.message}
+                <!-- GESTOR TÉCNICO E INTÉRPRETE MULTIMODAL CON ELENA -->
+                <div class="seccion-bloque">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80" alt="Elena Ingeniera" style="width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--azul-brillante);">
+                        <div>
+                            <h3 style="margin: 0; color: var(--azul-brillante);">Gestor Técnico e Intérprete Multimodal</h3>
+                            <p style="color: #94a3b8; font-size: 0.85rem; margin: 3px 0 0 0;">Asesoría técnica oficial con Elena & Gemini</p>
+                        </div>
+                    </div>
 
-                    <br><br>
+                    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">
+                        Escribe tu duda técnica o avería de la instalación para recibir un diagnóstico de Elena con Gemini o enviarla a WhatsApp:
+                    </p>
 
-                    Verifica que el endpoint
-                    <code>/api/chat</code>
-                    esté desplegado en Vercel y que
-                    <code>GEMINI_API_KEY</code>
-                    esté configurada.
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <input type="text" id="gestor-nombre" placeholder="Nombre completo" style="width: 100%;">
 
-                </p>
-            `;
-        }
-    }
-}
+                        <select id="gestor-tipo" style="width: 100%;">
+                            <option value="Avería Urgente">Avería Urgente</option>
+                            <option value="Consulta Normativa REBT / RITE">Consulta Normativa REBT / RITE</option>
+                            <option value="Climatización / Suelo Radiante">Climatización / Suelo Radiante</option>
+                            <option value="Instalación Fotovoltaica">Instalación Fotovoltaica</option>
+                            <option value="Punto de Recarga VE">Punto de Recarga VE</option>
+                            <option value="Infraestructura ICT">Infraestructura ICT</option>
+                            <option value="Domótica Inalámbrica (Zigbee/Z-Wave/Google)">Domótica Inalámbrica (Zigbee/Z-Wave/Google)</option>
+                        </select>
 
+                        <textarea id="gestor-mensaje" rows="3" placeholder="Describe brevemente la consulta técnica..." style="width: 100%; resize: vertical;"></textarea>
 
-// --- CONSULTOR AVANZADO ICT-2 Y TELECOMUNICACIONES ---
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 5px;">
+                            <button type="button" onclick="diagnosticarConIA()" style="flex: 2; background-color: var(--verde-ia); padding: 12px; font-size: 1rem; border-radius: 6px;">
+                                💬 Diagnosticar con Elena
+                            </button>
+                            <button type="button" onclick="enviarConsultaWhatsApp()" style="flex: 1; background-color: var(--verde-wa); padding: 12px; font-size: 1rem; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                📱 Enviar por WhatsApp
+                            </button>
+                        </div>
 
-function buscarTerminoICT(term) {
+                        <div id="gestor-ia-resultado" class="resultado-caja oculto"></div>
+                    </div>
+                </div>
 
-    const input =
-        document.getElementById('ict-busqueda-input');
+                <div class="portada-grid">
+                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-electrotecnia')">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">📖</div>
+                        <h3>Apuntes Electrotecnia</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Magnitudes, Ley de Ohm, corriente alterna/continua y componentes pasivos.</p>
+                    </div>
 
-    if (input) {
-        input.value = term;
-    }
+                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-asesor-voz')">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80" alt="Elena" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--azul-brillante);">
+                            <h3 style="margin: 0;">Asesor de Voz</h3>
+                        </div>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Consultas verbales en directo sobre normativas, cálculos y dudas con Elena.</p>
+                    </div>
 
-    consultarICTConIA();
-}
+                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-rebt')">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">⚖️</div>
+                        <h3>Buscador REBT / RITE</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Motor de consultas normativas completas con resolución técnica oficial.</p>
+                    </div>
 
+                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-caida')">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">📏</div>
+                        <h3>Cálculo Caída Tensión</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Dimensionamiento exacto de sección para cobre y aluminio.</p>
+                    </div>
 
-async function consultarICTConIA() {
+                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-ict')">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">📡</div>
+                        <h3>Consultas ICT-2</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Recintos RITI/RITS, cableados, registros y PAU (RD 346/2011).</p>
+                    </div>
 
-    const input =
-        document.getElementById('ict-busqueda-input');
+                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-ve')">
+                        <span class="insignia-candado">🔒 PRO</span>
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🚗</div>
+                        <h3>Vehículo Eléctrico</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">ITC-BT-52, esquemas 1 a 4, protecciones 6mA DC y curvas.</p>
+                    </div>
 
-    const resBox =
-        document.getElementById('ict-ia-resultado');
+                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-solar')">
+                        <span class="insignia-candado">🔒 PRO</span>
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🌞</div>
+                        <h3>Solar Fotovoltaica</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">ITC-BT-40, cálculo de strings, inversor y protecciones DC/AC.</p>
+                    </div>
 
-    const consulta =
-        input ? input.value.trim() : '';
+                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-industrial')">
+                        <span class="insignia-candado">🔒 PRO</span>
+                        <div style="font-size: 2rem; margin-bottom: 10px;">⚙️</div>
+                        <h3>Automatismos CADe SIMU</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Simulador interactivo Marcha/Paro con realimentación y cálculo motor.</p>
+                    </div>
 
-    if (!consulta || !resBox) {
+                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-knx')">
+                        <span class="insignia-candado">🔒 PRO</span>
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🟢</div>
+                        <h3>Domótica KNX</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Topología de bus, límites y direccionamientos ETS.</p>
+                    </div>
 
-        alert(
-            "Escribe una consulta técnica o avería de ICT."
-        );
+                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-domotica-inalambrica')">
+                        <span class="insignia-candado">🔒 PRO</span>
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🏠</div>
+                        <h3>Domótica Inalámbrica & IoT</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Zigbee (2.4 GHz), Z-Wave (868 MHz) y pasarelas con Google Home.</p>
+                    </div>
+                </div>
+            </section>
 
-        return;
-    }
+            <!-- VISTA: APUNTES DE ELECTROTECNIA Y AUTOMATISMOS -->
+            <section id="vista-electrotecnia" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>📖 Apuntes de Electrotecnia & Automatismos (Manual Completo)</h1>
+                </header>
 
-    resBox.classList.remove('oculto');
+                <!-- BLOQUE 1 -->
+                <div class="seccion-bloque">
+                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>⚡</span> Bloque 1: Magnitudes Eléctricas y Ley de Ohm
+                    </h2>
+                    <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 15px;">
+                        Las bases físicas y matemáticas de la electricidad explicadas de forma práctica:
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 15px;">
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--azul-brillante);">
+                            <strong style="color: var(--texto-brillante);">Tensión (U / E):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">La <em>presión o fuerza electromotriz</em>. Voltios (V).</span>
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--verde-ia);">
+                            <strong style="color: var(--texto-brillante);">Intensidad (I):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">El <em>caudal de electrones</em> (Q/t). Amperios (A).</span>
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--oro-candado);">
+                            <strong style="color: var(--texto-brillante);">Resistencia (R):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">La <em>oposición al paso</em> y el Efecto Joule (calor). Ohmios (Ω).</span>
+                        </div>
+                    </div>
 
-    resBox.innerHTML = `
-        <div style="
-            display:flex;
-            align-items:center;
-            gap:10px;
-            color:var(--azul-brillante);
-        ">
-            <span>⏳</span>
+                    <div style="background: #0f172a; border: 1px solid var(--azul-brillante); padding: 15px; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 1.1rem; font-weight: bold; color: var(--azul-brillante);">Ley de Ohm y Densidad de Corriente:</span>
+                        <div style="font-size: 1.15rem; font-family: monospace; color: #fff; margin-top: 6px;">U = I · R &nbsp;&nbsp;|&nbsp;&nbsp; J = I / S (A/mm²)</div>
+                    </div>
+                </div>
 
-            <em>
-                Elena está analizando la normativa ICT-2
-                (RD 346/2011) y REBT con Gemini...
-            </em>
+                <!-- BLOQUE 2 -->
+                <div class="seccion-bloque">
+                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>🔌</span> Bloque 2: Corriente Continua, Alterna y Redes
+                    </h2>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                            <strong>🔋 Corriente Continua (CC / DC):</strong> Flujo unidireccional constante (Pilas, baterías, paneles solares). Conductor positivo rojo, negativo negro.
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                            <strong>〰️ Corriente Alterna (CA / AC):</strong> Onda senoidal que oscila a 50 Hz en Europa. Código de colores: Fase (Marrón/Negro/Gris) y Neutro (Azul).
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                            <strong>🌐 Monofásico (230V) vs Trifásico (400V):</strong> Monofásico usa Fase + Neutro. Trifásico usa tres fases (L1, L2, L3) y neutro para alta potencia industrial y climatización.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BLOQUE 3 -->
+                <div class="seccion-bloque">
+                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>⚙️</span> Bloque 3: Componentes Pasivos, Impedancia y Factor de Potencia
+                    </h2>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                            <strong>📌 Resistencias (R):</strong> Oponen resistencia pura. Generan calor por Efecto Joule.
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                            <strong>🌀 Bobinas (L) y Condensadores (C):</strong> En alterna generan reactancia (XL y XC) provocando desfases de 90°. La combinación total se llama <strong>Impedancia (Z)</strong>.
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--verde-ia);">
+                            <strong>⚡ Factor de Potencia (cos φ):</strong> Mide el aprovechamiento real de la energía en alterna. Un cos φ bajo requiere compensación con baterías de condensadores.
+                        </div>
+                    </div>
+
+                    <!-- VÍDEO 1 -->
+                    <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-bottom: 8px;">📺 Vídeo Explicativo (Reactancia e Impedancia):</h3>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube-nocookie.com/embed/2Vv-BfVoq4g" title="Factor de Potencia y Reactancia" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- BLOQUE 4 -->
+                <div class="seccion-bloque">
+                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>🔄</span> Bloque 4: Motores de Inducción y Conexión Estrella - Triángulo
+                    </h2>
+                    <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 15px;">
+                        El sistema de arranque estrella-triángulo es el método clásico y obligatorio en muchos motores de inducción de mediana y gran potencia para evitar caídas de tensión severas en la red y proteger los devanados:
+                    </p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                        <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-top: 3px solid var(--oro-candado);">
+                            <strong style="color: var(--texto-brillante); font-size: 1.05rem;">1. Arranque en Estrella (Y):</strong>
+                            <p style="font-size: 0.88rem; color: #94a3b8; margin: 8px 0 0 0;">
+                                Al arrancar, el contactor principal y el de estrella cierran los puentes en los terminales finales. La tensión aplicada a cada fase se reduce, limitando drásticamente la intensidad de pico a un tercio de su valor nominal directo.
+                            </p>
+                        </div>
+                        <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-top: 3px solid var(--verde-ia);">
+                            <strong style="color: var(--texto-brillante); font-size: 1.05rem;">2. Conmutación a Triángulo (Δ):</strong>
+                            <p style="font-size: 0.88rem; color: #94a3b8; margin: 8px 0 0 0;">
+                                Una vez que el rotor alcanza aproximadamente el 80% de su velocidad de régimen mediante un temporizador electrónico, conmuta a triángulo. El motor opera al 100% de su par y potencia útil.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- VÍDEO 2 -->
+                    <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-bottom: 8px;">📺 Vídeo Explicativo Detallado (Arranque Estrella-Triángulo):</h3>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube-nocookie.com/embed/9bZkp7q19f0" title="Arranque Estrella Triángulo" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA ASESOR DE VOZ -->
+            <section id="vista-asesor-voz" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>🗣️ Asesor Técnico Parlante</h1>
+                </header>
+                <div class="seccion-bloque" style="text-align: center; padding: 30px;">
+                    <div style="display: flex; justify-content: center; margin-bottom: 15px;">
+                        <div id="elena-avatar-container" style="position: relative; width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--azul-brillante); box-shadow: 0 0 20px rgba(24, 143, 167, 0.4); overflow: hidden; background: #131e2b; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                            <img id="avatar-elena-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80" alt="Elena Ingeniera Técnica" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    </div>
+                    <h3 style="color: var(--azul-brillante); margin-bottom: 5px;">Elena · Ingeniera Técnica Virtual</h3>
+                    <p style="color: #94a3b8; max-width: 600px; margin: 0 auto 20px auto;">
+                        Consulta por voz sobre REBT, RITE, ITC-BT-52, caídas de tensión y esquemas eléctricos.
+                    </p>
+                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                        <button type="button" id="btn-hablar-asesor" style="font-size: 1.1rem; padding: 14px 25px; border-radius: 30px; background-color: var(--azul-tecnico);">🎙️ Hablar con Elena</button>
+                        <button type="button" onclick="silenciarAElena()" style="font-size: 1.1rem; padding: 14px 25px; border-radius: 30px; background-color: #ef4444; border: none; color: white; cursor: pointer; font-weight: bold;">🔇 Callar</button>
+                    </div>
+                    <p id="status-voz" style="color: #a0aec0; margin-top: 15px;">Pulsa para realizar tu consulta verbal.</p>
+                    <div id="respuesta-voz-box" class="oculto resultado-caja" style="text-align: left;"></div>
+                </div>
+            </section>
+
+            <!-- VISTA BUSCADOR REBT / RITE -->
+            <section id="vista-rebt" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>⚖️ Buscador y Consultor REBT / RITE</h1>
+                </header>
+                <div class="seccion-bloque">
+                    <p style="color: #94a3b8; font-size: 0.9rem;">Escribe cualquier pregunta o duda técnica para que Elena la resuelva consultando Gemini:</p>
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <input type="text" id="entrada-busqueda" placeholder="Ej: dime algo sobre los diferenciales tipo f, ITC-BT-19 caidas, RITE IDA 2..." style="flex-grow: 1;">
+                        <button type="button" onclick="ejecutarBusquedaNormativa()">🔍 Consultar</button>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px;">
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Qué requisitos y caídas de tensión exige la ITC-BT-15?')">ITC-BT-15 (DI)</button>
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Cuáles son las caídas de tensión máximas según la ITC-BT-19?')">ITC-BT-19 (Interiores)</button>
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Qué circuitos mínimos y secciones exige la ITC-BT-25 para una vivienda?')">ITC-BT-25 (Viviendas)</button>
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Qué protecciones diferenciales y esquemas define la ITC-BT-52 para vehículos eléctricos?')">ITC-BT-52 (VE)</button>
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Cuáles son las categorías de calidad de aire interior IDA en el RITE?')">RITE (Ventilación)</button>
+                    </div>
+
+                    <div id="resultados-busqueda" class="resultado-caja">
+                        <h4 style="margin-top:0; color: var(--azul-brillante);">Base de Respuestas Técnicas:</h4>
+                        <p style="color: #94a3b8;">Escribe tu duda técnica o haz clic en uno de los accesos rápidos para obtener la respuesta oficial de Elena.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA CONSULTOR TÉCNICO NORMATIVO E ICT-2 -->
+            <section id="vista-ict" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>📡 Consultor Técnico de Infraestructuras & Normativa ICT-2 / REBT</h1>
+                </header>
+
+                <div class="seccion-bloque">
+                    <h3 style="color: var(--azul-brillante); margin-top: 0;">🔍 Buscador Normativo y Resolución de Averías en Edificación</h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">
+                        Introduce cualquier consulta sobre telecomunicaciones, cuadros de servicios, recintos o problemas de señal para que Elena consulte la base técnica:
+                    </p>
+
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <input type="text" id="ict-busqueda-input" placeholder="Ej: no tengo señal de antena en PAU, dimensiones mínimas RITI, atenuación fibra SC/APC..." style="flex-grow: 1;">
+                        <button type="button" onclick="consultarICTConIA()">🔍 Analizar Caso</button>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Requisitos y canalizaciones para RITI y RITS en ICT-2')">🏢 RITI / RITS / RITU</button>
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Niveles de señal en toma de usuario coaxial dBµV y filtros LTE 5G')">📶 Niveles de Señal & Filtros 5G</button>
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Protocolo de pruebas y pérdidas máximas en fibra óptica monomodo ICT-2')">💡 Red de Fibra Óptica</button>
+                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Dimensionamiento de cuadro eléctrico y tomas de corriente en RITI según REBT')">⚡ Cuadro Eléctrico RITI</button>
+                    </div>
+
+                    <div id="ict-ia-resultado" class="resultado-caja">
+                        <h4 style="margin-top: 0; color: var(--verde-ia);">📋 Dictamen Técnico Oficial:</h4>
+                        <p style="color: #94a3b8;">Introduce tu consulta técnica o pulsa en uno de los accesos rápidos para generar el informe con normativa y soluciones.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA AUTOMATISMOS & SIMULADOR CADE SIMU -->
+            <section id="vista-industrial" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>⚙️ Automatismos Industriales & Simulador CADe SIMU</h1>
+                </header>
+
+                <div class="seccion-bloque">
+                    <h3>🎮 Simulador de Maniobra Marcha / Paro (Retención KM1)</h3>
+                    <p style="color: #94a3b8; font-size: 0.88rem;">Haz clic para activar o detener la maniobra del contactor KM1:</p>
+
+                    <div class="cade-cuadro">
+                        <div class="circuito-grid">
+                            <div>
+                                <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
+                                    <button type="button" id="sim-btn-paro" style="background-color: #ef4444; width: 75px; height: 75px; border-radius: 50%; font-size: 11px; font-weight: bold;">S1 (PARO)</button>
+                                    <button type="button" id="sim-btn-marcha" style="background-color: #10b981; width: 75px; height: 75px; border-radius: 50%; font-size: 11px; font-weight: bold;">S2 (MARCHA)</button>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div id="piloto-motor" style="width: 45px; height: 45px; border-radius: 50%; background-color: #334155; border: 3px solid #1e293b; transition: all 0.3s;"></div>
+                                    <span id="motor-estado-txt" style="font-weight: bold; color: #94a3b8;">MOTOR DETENIDO</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="estado-borne">
+                                    <span>Pulsador Paro (S1 - NC):</span>
+                                    <strong id="estado-s1" style="color: #10b981;">CERRADO (NC)</strong>
+                                </div>
+                                <div class="estado-borne">
+                                    <span>Pulsador Marcha (S2 - NA):</span>
+                                    <strong id="estado-s2" style="color: #ef4444;">ABIERTO (NA)</strong>
+                                </div>
+                                <div class="estado-borne">
+                                    <span>Contacto Auxiliar KM1 (13-14):</span>
+                                    <strong id="estado-km1-aux" style="color: #ef4444;">ABIERTO</strong>
+                                </div>
+                                <div class="estado-borne">
+                                    <span>Bobina Contactor KM1 (A1-A2):</span>
+                                    <strong id="estado-bobina" style="color: #94a3b8;">DESACTIVADA</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BANCO DE PRÁCTICAS CADe SIMU (Todos los esquemas integrados) -->
+                <div class="seccion-bloque" style="border-top: 3px solid var(--azul-brillante);">
+                    <h3 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>📥</span> Banco de Prácticas CADe SIMU (Esquemas del Taller)
+                    </h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 15px;">
+                        Descarga los esquemas fuente completos para abrirlos y simularlos directamente en tu simulador CADe SIMU:
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px;">
+                        <a href="puerta_garaje.cad" download style="background-color: var(--azul-tecnico); padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
+                            🚗 Puerta de Garaje con Temporizador (.cad)
+                        </a>
+                        <a href="fabrica_galletas.cad" download style="background-color: var(--verde-ia); padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
+                            🍪 Fábrica de Galletas / Laminadora (.cad)
+                        </a>
+                        <a href="almacen_naranjas.cad" download style="background-color: #0284c7; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
+                            🍊 Almacén de Naranjas (.cad)
+                        </a>
+                        <a href="tolva_grano.cad" download style="background-color: #d97706; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
+                            ⚙️ Tolva de Grano (.cad)
+                        </a>
+                        <a href="cinta_transportadora.cad" download style="background-color: #7c3aed; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
+                            📦 Cinta Transportadora Paquetes (.cad)
+                        </a>
+                        <a href="horno_ventilador.cad" download style="background-color: #dc2626; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
+                            🔥 Horno con Ventilador (.cad)
+                        </a>
+                    </div>
+                </div>
+
+                <div class="seccion-bloque">
+                    <h3>⚡ Calculadora de Motores y Protecciones</h3>
+                    <div class="calc-grid">
+                        <div class="calc-field">
+                            <label>Potencia del Motor (kW):</label>
+                            <input type="number" id="motor-kw" value="5.5" step="0.1">
+                        </div>
+                        <div class="calc-field">
+                            <label>Tensión de Trabajo:</label>
+                            <select id="motor-voltaje">
+                                <option value="400">400 V (Trifásico)</option>
+                                <option value="230">230 V (Trifásico)</option>
+                            </select>
+                        </div>
+                        <div class="calc-field">
+                            <label>Factor de Potencia (cos φ):</label>
+                            <input type="number" id="motor-fp" value="0.85" step="0.01">
+                        </div>
+                        <div class="calc-field">
+                            <label>Rendimiento (η):</label>
+                            <input type="number" id="motor-rend" value="0.88" step="0.01">
+                        </div>
+                    </div>
+                    <button type="button" onclick="calcularMotor()" style="width: 100%;">Calcular Intensidad y Guardamotor</button>
+                    <div id="motor-res-box" class="resultado-caja oculto"></div>
+                </div>
+            </section>
+
+            <!-- VISTA CAÍDA DE TENSIÓN -->
+            <section id="vista-caida" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>📏 Calculadora de Caída de Tensión y Sección</h1>
+                </header>
+                <div class="seccion-bloque">
+                    <div class="calc-grid">
+                        <div class="calc-field">
+                            <label>Tipo de Sistema:</label>
+                            <select id="calc-sistema">
+                                <option value="mono">Monofásico (230 V)</option>
+                                <option value="tri">Trifásico (400 V)</option>
+                            </select>
+                        </div>
+                        <div class="calc-field">
+                            <label>Potencia de Carga (W):</label>
+                            <input type="number" id="calc-potencia" value="3680" placeholder="W">
+                        </div>
+                        <div class="calc-field">
+                            <label>Longitud de Línea (metros):</label>
+                            <input type="number" id="calc-longitud" value="25" placeholder="m">
+                        </div>
+                        <div class="calc-field">
+                            <label>Conductor:</label>
+                            <select id="calc-material">
+                                <option value="56">Cobre (Cu - 56 m/(Ω·mm²))</option>
+                                <option value="35">Aluminio (Al - 35 m/(Ω·mm²))</option>
+                            </select>
+                        </div>
+                        <div class="calc-field">
+                            <label>Caída de Tensión Máxima (%):</label>
+                            <select id="calc-porcentaje-max">
+                                <option value="1.5">1,5% (Derivación Individual Centralizada)</option>
+                                <option value="3">3,0% (Alumbrado Interior)</option>
+                                <option value="5">5,0% (Usos Generales / Fuerza)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" onclick="calcularSeccionCable()" style="width: 100%;">⚡ Calcular Sección y Caída</button>
+                    <div id="resultado-caida-box" class="resultado-caja oculto"></div>
+                </div>
+            </section>
+
+            <!-- VISTA VEHÍCULO ELÉCTRICO -->
+            <section id="vista-ve" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>🚗 Vehículo Eléctrico (ITC-BT-52)</h1>
+                </header>
+                <div class="seccion-bloque">
+                    <h3>Protecciones Obligatorias y Esquemas</h3>
+                    <table class="tabla-normativa">
+                        <thead>
+                            <tr>
+                                <th>Esquema</th>
+                                <th>Descripción</th>
+                                <th>Ubicación Contador</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Esquema 2</strong></td>
+                                <td>Línea individual desde el contador principal de la vivienda.</td>
+                                <td>Cuarto de contadores de la comunidad.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Esquema 4a / 4b</strong></td>
+                                <td>Circuito adicional desde el cuadro general de la vivienda (unifamiliares).</td>
+                                <td>Cuadro General de Mando y Protección (CGMP).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="color: var(--azul-brillante); margin-top: 20px;">Protecciones Exigidas:</h4>
+                    <ul>
+                        <li><strong>Diferencial:</strong> Tipo A o Tipo B con protección para fugas de corriente continua.</li>
+                        <li><strong>Magnetotérmico (IGA/PIA):</strong> Curva C según la potencia del cargador (16A, 32A).</li>
+                        <li><strong>Sobretensiones:</strong> Protección permanente y transitoria (Tipo 2).</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- VISTA SOLAR FOTOVOLTAICA -->
+            <section id="vista-solar" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>🌞 Solar Fotovoltaica (ITC-BT-40)</h1>
+                </header>
+                <div class="seccion-bloque">
+                    <div class="calc-grid">
+                        <div class="calc-field">
+                            <label>Potencia por Panel (Wp):</label>
+                            <input type="number" id="solar-w-panel" value="450">
+                        </div>
+                        <div class="calc-field">
+                            <label>Número Total de Paneles:</label>
+                            <input type="number" id="solar-num-paneles" value="10">
+                        </div>
+                        <div class="calc-field">
+                            <label>Tensión Voc del Panel (V):</label>
+                            <input type="number" id="solar-voc" value="49.5">
+                        </div>
+                    </div>
+                    <button type="button" onclick="calcularSolar()" style="width: 100%;">Calcular Potencia Pico y String</button>
+                    <div id="solar-res-box" class="resultado-caja oculto"></div>
+                </div>
+            </section>
+
+            <!-- VISTA DOMÓTICA KNX -->
+            <section id="vista-knx" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>🟢 Domótica Estándar KNX</h1>
+                </header>
+                <div class="seccion-bloque">
+                    <h3>Reglas Topológicas del Bus KNX TP-1</h3>
+                    <table class="tabla-normativa">
+                        <thead>
+                            <tr>
+                                <th>Parámetro</th>
+                                <th>Límite Máximo</th>
+                                <th>Consideración Técnica</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Dispositivos por Línea</td>
+                                <td>64 dispositivos (con fuente estándar)</td>
+                                <td>Hasta 256 con fuentes desacopladas.</td>
+                            </tr>
+                            <tr>
+                                <td>Longitud máxima de Línea</td>
+                                <td>1.000 metros</td>
+                                <td>Longitud total sumando todas las ramas.</td>
+                            </tr>
+                            <tr>
+                                <td>Distancia Fuente - Dispositivo</td>
+                                <td>350 metros</td>
+                                <td>Distancia máxima de cable entre fuente y nodo.</td>
+                            </tr>
+                            <tr>
+                                <td>Distancia entre dos Dispositivos</td>
+                                <td>700 metros</td>
+                                <td>Para evitar colisiones CSMA/CA.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 style="margin-top: 25px;">Generador de Direccionamiento Físico</h3>
+                    <div class="calc-grid">
+                        <div class="calc-field">
+                            <label>Área (0-15):</label>
+                            <input type="number" id="knx-area" value="1" min="0" max="15">
+                        </div>
+                        <div class="calc-field">
+                            <label>Línea (0-15):</label>
+                            <input type="number" id="knx-linea" value="1" min="0" max="15">
+                        </div>
+                        <div class="calc-field">
+                            <label>Dispositivo (0-255):</label>
+                            <input type="number" id="knx-dispositivo" value="10" min="0" max="255">
+                        </div>
+                    </div>
+                    <button type="button" onclick="generarKNX()" style="width: 100%;">Generar Direcciones KNX / ETS</button>
+                    <div id="knx-res-box" class="resultado-caja oculto"></div>
+                </div>
+            </section>
+
+            <!-- VISTA DOMÓTICA INALÁMBRICA -->
+            <section id="vista-domotica-inalambrica" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>🏠 Domótica Inalámbrica & IoT (Zigbee / Z-Wave / Google)</h1>
+                </header>
+
+                <div class="seccion-bloque">
+                    <h3 style="color: var(--azul-brillante); margin-top: 0;">🌐 Comparativa de Protocolos Inalámbricos en el Instalador</h3>
+                    <table class="tabla-normativa">
+                        <thead>
+                            <tr>
+                                <th>Protocolo</th>
+                                <th>Frecuencia</th>
+                                <th>Topología</th>
+                                <th>Ventaja Principal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Zigbee</strong></td>
+                                <td>2.4 GHz</td>
+                                <td>Red en Malla (Mesh)</td>
+                                <td>Económico, gran variedad de sensores y actuadores (Sonoff, Tuya, Aqara).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Z-Wave</strong></td>
+                                <td>868 MHz (UE)</td>
+                                <td>Red en Malla (Mesh)</td>
+                                <td>Libre de interferencias Wi-Fi/Bluetooth, alta seguridad S2 y certificación estricta.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Google Home / Thread</strong></td>
+                                <td>Wi-Fi / 2.4 GHz</td>
+                                <td>Directo / IP Mallada</td>
+                                <td>Control por voz nativo, automatizaciones en la nube y unificación con Matter.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="seccion-bloque">
+                    <h3 style="color: var(--azul-brillante); margin-top: 0;">⚙️ Arquitectura de Enlace: Dispositivo → Pasarela → Google</h3>
+                    <div class="calc-grid">
+                        <div class="calc-field">
+                            <label>Dispositivo Final:</label>
+                            <select id="dom-dispositivo">
+                                <option value="sonoff-minir2">Relé / Micromódulo Sonoff Zigbee</option>
+                                <option value="sensor-puerta">Sensor Apertura Zigbee</option>
+                                <option value="termostato-zwave">Termostato Z-Wave 868 MHz</option>
+                            </select>
+                        </div>
+                        <div class="calc-field">
+                            <label>Pasarela / Hub:</label>
+                            <select id="dom-pasarela">
+                                <option value="bridge-local">Hub Zigbee / Coordinador USB (Home Assistant)</option>
+                                <option value="bridge-propietario">Pasarela Propietaria (Sonoff ZBBridge / Tuya)</option>
+                            </select>
+                        </div>
+                        <div class="calc-field">
+                            <label>Ecosistema Cloud / Voz:</label>
+                            <select id="dom-eco">
+                                <option value="google-home">Google Home (Control por voz / Nest Hub)</option>
+                                <option value="app-local">App Local Exclusiva</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="verificarArquitecturaIoT()" style="width: 100%;">Validar Esquema de Integración</button>
+                    
+                    <div id="domotica-res-box" class="resultado-caja oculto">
+                        <h4 style="margin-top: 0; color: var(--verde-ia);">✅ Informe de Validación de Red:</h4>
+                        <p id="domotica-texto-resultado" style="color: #94a3b8; margin: 0;"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA FACTURACIÓN -->
+            <section id="vista-facturacion" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>🧾 Generador de Facturas y Presupuestos</h1>
+                </header>
+                <div class="seccion-bloque">
+                    <h3>Cálculo de Base e IVA (21%)</h3>
+                    <div class="calc-grid">
+                        <div class="calc-field">
+                            <label>Importe Base Imponible (€):</label>
+                            <input type="number" id="fac-precio" value="150" step="1">
+                        </div>
+                    </div>
+                    <button type="button" id="btn-calcular-factura" style="width: 100%;">Calcular Total Factura</button>
+                    <div class="resultado-caja" style="margin-top: 15px;">
+                        <p>• <strong>Base Imponible:</strong> <span id="total-base">0.00 €</span></p>
+                        <p>• <strong>IVA (21%):</strong> <span id="total-iva">0.00 €</span></p>
+                        <p>• <strong>Total Factura:</strong> <span id="total-factura" style="color: var(--verde-ia); font-weight: bold; font-size: 1.1rem;">0.00 €</span></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA TARIFAS -->
+            <section id="vista-tarifas" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>💶 Tarifas y Estimación de Mano de Obra</h1>
+                </header>
+                <div class="seccion-bloque">
+                    <h3>Cálculo por Horas y Desplazamiento</h3>
+                    <div class="calc-grid">
+                        <div class="calc-field">
+                            <label>Horas de Trabajo:</label>
+                            <input type="number" id="tarifa-horas" value="3" step="0.5">
+                        </div>
+                        <div class="calc-field">
+                            <label>Precio por Hora (€):</label>
+                            <input type="number" id="tarifa-precio-hora" value="45" step="1">
+                        </div>
+                        <div class="calc-field">
+                            <label>Plus Desplazamiento (€):</label>
+                            <input type="number" id="tarifa-desplazamiento" value="30" step="1">
+                        </div>
+                    </div>
+                    <button type="button" id="btn-calcular-tarifa" style="width: 100%;">Calcular Presupuesto</button>
+                    <div class="resultado-caja" style="margin-top: 15px;">
+                        <p>• <strong>Subtotal Mano de Obra:</strong> <span id="subtotal-horas">0.00 €</span></p>
+                        <p>• <strong>Desplazamiento:</strong> <span id="subtotal-desplazamiento">0.00 €</span></p>
+                        <p>• <strong>Total Estimado:</strong> <span id="total-estimado" style="color: var(--verde-ia); font-weight: bold; font-size: 1.1rem;">0.00 €</span></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA VIDEOTECA TÉCNICA -->
+            <section id="vista-videoteca" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>📺 Videoteca Técnica y Tutoriales Prácticos</h1>
+                </header>
+                <div class="seccion-bloque">
+                    <h3>Selecciona una Práctica Real de Taller:</h3>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+                        <button type="button" onclick="cargarVideoTecnico(0)">⚙️ Arranque Estrella-Triángulo</button>
+                        <button type="button" onclick="cargarVideoTecnico(1)">📱 Cableado Dispositivos Sonoff</button>
+                        <button type="button" onclick="cargarVideoTecnico(2)">🚗 Coches Eléctricos y Recarga</button>
+                        <button type="button" onclick="cargarVideoTecnico(3)">🌞 Solar Fotovoltaica</button>
+                        <button type="button" onclick="cargarVideoTecnico(4)">📡 ICT-2 y Telecomunicaciones</button>
+                    </div>
+                    <h4 id="video-titulo" style="color: var(--azul-brillante); margin-top: 5px;">⚙️ Arranque Estrella-Triángulo: Potencia y Mando Explicado</h4>
+                    <div class="video-container">
+                        <iframe id="iframe-video" src="https://www.youtube-nocookie.com/embed/AiT3uWCY6BQ" title="Videoteca Técnica J.F" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- BOTÓN FLOTANTE WHATSAPP -->
+    <a href="https://wa.me/34642269680?text=Hola,%20solicito%20asistencia%20técnica%20sobre%20la%20aplicación%20J.F" 
+       class="btn-whatsapp-flotante" 
+       target="_blank" 
+       rel="noopener noreferrer">
+        <span style="font-size: 1.2rem;">💬</span> WhatsApp
+    </a>
+
+    <!-- MODAL DE CLAVE / CANDADO -->
+    <div id="modal-licencia" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999999; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
+        <div style="background: #131e2b; border: 1px solid var(--bordes); border-radius: 14px; padding: 25px; max-width: 400px; width: 90%; text-align: center; color: var(--texto-principal);">
+            <div style="font-size: 3rem; margin-bottom: 8px;">🔒</div>
+            <h3 style="font-size: 1.3rem; margin-bottom: 8px; color: var(--azul-brillante);">Módulo Protegido</h3>
+            <p style="font-size: 0.88rem; color: #94a3b8; margin-bottom: 20px;">Introduce tu clave de acceso o desbloquea todos los módulos Pro por solo 4 €:</p>
+
+            <input type="password" id="input-clave-licencia" placeholder="Ej: SM-PRO-2026" style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--bordes); background: var(--input-bg); color: #fff; font-size: 1rem; margin-bottom: 12px; outline: none;">
+            <p id="error-clave-licencia" style="display: none; color: #ef4444; font-size: 0.82rem; margin-bottom: 12px; font-weight: bold;">❌ Clave incorrecta</p>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button type="button" onclick="cerrarModalLicencia()" style="flex: 1; padding: 10px; background: var(--bordes); border: none; border-radius: 6px;">Cancelar</button>
+                <button type="button" onclick="validarClaveAcceso()" style="flex: 1; padding: 10px; background: var(--azul-tecnico); border: none; border-radius: 6px;">Desbloquear</button>
+            </div>
+
+            <div style="border-top: 1px solid var(--bordes); padding-top: 15px;">
+                <a href="https://paypal.me/JFMANTENIMIENTO/4" target="_blank" style="display: block; background-color: var(--verde-ia); color: white; text-decoration: none; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; text-align: center;">
+                    💳 Obtener Licencia Pro (4 €)
+                </a>
+            </div>
         </div>
-    `;
-
-    try {
-
-        const res = await fetch('/api/chat', {
-
-            method: 'POST',
-
-            headers: {
-                'Content-Type': 'application/json'
-            },
-
-            body: JSON.stringify({
-
-                prompt:
-                    `Consulta técnica especializada en ICT-2 ` +
-                    `(RD 346/2011), antenas, fibra, cableado estructurado ` +
-                    `y REBT: "${consulta}". 
-
-Entrega una solución completa dividida en:
-
-1. 📖 Normativa oficial aplicable.
-2. 🛠️ Diagnóstico y causas técnicas de la avería.
-3. 📐 Parámetros y valores reglamentarios (dBµV, atenuación, dimensiones, canalizaciones).
-4. 🔧 Procedimiento paso a paso para resolverlo.`
-
-            })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-            throw new Error(
-                data.details ||
-                data.error ||
-                `Error HTTP ${res.status}`
-            );
-        }
-
-        const texto =
-            data.text ||
-            data.respuesta ||
-            "No se obtuvo respuesta del servidor.";
-
-        resBox.innerHTML = `
-
-            <div style="
-                display:flex;
-                align-items:center;
-                gap:8px;
-                margin-bottom:12px;
-            ">
-
-                <span style="font-size:1.3rem;">
-                    📡⚡
-                </span>
-
-                <strong style="
-                    color:var(--verde-ia);
-                    font-size:1.05rem;
-                ">
-                    Resolución Técnica de Elena:
-                </strong>
-
-            </div>
-
-            <div style="
-                line-height:1.6;
-                font-size:0.95rem;
-                max-height:450px;
-                overflow-y:auto;
-                padding-right:10px;
-            ">
-                ${texto}
-            </div>
-        `;
-
-        hablarComoElena(texto);
-
-    } catch (err) {
-
-        console.error(
-            "Error en consulta ICT:",
-            err
-        );
-
-        resBox.innerHTML = `
-
-            <p style="color:#ef4444;">
-
-                <strong>
-                    ❌ Error al conectar con Elena
-                </strong>
-
-                <br><br>
-
-                ${err.message}
-
-                <br><br>
-
-                Comprueba el endpoint
-                <code>/api/chat</code>
-                y la variable
-                <code>GEMINI_API_KEY</code>.
-
-            </p>
-        `;
-    }
-}
-
-
-// --- CÁLCULO DE CAÍDA DE TENSIÓN ---
-
-function calcularSeccionCable() {
-
-    const sistema =
-        document.getElementById('calc-sistema')?.value
-        || 'mono';
-
-    const P =
-        parseFloat(
-            document.getElementById('calc-potencia')?.value
-        ) || 0;
-
-    const L =
-        parseFloat(
-            document.getElementById('calc-longitud')?.value
-        ) || 0;
-
-    const conductividad =
-        parseFloat(
-            document.getElementById('calc-material')?.value
-        ) || 56;
-
-    const ePorc =
-        parseFloat(
-            document.getElementById('calc-porcentaje-max')?.value
-        ) || 1.5;
-
-    const V =
-        (sistema === 'mono')
-            ? 230
-            : 400;
-
-    const eVoltios =
-        (V * ePorc) / 100;
-
-    let seccionCalculada =
-        (sistema === 'mono')
-            ? (
-                (2 * L * P) /
-                (conductividad * eVoltios * V)
-            )
-            : (
-                (L * P) /
-                (conductividad * eVoltios * V)
-            );
-
-    const seccionesNormalizadas =
-        [
-            1.5,
-            2.5,
-            4,
-            6,
-            10,
-            16,
-            25,
-            35,
-            50,
-            70,
-            95,
-            120,
-            150,
-            185,
-            240
-        ];
-
-    const seccionComercial =
-        seccionesNormalizadas.find(
-            s => s >= seccionCalculada
-        ) || "Superior a 240 mm²";
-
-    const resBox =
-        document.getElementById(
-            'resultado-caida-box'
-        );
-
-    if (resBox) {
-
-        resBox.classList.remove('oculto');
-
-        resBox.innerHTML = `
-
-            <h4 style="
-                margin:0 0 10px 0;
-                color:var(--verde-ia);
-            ">
-                ⚡ Resultados del Cálculo:
-            </h4>
-
-            <p>
-                • <strong>Sección Teórica Requerida:</strong>
-                ${seccionCalculada.toFixed(2)} mm²
-            </p>
-
-            <p>
-                • <strong>Sección Comercial Recomendada:</strong>
-
-                <span style="
-                    color:var(--azul-brillante);
-                    font-size:1.15rem;
-                    font-weight:bold;
-                ">
-                    ${seccionComercial} mm²
-                </span>
-            </p>
-
-            <p>
-                • <strong>Caída Admisible:</strong>
-                ${eVoltios.toFixed(2)} V
-                (${ePorc}%)
-            </p>
-        `;
-    }
-}
-
-
-// --- CÁLCULO VEHÍCULO ELÉCTRICO (ITC-BT-52) ---
-
-function calcularVE() {
-
-    const potencia =
-        parseFloat(
-            document.getElementById('ve-potencia')?.value
-        ) || 7.4;
-
-    const longitud =
-        parseFloat(
-            document.getElementById('ve-longitud')?.value
-        ) || 20;
-
-    let seccionMinima = 6;
-
-    let magnetotermico =
-        "Curva C - 32A";
-
-    const diferencial =
-        "Clase A / B (Superinmunizado con detección 6mA DC)";
-
-    const conductividadCobre =
-        48.5;
-
-    let caidaTension = 0;
-
-    if (potencia === 3.7) {
-
-        magnetotermico =
-            "Curva C - 16A";
-
-        caidaTension =
-            (2 * 3700 * longitud) /
-            (conductividadCobre * seccionMinima * 230);
-
-    } else if (potencia === 7.4) {
-
-        magnetotermico =
-            "Curva C - 32A";
-
-        caidaTension =
-            (2 * 7400 * longitud) /
-            (conductividadCobre * seccionMinima * 230);
-
-    } else if (potencia === 11) {
-
-        magnetotermico =
-            "Curva C - 16A (Tetrapolar)";
-
-        caidaTension =
-            (11000 * longitud) /
-            (conductividadCobre * seccionMinima * 400);
-
-    } else if (potencia === 22) {
-
-        magnetotermico =
-            "Curva C - 32A (Tetrapolar)";
-
-        caidaTension =
-            (22000 * longitud) /
-            (conductividadCobre * seccionMinima * 400);
-    }
-
-    const vNominal =
-        (potencia <= 7.4)
-            ? 230
-            : 400;
-
-    let porcentajeCDT =
-        (caidaTension / vNominal) * 100;
-
-    const seccionesOpciones =
-        [6, 10, 16, 25, 35, 50];
-
-    while (
-        porcentajeCDT > 1.5 &&
-        seccionMinima < 50
-    ) {
-
-        let indexActual =
-            seccionesOpciones.indexOf(
-                seccionMinima
-            );
-
-        if (
-            indexActual <
-            seccionesOpciones.length - 1
-        ) {
-
-            seccionMinima =
-                seccionesOpciones[indexActual + 1];
-
-            caidaTension =
-                (vNominal === 230)
-
-                    ? (
-                        2 *
-                        (potencia * 1000) *
-                        longitud
-                    ) /
-                    (
-                        conductividadCobre *
-                        seccionMinima *
-                        230
-                    )
-
-                    : (
-                        (potencia * 1000) *
-                        longitud
-                    ) /
-                    (
-                        conductividadCobre *
-                        seccionMinima *
-                        400
-                    );
-
-            porcentajeCDT =
-                (caidaTension / vNominal) * 100;
-
-        } else {
-
-            break;
-        }
-    }
-
-    alert(
-        `⚡ Cálculo VE (ITC-BT-52):\n` +
-        `- Sección: ${seccionMinima} mm²\n` +
-        `- Protección Magnetotérmica: ${magnetotermico}\n` +
-        `- Diferencial: ${diferencial}\n` +
-        `- Caída estimada: ${porcentajeCDT.toFixed(2)}%`
-    );
-}
-
-
-// --- CÁLCULO SOLAR FOTOVOLTAICA (ITC-BT-40) ---
-
-function calcularSolar() {
-
-    const wPanel =
-        parseFloat(
-            document.getElementById('solar-w-panel')?.value
-        ) || 450;
-
-    const numPaneles =
-        parseInt(
-            document.getElementById('solar-num-paneles')?.value
-        ) || 10;
-
-    const voc =
-        parseFloat(
-            document.getElementById('solar-voc')?.value
-        ) || 49.5;
-
-    const potPicoTotal =
-        (wPanel * numPaneles) / 1000;
-
-    const tensionVocString =
-        (voc * numPaneles);
-
-    const box =
-        document.getElementById(
-            'solar-res-box'
-        );
-
-    if (box) {
-
-        box.classList.remove('oculto');
-
-        box.innerHTML = `
-
-            <h4 style="
-                margin:0 0 10px 0;
-                color:var(--verde-ia);
-            ">
-                ☀️ Resultados Fotovoltaica:
-            </h4>
-
-            <p>
-                • <strong>Potencia Pico Total:</strong>
-                ${potPicoTotal.toFixed(2)} kWp
-            </p>
-
-            <p>
-                • <strong>Tensión Voc String:</strong>
-                ${tensionVocString.toFixed(1)} V DC
-            </p>
-
-            <p>
-                • <strong>Protección DC:</strong>
-                Fusibles gPV y descargador
-                Sobretensiones Tipo 2 DC (1000V DC).
-            </p>
-        `;
-    }
-}
-
-
-// --- CÁLCULO MOTOR ---
-
-function calcularMotor() {
-
-    const kw =
-        parseFloat(
-            document.getElementById('motor-kw')?.value ||
-            document.getElementById('ind-potencia-motor')?.value ||
-            5.5
-        );
-
-    const v =
-        parseFloat(
-            document.getElementById('motor-voltaje')?.value ||
-            document.getElementById('ind-tension-red')?.value ||
-            400
-        );
-
-    const fp =
-        parseFloat(
-            document.getElementById('motor-fp')?.value ||
-            document.getElementById('ind-cos-phi')?.value ||
-            0.85
-        );
-
-    const rend =
-        parseFloat(
-            document.getElementById('motor-rend')?.value ||
-            document.getElementById('ind-rendimiento')?.value ||
-            0.88
-        );
-
-    const potenciaW =
-        kw * 1000;
-
-    const iNominal =
-        potenciaW /
-        (
-            Math.sqrt(3) *
-            v *
-            fp *
-            rend
-        );
-
-    const iRegulacionMin =
-        (iNominal * 0.9).toFixed(1);
-
-    const iRegulacionMax =
-        (iNominal * 1.15).toFixed(1);
-
-    const box =
-        document.getElementById('motor-res-box') ||
-        document.getElementById('resultado-calculo-motor');
-
-    if (box) {
-
-        box.classList.remove('oculto');
-
-        box.innerHTML = `
-
-            <h4 style="
-                margin:0 0 10px 0;
-                color:var(--verde-ia);
-            ">
-                ⚙️ Resultados Motor:
-            </h4>
-
-            <p>
-                • <strong>Intensidad Nominal:</strong>
-
-                <span style="
-                    color:var(--azul-brillante);
-                    font-weight:bold;
-                ">
-                    ${iNominal.toFixed(2)} A
-                </span>
-            </p>
-
-            <p>
-                • <strong>Rango Ajuste Guardamotor:</strong>
-                ${iRegulacionMin} A -
-                ${iRegulacionMax} A
-            </p>
-
-            <p>
-                • <strong>Arranque recomendado:</strong>
-                ${
-                    kw > 5.5
-                        ? 'Estrella-Triángulo o Arrancador Suave'
-                        : 'Arranque Directo'
-                }
-            </p>
-        `;
-    }
-}
-
-
-// --- GENERADOR KNX ---
-
-function generarKNX() {
-
-    const area =
-        document.getElementById('knx-area')?.value || 1;
-
-    const linea =
-        document.getElementById('knx-linea')?.value || 1;
-
-    const disp =
-        document.getElementById('knx-dispositivo')?.value || 10;
-
-    const dirFisica =
-        `${area}.${linea}.${disp}`;
-
-    const box =
-        document.getElementById('knx-res-box') ||
-        document.getElementById('resultado-knx');
-
-    if (box) {
-
-        box.classList.remove('oculto');
-
-        box.innerHTML = `
-
-            <h4 style="
-                margin:0 0 10px 0;
-                color:var(--verde-ia);
-            ">
-                🟢 Parámetros ETS Generados:
-            </h4>
-
-            <p>
-                • <strong>Dirección Física Individual:</strong>
-
-                <span style="
-                    color:var(--azul-brillante);
-                    font-weight:bold;
-                    font-size:1.1rem;
-                ">
-                    ${dirFisica}
-                </span>
-            </p>
-
-            <p>
-                • <strong>Esquema de Grupos sugerido:</strong>
-                1/1/${disp}
-            </p>
-
-            <p>
-                • <strong>Cable de Bus:</strong>
-                Par trenzado apantallado verde certificado
-                ($2 \times 2 \times 0.8\text{ mm}$).
-            </p>
-        `;
-    }
-}
-
-
-// --- VIDEOTECA TÉCNICA ---
-
-function cargarVideo(id, titulo) {
-
-    const elTitulo =
-        document.getElementById('video-titulo');
-
-    const elIframe =
-        document.getElementById('iframe-video') ||
-        document.getElementById('reproductor-youtube');
-
-    if (elTitulo) {
-        elTitulo.innerText = titulo;
-    }
-
-    if (elIframe) {
-        elIframe.src =
-            `https://www.youtube-nocookie.com/embed/${id}`;
-    }
-}
-
-
-// ==========================================
-// INICIALIZACIÓN DE EVENTOS DEL DOM
-// ==========================================
-
-document.addEventListener('DOMContentLoaded', () => {
-
-    console.log(
-        "Servicio y Gestión SM iniciado correctamente"
-    );
-
-    actualizarBotonEstado();
-
-
-    const inputBusqueda =
-        document.getElementById('entrada-busqueda');
-
-    if (inputBusqueda) {
-
-        inputBusqueda.addEventListener(
-            'keypress',
-            (e) => {
-
-                if (e.key === 'Enter') {
-                    ejecutarBusquedaNormativa();
-                }
-
-            }
-        );
-    }
-
-
-    const inputICT =
-        document.getElementById(
-            'ict-busqueda-input'
-        );
-
-    if (inputICT) {
-
-        inputICT.addEventListener(
-            'keypress',
-            (e) => {
-
-                if (e.key === 'Enter') {
-                    consultarICTConIA();
-                }
-
-            }
-        );
-    }
-
-
-    const btnMarcha =
-        document.getElementById('sim-btn-marcha');
-
-    const btnParo =
-        document.getElementById('sim-btn-paro');
-
-    const estadoS1 =
-        document.getElementById('estado-s1');
-
-    const estadoS2 =
-        document.getElementById('estado-s2');
-
-    const estadoKm1 =
-        document.getElementById('estado-km1-aux');
-
-    const estadoBobina =
-        document.getElementById('estado-bobina');
-
-    const pilotoMotor =
-        document.getElementById('piloto-motor');
-
-    const txtMotor =
-        document.getElementById('motor-estado-txt');
-
-
-    if (btnMarcha && btnParo) {
-
-        btnMarcha.addEventListener(
-            'click',
-            () => {
-
-                if (estadoS2) {
-                    estadoS2.textContent =
-                        "CERRADO (Pulsado)";
-                    estadoS2.style.color =
-                        "#10b981";
-                }
-
-                if (estadoKm1) {
-                    estadoKm1.textContent =
-                        "CERRADO (Retenido 13-14)";
-                    estadoKm1.style.color =
-                        "#10b981";
-                }
-
-                if (estadoBobina) {
-                    estadoBobina.textContent =
-                        "ACTIVADA (230V A1-A2)";
-                    estadoBobina.style.color =
-                        "#10b981";
-                }
-
-                if (pilotoMotor) {
-                    pilotoMotor.style.backgroundColor =
-                        "#10b981";
-                    pilotoMotor.style.boxShadow =
-                        "0 0 20px #10b981";
-                }
-
-                if (txtMotor) {
-                    txtMotor.textContent =
-                        "⚡ MOTOR EN MARCHA";
-                    txtMotor.style.color =
-                        "#10b981";
-                }
-            }
-        );
-
-
-        btnParo.addEventListener(
-            'click',
-            () => {
-
-                if (estadoS1) {
-                    estadoS1.textContent =
-                        "ABIERTO (Pulsado)";
-                    estadoS1.style.color =
-                        "#ef4444";
-                }
-
-                if (estadoKm1) {
-                    estadoKm1.textContent =
-                        "ABIERTO";
-                    estadoKm1.style.color =
-                        "#ef4444";
-                }
-
-                if (estadoBobina) {
-                    estadoBobina.textContent =
-                        "DESACTIVADA (0V)";
-                    estadoBobina.style.color =
-                        "#94a3b8";
-                }
-
-                if (pilotoMotor) {
-                    pilotoMotor.style.backgroundColor =
-                        "#2a3441";
-                    pilotoMotor.style.boxShadow =
-                        "none";
-                }
-
-                if (txtMotor) {
-                    txtMotor.textContent =
-                        "MOTOR DETENIDO";
-                    txtMotor.style.color =
-                        "#94a3b8";
-                }
-            }
-        );
-    }
-
-
-    const btnFactura =
-        document.getElementById(
-            'btn-calcular-factura'
-        );
-
-    if (btnFactura) {
-
-        btnFactura.addEventListener(
-            'click',
-            () => {
-
-                const base =
-                    parseFloat(
-                        document.getElementById(
-                            'fac-precio'
-                        )?.value || 0
-                    );
-
-                const iva =
-                    base * 0.21;
-
-                const total =
-                    base + iva;
-
-                const tBase =
-                    document.getElementById(
-                        'total-base'
-                    );
-
-                const tIva =
-                    document.getElementById(
-                        'total-iva'
-                    );
-
-                const tFactura =
-                    document.getElementById(
-                        'total-factura'
-                    );
-
-                if (tBase)
-                    tBase.textContent =
-                        base.toFixed(2) + " €";
-
-                if (tIva)
-                    tIva.textContent =
-                        iva.toFixed(2) + " €";
-
-                if (tFactura)
-                    tFactura.textContent =
-                        total.toFixed(2) + " €";
-            }
-        );
-    }
-
-
-    const btnTarifa =
-        document.getElementById(
-            'btn-calcular-tarifa'
-        );
-
-    if (btnTarifa) {
-
-        btnTarifa.addEventListener(
-            'click',
-            () => {
-
-                const h =
-                    parseFloat(
-                        document.getElementById(
-                            'tarifa-horas'
-                        )?.value || 0
-                    );
-
-                const ph =
-                    parseFloat(
-                        document.getElementById(
-                            'tarifa-precio-hora'
-                        )?.value || 0
-                    );
-
-                const desp =
-                    parseFloat(
-                        document.getElementById(
-                            'tarifa-desplazamiento'
-                        )?.value || 0
-                    );
-
-                const subMO =
-                    h * ph;
-
-                const total =
-                    subMO + desp;
-
-                const sHoras =
-                    document.getElementById(
-                        'subtotal-horas'
-                    );
-
-                const sDesp =
-                    document.getElementById(
-                        'subtotal-desplazamiento'
-                    );
-
-                const tEstimado =
-                    document.getElementById(
-                        'total-estimado'
-                    );
-
-                if (sHoras)
-                    sHoras.textContent =
-                        subMO.toFixed(2) + " €";
-
-                if (sDesp)
-                    sDesp.textContent =
-                        desp.toFixed(2) + " €";
-
-                if (tEstimado)
-                    tEstimado.textContent =
-                        total.toFixed(2) + " €";
-            }
-        );
-    }
-
-
-    // --- VOZ DE ELENA ---
-
-    const btnVoz =
-        document.getElementById(
-            'btn-hablar-asesor'
-        );
-
-    const statusVoz =
-        document.getElementById('status-voz');
-
-    const respuestaBox =
-        document.getElementById(
-            'respuesta-voz-box'
-        );
-
-    const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
-
-
-    if (btnVoz) {
-
-        if (!SpeechRecognition) {
-
-            if (statusVoz) {
-                statusVoz.innerText =
-                    "Reconocimiento de voz no soportado. Usa Chrome o Edge.";
-            }
-
-            btnVoz.disabled = true;
-
-            return;
-        }
-
-
-        const recognition =
-            new SpeechRecognition();
-
-        recognition.lang =
-            'es-ES';
-
-        recognition.continuous =
-            false;
-
-        recognition.interimResults =
-            false;
-
-
-        recognition.onstart = () => {
-
-            btnVoz.innerText =
-                "🛑 Escuchando a Elena... Habla ahora";
-
-            btnVoz.style.backgroundColor =
-                "#e53e3e";
-
-            if (statusVoz) {
-                statusVoz.innerText =
-                    "Escuchando consulta...";
-            }
-        };
-
-
-        recognition.onresult =
-            async (event) => {
-
-                const pregunta =
-                    event.results[0][0].transcript;
-
-                if (statusVoz) {
-                    statusVoz.innerText =
-                        `Pregunta: "${pregunta}"`;
-                }
-
-                btnVoz.innerText =
-                    "⏳ Elena está pensando...";
-
-                btnVoz.style.backgroundColor =
-                    "var(--azul-tecnico)";
-
-
-                if (respuestaBox) {
-
-                    respuestaBox.classList.remove(
-                        'oculto'
-                    );
-
-                    respuestaBox.innerHTML =
-                        `<strong>Tú:</strong> ${pregunta}<br><br>` +
-                        `<em>Elena está analizando la normativa con Gemini...</em>`;
-                }
-
-
-                try {
-
-                    const res =
-                        await fetch('/api/chat', {
-
-                            method: 'POST',
-
-                            headers: {
-                                'Content-Type':
-                                    'application/json'
-                            },
-
-                            body: JSON.stringify({
-                                prompt: pregunta
-                            })
-                        });
-
-
-                    const data =
-                        await res.json();
-
-
-                    if (!res.ok) {
-
-                        throw new Error(
-                            data.details ||
-                            data.error ||
-                            `Error HTTP ${res.status}`
-                        );
-                    }
-
-
-                    const textoRespuesta =
-                        data.text ||
-                        data.respuesta ||
-                        "No se obtuvo respuesta del servidor.";
-
-
-                    if (respuestaBox) {
-
-                        respuestaBox.innerHTML =
-                            `<strong>Tú:</strong> ${pregunta}` +
-                            `<br><br>` +
-                            `<strong>Elena:</strong><br>` +
-                            `<div style="max-height:450px; overflow-y:auto;">` +
-                            `${textoRespuesta}` +
-                            `</div>`;
-                    }
-
-
-                    hablarComoElena(
-                        textoRespuesta
-                    );
-
-
-                } catch (err) {
-
-                    console.error(
-                        "Error al consultar la API:",
-                        err
-                    );
-
-                    if (respuestaBox) {
-
-                        respuestaBox.innerHTML = `
-
-                            <strong style="color:#ef4444;">
-                                ❌ Error al conectar con Elena
-                            </strong>
-
-                            <br><br>
-
-                            ${err.message}
-
-                            <br><br>
-
-                            Comprueba el endpoint
-                            <code>/api/chat</code>
-                            y la variable
-                            <code>GEMINI_API_KEY</code>.
-
-                        `;
-                    }
-
-                } finally {
-
-                    btnVoz.innerText =
-                        "🎙️ Hablar con Elena";
-
-                    btnVoz.style.backgroundColor =
-                        "var(--azul-tecnico)";
-                }
-            };
-
-
-        recognition.onerror =
-            (event) => {
-
-                console.error(
-                    "Error de voz:",
-                    event.error
-                );
-
-                if (statusVoz) {
-                    statusVoz.innerText =
-                        `Error: ${event.error}`;
-                }
-
-                btnVoz.innerText =
-                    "🎙️ Hablar con Elena";
-
-                btnVoz.style.backgroundColor =
-                    "var(--azul-tecnico)";
-            };
-
-
-        recognition.onend =
-            () => {
-
-                if (
-                    btnVoz.innerText.includes(
-                        "Escuchando"
-                    )
-                ) {
-
-                    btnVoz.innerText =
-                        "🎙️ Hablar con Elena";
-
-                    btnVoz.style.backgroundColor =
-                        "var(--azul-tecnico)";
-                }
-            };
-
-
-        btnVoz.addEventListener(
-            'click',
-            () => {
-
-                window.speechSynthesis.cancel();
-
-                recognition.start();
-            }
-        );
-    }
-
-});
-
-
-// ==========================================
-// EXPOSICIÓN GLOBAL DE FUNCIONES
-// ==========================================
-
-window.tieneLicencia =
-    tieneLicencia;
-
-window.verificarYEntrar =
-    verificarYEntrar;
-
-window.cerrarModalLicencia =
-    cerrarModalLicencia;
-
-window.validarClaveAcceso =
-    validarClaveAcceso;
-
-window.gestionarBotonLicencia =
-    gestionarBotonLicencia;
-
-window.actualizarBotonEstado =
-    actualizarBotonEstado;
-
-window.abrirModuloDirecto =
-    abrirModuloDirecto;
-
-window.hablarComoElena =
-    hablarComoElena;
-
-window.enviarConsultaWhatsApp =
-    enviarConsultaWhatsApp;
-
-window.diagnosticarConIA =
-    diagnosticarConIA;
-
-window.buscarTermino =
-    buscarTermino;
-
-window.ejecutarBusquedaNormativa =
-    ejecutarBusquedaNormativa;
-
-window.buscarTerminoICT =
-    buscarTerminoICT;
-
-window.consultarICTConIA =
-    consultarICTConIA;
-
-window.calcularSeccionCable =
-    calcularSeccionCable;
-
-window.calcularVE =
-    calcularVE;
-
-window.calcularSolar =
-    calcularSolar;
-
-window.calcularMotor =
-    calcularMotor;
-
-window.generarKNX =
-    generarKNX;
-
-window.cargarVideo =
-    cargarVideo;
+    </div>
+
+    <!-- ENLACE AL ARCHIVO JAVASCRIPT PRINCIPAL -->
+    <script src="main.js" defer></script>
+</body>
+</html>
