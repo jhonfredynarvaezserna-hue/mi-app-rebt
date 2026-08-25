@@ -3,14 +3,13 @@
 // ==========================================
 
 const TELEFONO_WHATSAPP = "34642269680";
-const CLAVE_MAESTRA = "JF-PRO-2026"; // Cambia aquí tu clave secreta si lo deseas
-const CLAVES_VALIDAS = ["JF-PRO-2026", "SM-PRO-2026"];
+const CLAVE_MAESTRA = "JF-PRO-2026"; // Clave maestra única de acceso
 let destinoPendiente = null;
 
 // --- SISTEMA DE LICENCIAS PRO ---
 function tieneLicencia() {
     const clave = localStorage.getItem("licencia_sm_activa");
-    return (clave === CLAVE_MAESTRA || CLAVES_VALIDAS.includes(clave));
+    return (clave === CLAVE_MAESTRA);
 }
 
 function verificarYEntrar(idVista) {
@@ -39,7 +38,7 @@ function validarClaveAcceso() {
     const val = inputEl ? inputEl.value.trim() : '';
     const err = document.getElementById('error-clave-licencia');
 
-    if (val === CLAVE_MAESTRA || CLAVES_VALIDAS.includes(val)) {
+    if (val === CLAVE_MAESTRA) {
         localStorage.setItem("licencia_sm_activa", val);
         cerrarModalLicencia();
         actualizarBotonEstado();
