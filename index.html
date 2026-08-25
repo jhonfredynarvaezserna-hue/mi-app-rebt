@@ -659,22 +659,22 @@
 
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px;">
                         <a href="puerta_garaje.cad" download style="background-color: var(--azul-tecnico); padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
-                            🚗 Puerta de Garaje con Temporizador (.cad)[cite: 1]
+                            🚗 Puerta de Garaje con Temporizador (.cad)
                         </a>
                         <a href="fabrica_galletas.cad" download style="background-color: var(--verde-ia); padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
-                            🍪 Fábrica de Galletas / Laminadora (.cad)[cite: 2, 3]
+                            🍪 Fábrica de Galletas / Laminadora (.cad)
                         </a>
                         <a href="almacen_naranjas.cad" download style="background-color: #0284c7; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
-                            🍊 Almacén de Naranjas (.cad)[cite: 4]
+                            🍊 Almacén de Naranjas (.cad)
                         </a>
                         <a href="tolva_grano.cad" download style="background-color: #d97706; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
-                            ⚙️ Tolva de Grano (.cad)[cite: 5]
+                            ⚙️ Tolva de Grano (.cad)
                         </a>
                         <a href="cinta_transportadora.cad" download style="background-color: #7c3aed; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
-                            📦 Cinta Transportadora Paquetes (.cad)[cite: 6]
+                            📦 Cinta Transportadora Paquetes (.cad)
                         </a>
                         <a href="horno_ventilador.cad" download style="background-color: #dc2626; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
-                            🔥 Horno con Ventilador (.cad)[cite: 7]
+                            🔥 Horno con Ventilador (.cad)
                         </a>
                     </div>
                 </div>
@@ -1011,18 +1011,19 @@
             <section id="vista-videoteca" class="vista-section oculto">
                 <header>
                     <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>📺 Videoteca Técnica y Tutoriales</h1>
+                    <h1>📺 Videoteca Técnica y Tutoriales Prácticos</h1>
                 </header>
                 <div class="seccion-bloque">
-                    <h3>Selecciona un Video de Apoyo:</h3>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
-                        <button type="button" onclick="cargarVideo('2Vv-BfVoq4g', 'Instalación Punto de Recarga Vehículo Eléctrico')">🚗 Vehículo Eléctrico</button>
-                        <button type="button" onclick="cargarVideo('9bZkp7q19f0', 'Esquema y Cableado de Automatismos')">⚙️ Automatismos</button>
-                        <button type="button" onclick="cargarVideo('9bZkp7q19f0', 'Dimensionamiento Solar Fotovoltaico')">🌞 Fotovoltaica</button>
+                    <h3>Selecciona una Práctica Real de Taller:</h3>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+                        <button type="button" onclick="cargarVideoTecnico(0)">⚙️ Arranque Estrella-Triángulo</button>
+                        <button type="button" onclick="cargarVideoTecnico(1)">📱 Cableado Dispositivos Sonoff</button>
+                        <button type="button" onclick="cargarVideoTecnico(2)">⚡ Simulación Motores Trifásicos</button>
+                        <button type="button" onclick="cargarVideoTecnico(3)">🔋 Fundamentos y Arranque Industrial</button>
                     </div>
-                    <h4 id="video-titulo" style="color: var(--azul-brillante);">Selecciona un contenido</h4>
+                    <h4 id="video-titulo" style="color: var(--azul-brillante); margin-top: 5px;">⚙️ Arranque Estrella-Triángulo: Potencia y Mando Explicado</h4>
                     <div class="video-container">
-                        <iframe id="iframe-video" src="https://www.youtube-nocookie.com/embed/2Vv-BfVoq4g" title="Video Técnico" allowfullscreen></iframe>
+                        <iframe id="iframe-video" src="https://www.youtube-nocookie.com/embed/AiT3uWCY6BQ" title="Videoteca Técnica J.F" allowfullscreen></iframe>
                     </div>
                 </div>
             </section>
