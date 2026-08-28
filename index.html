@@ -163,6 +163,42 @@
             top: 0; left: 0; width: 100%; height: 100%; border: 0;
         }
 
+        /* Estilos específicos añadidos para el banner interactivo del Diferencial */
+        .diferencial-banner-box {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 15px auto;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--bordes);
+            background: #000;
+        }
+        .diferencial-img-bg {
+            display: block;
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        .diferencial-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            z-index: 3;
+            transition: transform 0.2s ease-in-out;
+        }
+        .diferencial-play-btn:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        .diferencial-play-svg {
+            width: 75px;
+            height: 75px;
+            fill: rgba(255, 255, 255, 0.85);
+            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.7));
+        }
+
         .btn-whatsapp-flotante {
             position: fixed;
             bottom: 25px;
@@ -323,7 +359,7 @@
                             <option value="Punto de Recarga VE">Punto de Recarga VE</option>
                             <option value="Infraestructura ICT">Infraestructura ICT</option>
                             <option value="Domótica Inalámbrica (Zigbee/Z-Wave/Google)">Domótica Inalámbrica (Zigbee/Z-Wave/Google)</option>
-                        </select>
+                      </select>
 
                         <textarea id="gestor-mensaje" rows="3" placeholder="Describe brevemente la consulta técnica..." style="width: 100%; resize: vertical;"></textarea>
 
@@ -333,710 +369,730 @@
                             </button>
                             <button type="button" onclick="enviarConsultaWhatsApp()" style="flex: 1; background-color: var(--verde-wa); padding: 12px; font-size: 1rem; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 6px;">
                                 📱 Enviar por WhatsApp
-                            </button>
-                        </div>
+                          </button>
+                      </div>
 
-                        <div id="gestor-ia-resultado" class="resultado-caja oculto"></div>
-                    </div>
+                      <div id="gestor-ia-resultado" class="resultado-caja oculto"></div>
+                </div>
+            </div>
+
+            <div class="portada-grid">
+                <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-electrotecnia')">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">📖</div>
+                    <h3>Apuntes Electrotecnia</h3>
+                    <p style="color: #a0aec0; font-size: 0.9rem;">Magnitudes, Ley de Ohm, corriente alterna/continua y componentes pasivos.</p>
                 </div>
 
-                <div class="portada-grid">
-                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-electrotecnia')">
-                        <div style="font-size: 2rem; margin-bottom: 10px;">📖</div>
-                        <h3>Apuntes Electrotecnia</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">Magnitudes, Ley de Ohm, corriente alterna/continua y componentes pasivos.</p>
+                <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-asesor-voz')">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80" alt="Elena" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--azul-brillante);">
+                        <h3 style="margin: 0;">Asesor de Voz</h3>
                     </div>
-
-                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-asesor-voz')">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80" alt="Elena" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--azul-brillante);">
-                            <h3 style="margin: 0;">Asesor de Voz</h3>
-                        </div>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">Consultas verbales en directo sobre normativas, cálculos y dudas con Elena.</p>
-                    </div>
-
-                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-rebt')">
-                        <div style="font-size: 2rem; margin-bottom: 10px;">⚖️</div>
-                        <h3>Buscador REBT / RITE</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">Motor de consultas normativas completas con resolución técnica oficial.</p>
-                    </div>
-
-                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-caida')">
-                        <div style="font-size: 2rem; margin-bottom: 10px;">📏</div>
-                        <h3>Cálculo Caída Tensión</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">Dimensionamiento exacto de sección para cobre y aluminio.</p>
-                    </div>
-
-                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-ict')">
-                        <div style="font-size: 2rem; margin-bottom: 10px;">📡</div>
-                        <h3>Consultas ICT-2</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">Recintos RITI/RITS, cableados, registros y PAU (RD 346/2011).</p>
-                    </div>
-
-                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-ve')">
-                        <span class="insignia-candado">🔒 PRO</span>
-                        <div style="font-size: 2rem; margin-bottom: 10px;">🚗</div>
-                        <h3>Vehículo Eléctrico</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">ITC-BT-52, esquemas 1 a 4, protecciones 6mA DC y curvas.</p>
-                    </div>
-
-                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-solar')">
-                        <span class="insignia-candado">🔒 PRO</span>
-                        <div style="font-size: 2rem; margin-bottom: 10px;">🌞</div>
-                        <h3>Solar Fotovoltaica</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">ITC-BT-40, cálculo de strings, inversor y protecciones DC/AC.</p>
-                    </div>
-
-                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-industrial')">
-                        <span class="insignia-candado">🔒 PRO</span>
-                        <div style="font-size: 2rem; margin-bottom: 10px;">⚙️</div>
-                        <h3>Automatismos CADe SIMU</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">Simulador interactivo Marcha/Paro con realimentación y cálculo motor.</p>
-                    </div>
-
-                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-knx')">
-                        <span class="insignia-candado">🔒 PRO</span>
-                        <div style="font-size: 2rem; margin-bottom: 10px;">🟢</div>
-                        <h3>Domótica KNX</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">Topología de bus, límites y direccionamientos ETS.</p>
-                    </div>
-
-                    <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-domotica-inalambrica')">
-                        <span class="insignia-candado">🔒 PRO</span>
-                        <div style="font-size: 2rem; margin-bottom: 10px;">🏠</div>
-                        <h3>Domótica Inalámbrica & IoT</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">Zigbee (2.4 GHz), Z-Wave (868 MHz) y pasarelas con Google Home.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- VISTA: APUNTES DE ELECTROTECNIA Y AUTOMATISMOS -->
-            <section id="vista-electrotecnia" class="vista-section oculto">
-                <header>
-                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>📖 Apuntes de Electrotecnia & Automatismos (Manual Completo)</h1>
-                </header>
-
-                <!-- BLOQUE 1 -->
-                <div class="seccion-bloque">
-                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
-                        <span>⚡</span> Bloque 1: Magnitudes Eléctricas y Ley de Ohm
-                    </h2>
-                    <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 15px;">
-                        Las bases físicas y matemáticas de la electricidad explicadas de forma práctica:
-                    </p>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 15px;">
-                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--azul-brillante);">
-                            <strong style="color: var(--texto-brillante);">Tensión (U / E):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">La <em>presión o fuerza electromotriz</em>. Voltios (V).</span>
-                        </div>
-                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--verde-ia);">
-                            <strong style="color: var(--texto-brillante);">Intensidad (I):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">El <em>caudal de electrones</em> (Q/t). Amperios (A).</span>
-                        </div>
-                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--oro-candado);">
-                            <strong style="color: var(--texto-brillante);">Resistencia (R):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">La <em>oposición al paso</em> y el Efecto Joule (calor). Ohmios (Ω).</span>
-                        </div>
-                    </div>
-
-                    <div style="background: #0f172a; border: 1px solid var(--azul-brillante); padding: 15px; border-radius: 8px; text-align: center;">
-                        <span style="font-size: 1.1rem; font-weight: bold; color: var(--azul-brillante);">Ley de Ohm y Densidad de Corriente:</span>
-                        <div style="font-size: 1.15rem; font-family: monospace; color: #fff; margin-top: 6px;">U = I · R &nbsp;&nbsp;|&nbsp;&nbsp; J = I / S (A/mm²)</div>
-                    </div>
+                    <p style="color: #a0aec0; font-size: 0.9rem;">Consultas verbales en directo sobre normativas, cálculos y dudas con Elena.</p>
                 </div>
 
-                <!-- BLOQUE 2 -->
-                <div class="seccion-bloque">
-                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
-                        <span>🔌</span> Bloque 2: Corriente Continua, Alterna y Redes
-                    </h2>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
-                            <strong>🔋 Corriente Continua (CC / DC):</strong> Flujo unidireccional constante (Pilas, baterías, paneles solares). Conductor positivo rojo, negativo negro.
-                        </div>
-                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
-                            <strong>〰️ Corriente Alterna (CA / AC):</strong> Onda senoidal que oscila a 50 Hz en Europa. Código de colores: Fase (Marrón/Negro/Gris) y Neutro (Azul).
-                        </div>
-                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
-                            <strong>🌐 Monofásico (230V) vs Trifásico (400V):</strong> Monofásico usa Fase + Neutro. Trifásico usa tres fases (L1, L2, L3) y neutro para alta potencia industrial y climatización.
-                        </div>
-                    </div>
+                <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-rebt')">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">⚖️</div>
+                    <h3>Buscador REBT / RITE</h3>
+                    <p style="color: #a0aec0; font-size: 0.9rem;">Motor de consultas normativas completas con resolución técnica oficial.</p>
                 </div>
 
-                <!-- BLOQUE 3 - VÍDEO TÉCNICO DE REACTANCIA E IMPEDANCIA -->
-                <div class="seccion-bloque">
-                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
-                        <span>⚙️</span> Bloque 3: Componentes Pasivos, Impedancia y Factor de Potencia
-                    </h2>
-                    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
-                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
-                            <strong>📌 Resistencias (R):</strong> Oponen resistencia pura. Generan calor por Efecto Joule.
-                        </div>
-                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
-                            <strong>🌀 Bobinas (L) y Condensadores (C):</strong> En alterna generan reactancia (XL y XC) provocando desfases de 90°. La combinación total se llama <strong>Impedancia (Z)</strong>.
-                        </div>
-                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--verde-ia);">
-                            <strong>⚡ Factor de Potencia (cos φ):</strong> Mide el aprovechamiento real de la energía en alterna. Un cos φ bajo requiere compensación con baterías de condensadores.
-                        </div>
-                    </div>
-
-                    <!-- VÍDEO 1 -->
-                    <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-bottom: 8px;">📺 Vídeo Explicativo (Reactancia e Impedancia):</h3>
-                    <div class="video-container">
-                        <iframe src="https://www.youtube-nocookie.com/embed/2Vv-BfVoq4g" title="Factor de Potencia y Reactancia" allowfullscreen></iframe>
-                    </div>
+                <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-caida')">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">📏</div>
+                    <h3>Cálculo Caída Tensión</h3>
+                    <p style="color: #a0aec0; font-size: 0.9rem;">Dimensionamiento exacto de sección para cobre y aluminio.</p>
                 </div>
 
-                <!-- BLOQUE 4 -->
-                <div class="seccion-bloque">
-                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
-                        <span>🔄</span> Bloque 4: Motores de Inducción y Conexión Estrella - Triángulo
-                    </h2>
-                    <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 15px;">
-                        El sistema de arranque estrella-triángulo es el método clásico y obligatorio en muchos motores de inducción de mediana y gran potencia para evitar caídas de tensión severas en la red y proteger los devanados:
-                    </p>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 20px;">
-                        <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-top: 3px solid var(--oro-candado);">
-                            <strong style="color: var(--texto-brillante); font-size: 1.05rem;">1. Arranque en Estrella (Y):</strong>
-                            <p style="font-size: 0.88rem; color: #94a3b8; margin: 8px 0 0 0;">
-                                Al arrancar, el contactor principal y el de estrella cierran los puentes en los terminales finales. La tensión aplicada a cada fase se reduce, limitando drásticamente la intensidad de pico a un tercio de su valor nominal directo.
-                            </p>
-                        </div>
-                        <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-top: 3px solid var(--verde-ia);">
-                            <strong style="color: var(--texto-brillante); font-size: 1.05rem;">2. Conmutación a Triángulo (Δ):</strong>
-                            <p style="font-size: 0.88rem; color: #94a3b8; margin: 8px 0 0 0;">
-                                Una vez que el rotor alcanza aproximadamente el 80% de su velocidad de régimen mediante un temporizador electrónico, conmuta a triángulo. El motor opera al 100% de su par y potencia útil.
-                            </p>
-                        </div>
-                    </div>
+                <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-ict')">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">📡</div>
+                    <h3>Consultas ICT-2</h3>
+                    <p style="color: #a0aec0; font-size: 0.9rem;">Recintos RITI/RITS, cableados, registros y PAU (RD 346/2011).</p>
+                </div>
 
-                    <!-- VÍDEO 2 -->
-                    <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-bottom: 8px;">📺 Vídeo Explicativo Detallado (Arranque Estrella-Triángulo):</h3>
-                    <div class="video-container">
-                        <iframe src="https://www.youtube-nocookie.com/embed/AiT3uWCY6BQ" title="Arranque Estrella Triángulo" allowfullscreen></iframe>
+                <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-ve')">
+                    <span class="insignia-candado">🔒 PRO</span>
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🚗</div>
+                    <h3>Vehículo Eléctrico</h3>
+                    <p style="color: #a0aec0; font-size: 0.9rem;">ITC-BT-52, esquemas 1 a 4, protecciones 6mA DC y curvas.</p>
+                </div>
+
+                <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-solar')">
+                    <span class="insignia-candado">🔒 PRO</span>
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🌞</div>
+                    <h3>Solar Fotovoltaica</h3>
+                    <p style="color: #a0aec0; font-size: 0.9rem;">ITC-BT-40, cálculo de strings, inversor y protecciones DC/AC.</p>
+                </div>
+
+                <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-industrial')">
+                    <span class="insignia-candado">🔒 PRO</span>
+                    <div style="font-size: 2rem; margin-bottom: 10px;">⚙️</div>
+                    <h3>Automatismos CADe SIMU</h3>
+                    <p style="color: #a0aec0; font-size: 0.9rem;">Simulador interactivo Marcha/Paro con realimentación y cálculo motor.</p>
+                </div>
+
+                <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-knx')">
+                    <span class="insignia-candado">🔒 PRO</span>
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🟢</div>
+                    <h3>Domótica KNX</h3>
+                    <p style="color: #a0aec0; font-size: 0.9rem;">Topología de bus, límites y direccionamientos ETS.</p>
+                </div>
+
+                <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-domotica-inalambrica')">
+                    <span class="insignia-candado">🔒 PRO</span>
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🏠</div>
+                    <h3>Domótica Inalámbrica & IoT</h3>
+                    <p style="color: #a0aec0; font-size: 0.9rem;">Zigbee (2.4 GHz), Z-Wave (868 MHz) y pasarelas con Google Home.</p>
+                </div>
+            </div>
+          </section>
+
+          <!-- VISTA: APUNTES DE ELECTROTECNIA Y AUTOMATISMOS -->
+          <section id="vista-electrotecnia" class="vista-section oculto">
+            <header>
+                <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                <h1>📖 Apuntes de Electrotecnia & Automatismos (Manual Completo)</h1>
+          </header>
+
+          <!-- BLOQUE 1 -->
+          <div class="seccion-bloque">
+              <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                  <span>⚡</span> Bloque 1: Magnitudes Eléctricas y Ley de Ohm
+              </h2>
+              <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 15px;">
+                  Las bases físicas y matemáticas de la electricidad explicadas de forma práctica:
+              </p>
+            
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 15px;">
+                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--azul-brillante);">
+                      <strong style="color: var(--texto-brillante);">Tensión (U / E):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">La <em>presión o fuerza electromotriz</em>. Voltios (V).</span>
+                  </div>
+                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--verde-ia);">
+                      <strong style="color: var(--texto-brillante);">Intensidad (I):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">El <em>caudal de electrones</em> (Q/t). Amperios (A).</span>
+                  </div>
+                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--oro-candado);">
+                      <strong style="color: var(--texto-brillante);">Resistencia (R):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">La <em>oposición al paso</em> y el Efecto Joule (calor). Ohmios (Ω).</span>
+                  </div>
+              </div>
+
+              <div style="background: #0f172a; border: 1px solid var(--azul-brillante); padding: 15px; border-radius: 8px; text-align: center;">
+                  <span style="font-size: 1.1rem; font-weight: bold; color: var(--azul-brillante);">Ley de Ohm y Densidad de Corriente:</span>
+                  <div style="font-size: 1.15rem; font-family: monospace; color: #fff; margin-top: 6px;">U = I · R &nbsp;&nbsp;|&nbsp;&nbsp; J = I / S (A/mm²)</div>
+              </div>
+          </div>
+
+          <!-- BLOQUE 2 -->
+          <div class="seccion-bloque">
+              <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                  <span>🔌</span> Bloque 2: Corriente Continua, Alterna y Redes
+              </h2>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                      <strong>🔋 Corriente Continua (CC / DC):</strong> Flujo unidireccional constante (Pilas, baterías, paneles solares). Conductor positivo rojo, negativo negro.
+                  </div>
+                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                      <strong>〰️ Corriente Alterna (CA / AC):</strong> Onda senoidal que oscila a 50 Hz en Europa. Código de colores: Fase (Marrón/Negro/Gris) y Neutro (Azul).
+                  </div>
+                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                      <strong>🌐 Monofásico (230V) vs Trifásico (400V):</strong> Monofásico usa Fase + Neutro. Trifásico usa tres fases (L1, L2, L3) y neutro para alta potencia industrial y climatización.
+                  </div>
+              </div>
+          </div>
+
+          <!-- BLOQUE 3 - VÍDEO TÉCNICO DE REACTANCIA E IMPEDANCIA -->
+          <div class="seccion-bloque">
+              <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                  <span>⚙️</span> Bloque 3: Componentes Pasivos, Impedancia y Factor de Potencia
+              </h2>
+              <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
+                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                      <strong>📌 Resistencias (R):</strong> Oponen resistencia pura. Generan calor por Efecto Joule.
+                  </div>
+                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                      <strong>🌀 Bobinas (L) y Condensadores (C):</strong> En alterna generan reactancia (XL y XC) provocando desfases de 90°. La combinación total se llama <strong>Impedancia (Z)</strong>.
+                  </div>
+                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--verde-ia);">
+                      <strong>⚡ Factor de Potencia (cos φ):</strong> Mide el aprovechamiento real de la energía en alterna. Un cos φ bajo requiere compensación con baterías de condensadores.
+                  </div>
+              </div>
+
+              <!-- VÍDEO 1 -->
+              <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-bottom: 8px;">📺 Vídeo Explicativo (Reactancia e Impedancia):</h3>
+              <div class="video-container">
+                  <iframe src="https://www.youtube-nocookie.com/embed/2Vv-BfVoq4g" title="Factor de Potencia y Reactancia" allowfullscreen></iframe>
+              </div>
+          </div>
+
+          <!-- BLOQUE 4 -->
+          <div class="seccion-bloque">
+              <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                  <span>🔄</span> Bloque 4: Motores de Inducción y Conexión Estrella - Triángulo
+              </h2>
+              <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 15px;">
+                  El sistema de arranque estrella-triángulo es el método clásico y obligatorio en muchos motores de inducción de mediana y gran potencia para evitar caídas de tensión severas en la red y proteger los devanados:
+              </p>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                  <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-top: 3px solid var(--oro-candado);">
+                      <strong style="color: var(--texto-brillante); font-size: 1.05rem;">1. Arranque en Estrella (Y):</strong>
+                      <p style="font-size: 0.88rem; color: #94a3b8; margin: 8px 0 0 0;">
+                          Al arrancar, el contactor principal y el de estrella cierran los puentes en los terminales finales. La tensión aplicada a cada fase se reduce, limitando drásticamente la intensidad de pico a un tercio de su valor nominal directo.
+                      </p>
+                  </div>
+                  <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-top: 3px solid var(--verde-ia);">
+                      <strong style="color: var(--texto-brillante); font-size: 1.05rem;">2. Conmutación a Triángulo (Δ):</strong>
+                      <p style="font-size: 0.88rem; color: #94a3b8; margin: 8px 0 0 0;">
+                          Una vez que el rotor alcanza aproximadamente el 80% de su velocidad de régimen mediante un temporizador electrónico, conmuta a triángulo. El motor opera al 100% de su par y potencia útil.
+                      </p>
+                  </div>
+              </div>
+
+              <!-- VÍDEO 2 -->
+              <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-bottom: 8px;">📺 Vídeo Explicativo Detallado (Arranque Estrella-Triángulo):</h3>
+              <div class="video-container">
+                  <iframe src="https://www.youtube-nocookie.com/embed/AiT3uWCY6BQ" title="Arranque Estrella Triángulo" allowfullscreen></iframe>
+              </div>
+          </div>
+        </section>
+
+        <!-- VISTA ASESOR DE VOZ -->
+        <section id="vista-asesor-voz" class="vista-section oculto">
+            <header>
+                <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                <h1>🗣️ Asesor Técnico Parlante</h1>
+            </header>
+            <div class="seccion-bloque" style="text-align: center; padding: 30px;">
+                <div style="display: flex; justify-content: center; margin-bottom: 15px;">
+                    <div id="elena-avatar-container" style="position: relative; width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--azul-brillante); box-shadow: 0 0 20px rgba(24, 143, 167, 0.4); overflow: hidden; background: #131e2b; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                        <img id="avatar-elena-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80" alt="Elena Ingeniera Técnica" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                 </div>
-            </section>
-
-            <!-- VISTA ASESOR DE VOZ -->
-            <section id="vista-asesor-voz" class="vista-section oculto">
-                <header>
-                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>🗣️ Asesor Técnico Parlante</h1>
-                </header>
-                <div class="seccion-bloque" style="text-align: center; padding: 30px;">
-                    <div style="display: flex; justify-content: center; margin-bottom: 15px;">
-                        <div id="elena-avatar-container" style="position: relative; width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--azul-brillante); box-shadow: 0 0 20px rgba(24, 143, 167, 0.4); overflow: hidden; background: #131e2b; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
-                            <img id="avatar-elena-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80" alt="Elena Ingeniera Técnica" style="width: 100%; height: 100%; object-fit: cover;">
-                        </div>
-                    </div>
-                    <h3 style="color: var(--azul-brillante); margin-bottom: 5px;">Elena · Ingeniera Técnica Virtual</h3>
-                    <p style="color: #94a3b8; max-width: 600px; margin: 0 auto 20px auto;">
-                        Consulta por voz sobre REBT, RITE, ITC-BT-52, caídas de tensión y esquemas eléctricos.
-                    </p>
-                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                        <button type="button" id="btn-hablar-asesor" style="font-size: 1.1rem; padding: 14px 25px; border-radius: 30px; background-color: var(--azul-tecnico);">🎙️ Hablar con Elena</button>
-                        <button type="button" onclick="silenciarAElena()" style="font-size: 1.1rem; padding: 14px 25px; border-radius: 30px; background-color: #ef4444; border: none; color: white; cursor: pointer; font-weight: bold;">🔇 Callar</button>
-                    </div>
-                    <p id="status-voz" style="color: #a0aec0; margin-top: 15px;">Pulsa para realizar tu consulta verbal.</p>
-                    <div id="respuesta-voz-box" class="oculto resultado-caja" style="text-align: left;"></div>
+                <h3 style="color: var(--azul-brillante); margin-bottom: 5px;">Elena · Ingeniera Técnica Virtual</h3>
+                <p style="color: #94a3b8; max-width: 600px; margin: 0 auto 20px auto;">
+                    Consulta por voz sobre REBT, RITE, ITC-BT-52, caídas de tensión y esquemas eléctricos.
+                </p>
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <button type="button" id="btn-hablar-asesor" style="font-size: 1.1rem; padding: 14px 25px; border-radius: 30px; background-color: var(--azul-tecnico);">🎙️ Hablar con Elena</button>
+                    <button type="button" onclick="silenciarAElena()" style="font-size: 1.1rem; padding: 14px 25px; border-radius: 30px; background-color: #ef4444; border: none; color: white; cursor: pointer; font-weight: bold;">🔇 Callar</button>
                 </div>
-            </section>
+                <p id="status-voz" style="color: #a0aec0; margin-top: 15px;">Pulsa para realizar tu consulta verbal.</p>
+                <div id="respuesta-voz-box" class="oculto resultado-caja" style="text-align: left;"></div>
+            </div>
+        </section>
 
-            <!-- VISTA BUSCADOR REBT / RITE -->
-            <section id="vista-rebt" class="vista-section oculto">
-                <header>
-                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>⚖️ Buscador y Consultor REBT / RITE</h1>
-                </header>
-                <div class="seccion-bloque">
-                    <p style="color: #94a3b8; font-size: 0.9rem;">Escribe cualquier pregunta o duda técnica para que Elena la resuelva consultando Gemini:</p>
-                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <input type="text" id="entrada-busqueda" placeholder="Ej: dime algo sobre los diferenciales tipo f, ITC-BT-19 caidas, RITE IDA 2..." style="flex-grow: 1;">
-                        <button type="button" onclick="ejecutarBusquedaNormativa()">🔍 Consultar</button>
-                    </div>
-
-                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px;">
-                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Qué requisitos y caídas de tensión exige la ITC-BT-15?')">ITC-BT-15 (DI)</button>
-                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Cuáles son las caídas de tensión máximas según la ITC-BT-19?')">ITC-BT-19 (Interiores)</button>
-                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Qué circuitos mínimos y secciones exige la ITC-BT-25 para una vivienda?')">ITC-BT-25 (Viviendas)</button>
-                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Qué protecciones diferenciales y esquemas define la ITC-BT-52 para vehículos eléctricos?')">ITC-BT-52 (VE)</button>
-                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Cuáles son las categorías de calidad de aire interior IDA en el RITE?')">RITE (Ventilación)</button>
-                    </div>
-
-                    <div id="resultados-busqueda" class="resultado-caja">
-                        <h4 style="margin-top:0; color: var(--azul-brillante);">Base de Respuestas Técnicas:</h4>
-                        <p style="color: #94a3b8;">Escribe tu duda técnica o haz clic en uno de los accesos rápidos para obtener la respuesta oficial de Elena.</p>
-                    </div>
+        <!-- VISTA BUSCADOR REBT / RITE -->
+        <section id="vista-rebt" class="vista-section oculto">
+            <header>
+                <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                <h1>⚖️ Buscador y Consultor REBT / RITE</h1>
+            </header>
+            <div class="seccion-bloque">
+                <p style="color: #94a3b8; font-size: 0.9rem;">Escribe cualquier pregunta o duda técnica para que Elena la resuelva consultando Gemini:</p>
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <input type="text" id="entrada-busqueda" placeholder="Ej: dime algo sobre los diferenciales tipo f, ITC-BT-19 caidas, RITE IDA 2..." style="flex-grow: 1;">
+                    <button type="button" onclick="ejecutarBusquedaNormativa()">🔍 Consultar</button>
                 </div>
-            </section>
 
-            <!-- VISTA CONSULTOR TÉCNICO NORMATIVO E ICT-2 -->
-            <section id="vista-ict" class="vista-section oculto">
-                <header>
-                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>📡 Consultor Técnico de Infraestructuras & Normativa ICT-2 / REBT</h1>
-                </header>
-
-                <div class="seccion-bloque">
-                    <h3 style="color: var(--azul-brillante); margin-top: 0;">🔍 Buscador Normativo y Resolución de Averías en Edificación</h3>
-                    <p style="color: #94a3b8; font-size: 0.9rem;">
-                        Introduce cualquier consulta sobre telecomunicaciones, cuadros de servicios, recintos o problemas de señal para que Elena consulte la base técnica:
-                    </p>
-
-                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <input type="text" id="ict-busqueda-input" placeholder="Ej: no tengo señal de antena en PAU, dimensiones mínimas RITI, atenuación fibra SC/APC..." style="flex-grow: 1;">
-                        <button type="button" onclick="consultarICTConIA()">🔍 Analizar Caso</button>
-                    </div>
-
-                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
-                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Requisitos y canalizaciones para RITI y RITS en ICT-2')">🏢 RITI / RITS / RITU</button>
-                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Niveles de señal en toma de usuario coaxial dBµV y filtros LTE 5G')">📶 Niveles de Señal & Filtros 5G</button>
-                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Protocolo de pruebas y pérdidas máximas en fibra óptica monomodo ICT-2')">💡 Red de Fibra Óptica</button>
-                        <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Dimensionamiento de cuadro eléctrico y tomas de corriente en RITI según REBT')">⚡ Cuadro Eléctrico RITI</button>
-                    </div>
-
-                    <div id="ict-ia-resultado" class="resultado-caja">
-                        <h4 style="margin-top: 0; color: var(--verde-ia);">📋 Dictamen Técnico Oficial:</h4>
-                        <p style="color: #94a3b8;">Introduce tu consulta técnica o pulsa en uno de los accesos rápidos para generar el informe con normativa y soluciones.</p>
-                    </div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px;">
+                    <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Qué requisitos y caídas de tensión exige la ITC-BT-15?')">ITC-BT-15 (DI)</button>
+                    <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Cuáles son las caídas de tensión máximas según la ITC-BT-19?')">ITC-BT-19 (Interiores)</button>
+                    <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Qué circuitos mínimos y secciones exige la ITC-BT-25 para una vivienda?')">ITC-BT-25 (Viviendas)</button>
+                    <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Qué protecciones diferenciales y esquemas define la ITC-BT-52 para vehículos eléctricos?')">ITC-BT-52 (VE)</button>
+                    <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTermino('¿Cuáles son las categorías de calidad de aire interior IDA en el RITE?')">RITE (Ventilación)</button>
                 </div>
-            </section>
 
-            <!-- VISTA AUTOMATISMOS & SIMULADOR CADE SIMU -->
-            <section id="vista-industrial" class="vista-section oculto">
-                <header>
-                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>⚙️ Automatismos Industriales & Simulador CADe SIMU</h1>
-                </header>
+                <div id="resultados-busqueda" class="resultado-caja">
+                    <h4 style="margin-top:0; color: var(--azul-brillante);">Base de Respuestas Técnicas:</h4>
+                    <p style="color: #94a3b8;">Escribe tu duda técnica o haz clic en uno de los accesos rápidos para obtener la respuesta oficial de Elena.</p>
+            </div>
+            </div>
+        </section>
 
-                <div class="seccion-bloque">
-                    <h3>🎮 Simulador de Maniobra Marcha / Paro (Retención KM1)</h3>
-                    <p style="color: #94a3b8; font-size: 0.88rem;">Haz clic para activar o detener la maniobra del contactor KM1:</p>
+        <!-- VISTA CONSULTOR TÉCNICO NORMATIVO E ICT-2 -->
+        <section id="vista-ict" class="vista-section oculto">
+            <header>
+                <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                <h1>📡 Consultor Técnico de Infraestructuras & Normativa ICT-2 / REBT</h1>
+            </header>
 
-                    <div class="cade-cuadro">
-                        <div class="circuito-grid">
-                            <div>
-                                <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
-                                    <button type="button" id="sim-btn-paro" style="background-color: #ef4444; width: 75px; height: 75px; border-radius: 50%; font-size: 11px; font-weight: bold;">S1 (PARO)</button>
-                                    <button type="button" id="sim-btn-marcha" style="background-color: #10b981; width: 75px; height: 75px; border-radius: 50%; font-size: 11px; font-weight: bold;">S2 (MARCHA)</button>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <div id="piloto-motor" style="width: 45px; height: 45px; border-radius: 50%; background-color: #334155; border: 3px solid #1e293b; transition: all 0.3s;"></div>
-                                    <span id="motor-estado-txt" style="font-weight: bold; color: #94a3b8;">MOTOR DETENIDO</span>
-                                </div>
+            <div class="seccion-bloque">
+                <h3 style="color: var(--azul-brillante); margin-top: 0;">🔍 Buscador Normativo y Resolución de Averías en Edificación</h3>
+                <p style="color: #94a3b8; font-size: 0.9rem;">
+                    Introduce cualquier consulta sobre telecomunicaciones, cuadros de servicios, recintos o problemas de señal para que Elena consulte la base técnica:
+                </p>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <input type="text" id="ict-busqueda-input" placeholder="Ej: no tengo señal de antena en PAU, dimensiones mínimas RITI, atenuación fibra SC/APC..." style="flex-grow: 1;">
+                    <button type="button" onclick="consultarICTConIA()">🔍 Analizar Caso</button>
+                </div>
+
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
+                    <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Requisitos y canalizaciones para RITI y RITS en ICT-2')">🏢 RITI / RITS / RITU</button>
+                    <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Niveles de señal en toma de usuario coaxial dBµV y filtros LTE 5G')">📶 Niveles de Señal & Filtros 5G</button>
+                    <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Protocolo de pruebas y pérdidas máximas en fibra óptica monomodo ICT-2')">💡 Red de Fibra Óptica</button>
+                    <button type="button" style="font-size: 0.8rem; padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--bordes);" onclick="buscarTerminoICT('Dimensionamiento de cuadro eléctrico y tomas de corriente en RITI según REBT')">⚡ Cuadro Eléctrico RITI</button>
+                </div>
+
+                <div id="ict-ia-resultado" class="resultado-caja">
+                    <h4 style="margin-top: 0; color: var(--verde-ia);">📋 Dictamen Técnico Oficial:</h4>
+                    <p style="color: #94a3b8;">Introduce tu consulta técnica o pulsa en uno de los accesos rápidos para generar el informe con normativa y soluciones.</p>
+            </div>
+            </div>
+        </section>
+
+        <!-- VISTA AUTOMATISMOS & SIMULADOR CADE SIMU -->
+        <section id="vista-industrial" class="vista-section oculto">
+            <header>
+                <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                <h1>⚙️ Automatismos Industriales & Simulador CADe SIMU</h1>
+            </header>
+
+            <!-- NUEVO BLOQUE INTEGRADO: INTERRUPTOR DIFERENCAL (MULTIMEDIA) -->
+            <div class="seccion-bloque" style="border-top: 3px solid var(--azul-brillante);">
+                <h3 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                    <span>🛡️</span> Protección ante Fugas de Corriente: Interruptor Diferencial
+                </h3>
+                <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 10px;">
+                    Visualiza la explicación multimedia sobre el funcionamiento y ensayo periódico del interruptor diferencial en las instalaciones:
+                </p>
+
+                <!-- Banner interactivo de la imagen con botón play -->
+                <div class="diferencial-banner-box">
+                    <img src="image_b6c0f8.jpg" alt="Interruptor Diferencial" class="diferencial-img-bg">
+                    <div class="diferencial-play-btn" onclick="abrirVideoModal()">
+                        <svg class="diferencial-play-svg" viewBox="0 0 512 512">
+                            <path d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM350.5 269.2l-132.6 89.8c-4.7 3.2-10.9 3.5-15.9 1c-5-2.5-8.1-7.7-8.1-13.4v-179.6c0-5.7 3.1-10.8 8.1-13.4c5-2.5 11.2-2.2 15.9 1l132.6 89.8c4.3 2.9 6.9 7.6 6.9 12.4S354.8 266.3 350.5 269.2z"/>
+                      </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="seccion-bloque">
+                <h3>🎮 Simulador de Maniobra Marcha / Paro (Retención KM1)</h3>
+                <p style="color: #94a3b8; font-size: 0.88rem;">Haz clic para activar o detener la maniobra del contactor KM1:</p>
+
+                <div class="cade-cuadro">
+                    <div class="circuito-grid">
+                        <div>
+                            <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
+                                <button type="button" id="sim-btn-paro" style="background-color: #ef4444; width: 75px; height: 75px; border-radius: 50%; font-size: 11px; font-weight: bold;">S1 (PARO)</button>
+                                <button type="button" id="sim-btn-marcha" style="background-color: #10b981; width: 75px; height: 75px; border-radius: 50%; font-size: 11px; font-weight: bold;">S2 (MARCHA)</button>
                             </div>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div id="piloto-motor" style="width: 45px; height: 45px; border-radius: 50%; background-color: #334155; border: 3px solid #1e293b; transition: all 0.3s;"></div>
+                                <span id="motor-estado-txt" style="font-weight: bold; color: #94a3b8;">MOTOR DETENIDO</span>
+                            </div>
+                        </div>
 
-                            <div>
-                                <div class="estado-borne">
-                                    <span>Pulsador Paro (S1 - NC):</span>
-                                    <strong id="estado-s1" style="color: #10b981;">CERRADO (NC)</strong>
-                                </div>
-                                <div class="estado-borne">
-                                    <span>Pulsador Marcha (S2 - NA):</span>
-                                    <strong id="estado-s2" style="color: #ef4444;">ABIERTO (NA)</strong>
-                                </div>
-                                <div class="estado-borne">
-                                    <span>Contacto Auxiliar KM1 (13-14):</span>
-                                    <strong id="estado-km1-aux" style="color: #ef4444;">ABIERTO</strong>
-                                </div>
-                                <div class="estado-borne">
-                                    <span>Bobina Contactor KM1 (A1-A2):</span>
-                                    <strong id="estado-bobina" style="color: #94a3b8;">DESACTIVADA</strong>
-                                </div>
+                        <div>
+                            <div class="estado-borne">
+                                <span>Pulsador Paro (S1 - NC):</span>
+                                <strong id="estado-s1" style="color: #10b981;">CERRADO (NC)</strong>
+                            </div>
+                            <div class="estado-borne">
+                                <span>Pulsador Marcha (S2 - NA):</span>
+                                <strong id="estado-s2" style="color: #ef4444;">ABIERTO (NA)</strong>
+                            </div>
+                            <div class="estado-borne">
+                                <span>Contacto Auxiliar KM1 (13-14):</span>
+                                <strong id="estado-km1-aux" style="color: #ef4444;">ABIERTO</strong>
+                            </div>
+                            <div class="estado-borne">
+                                <span>Bobina Contactor KM1 (A1-A2):</span>
+                                <strong id="estado-bobina" style="color: #94a3b8;">DESACTIVADA</strong>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- BANCO DE PRÁCTICAS CADe SIMU (Todos los esquemas integrados) -->
-                <div class="seccion-bloque" style="border-top: 3px solid var(--azul-brillante);">
-                    <h3 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
-                        <span>📥</span> Banco de Prácticas CADe SIMU (Esquemas del Taller)
-                    </h3>
-                    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 15px;">
-                        Descarga los esquemas fuente completos para abrirlos y simularlos directamente en tu simulador CADe SIMU:
-                    </p>
+          <!-- BANCO DE PRÁCTICAS CADe SIMU (Todos los esquemas integrados) -->
+          <div class="seccion-bloque" style="border-top: 3px solid var(--azul-brillante);">
+                <h3 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                    <span>📥</span> Banco de Prácticas CADe SIMU (Esquemas del Taller)
+                </h3>
+                <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 15px;">
+                    Descarga los esquemas fuente completos para abrirlos y simularlos directamente en tu simulador CADe SIMU:
+                </p>
 
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px;">
-                        <a href="puerta_garaje.cad" download style="background-color: var(--azul-tecnico); padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
-                            🚗 Puerta de Garaje con Temporizador (.cad)
-                        </a>
-                        <a href="fabrica_galletas.cad" download style="background-color: var(--verde-ia); padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
-                            🍪 Fábrica de Galletas / Laminadora (.cad)
-                        </a>
-                        <a href="almacen_naranjas.cad" download style="background-color: #0284c7; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
-                            🍊 Almacén de Naranjas (.cad)
-                        </a>
-                        <a href="tolva_grano.cad" download style="background-color: #d97706; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
-                            ⚙️ Tolva de Grano (.cad)
-                        </a>
-                        <a href="cinta_transportadora.cad" download style="background-color: #7c3aed; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
-                            📦 Cinta Transportadora Paquetes (.cad)
-                        </a>
-                        <a href="horno_ventilador.cad" download style="background-color: #dc2626; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
-                            🔥 Horno con Ventilador (.cad)
-                        </a>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px;">
+                    <a href="puerta_garaje.cad" download style="background-color: var(--azul-tecnico); padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
+                        🚗 Puerta de Garaje con Temporizador (.cad)
+                    </a>
+                    <a href="fabrica_galletas.cad" download style="background-color: var(--verde-ia); padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
+                        🍪 Fábrica de Galletas / Laminadora (.cad)
+                    </a>
+                    <a href="almacen_naranjas.cad" download style="background-color: #0284c7; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
+                        🍊 Almacén de Naranjas (.cad)
+                    </a>
+                    <a href="tolva_grano.cad" download style="background-color: #d97706; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
+                        ⚙️ Tolva de Grano (.cad)
+                    </a>
+                    <a href="cinta_transportadora.cad" download style="background-color: #7c3aed; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
+                        📦 Cinta Transportadora Paquetes (.cad)
+                    </a>
+                    <a href="horno_ventilador.cad" download style="background-color: #dc2626; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center;">
+                        🔥 Horno con Ventilador (.cad)
+                    </a>
+                </div>
+            </div>
+
+          <div class="seccion-bloque">
+                <h3>⚡ Calculadora de Motores y Protecciones</h3>
+                <div class="calc-grid">
+                    <div class="calc-field">
+                        <label>Potencia del Motor (kW):</label>
+                        <input type="number" id="motor-kw" value="5.5" step="0.1">
+                    </div>
+                    <div class="calc-field">
+                        <label>Tensión de Trabajo:</label>
+                        <select id="motor-voltaje">
+                            <option value="400">400 V (Trifásico)</option>
+                            <option value="230">230 V (Trifásico)</option>
+                        </select>
+                    </div>
+                    <div class="calc-field">
+                        <label>Factor de Potencia (cos φ):</label>
+                        <input type="number" id="motor-fp" value="0.85" step="0.01">
+                    </div>
+                    <div class="calc-field">
+                        <label>Rendimiento (η):</label>
+                        <input type="number" id="motor-rend" value="0.88" step="0.01">
+                    </div>
+                </div>
+                <button type="button" onclick="calcularMotor()" style="width: 100%;">Calcular Intensidad y Guardamotor</button>
+                <div id="motor-res-box" class="resultado-caja oculto"></div>
+          </div>
+        </section>
+
+        <!-- VISTA CAÍDA DE TENSIÓN -->
+        <section id="vista-caida" class="vista-section oculto">
+            <header>
+                <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                <h1>📏 Calculadora de Caída de Tensión y Sección</h1>
+            </header>
+            <div class="seccion-bloque">
+                <div class="calc-grid">
+                    <div class="calc-field">
+                        <label>Tipo de Sistema:</label>
+                        <select id="calc-sistema">
+                            <option value="mono">Monofásico (230 V)</option>
+                            <option value="tri">Trifásico (400 V)</option>
+                        </select>
+                    </div>
+                    <div class="calc-field">
+                        <label>Potencia de Carga (W):</label>
+                        <input type="number" id="calc-potencia" value="3680" placeholder="W">
+                    </div>
+                    <div class="calc-field">
+                        <label>Longitud de Línea (metros):</label>
+                        <input type="number" id="calc-longitud" value="25" placeholder="m">
+                    </div>
+                    <div class="calc-field">
+                        <label>Conductor:</label>
+                        <select id="calc-material">
+                            <option value="56">Cobre (Cu - 56 m/(Ω·mm²))</option>
+                            <option value="35">Aluminio (Al - 35 m/(Ω·mm²))</option>
+                        </select>
+                    </div>
+                    <div class="calc-field">
+                        <label>Caída de Tensión Máxima (%):</label>
+                        <select id="calc-porcentaje-max">
+                            <option value="1.5">1,5% (Derivación Individual Centralizada)</option>
+                            <option value="3">3,0% (Alumbrado Interior)</option>
+                            <option value="5">5,0% (Usos Generales / Fuerza)</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="button" onclick="calcularSeccionCable()" style="width: 100%;">⚡ Calcular Sección y Caída</button>
+                <div id="resultado-caida-box" class="resultado-caja oculto"></div>
+        </div>
+        </section>
+
+        <!-- VISTA VEHÍCULO ELÉCTRICO -->
+        <section id="vista-ve" class="vista-section oculto">
+            <header>
+                <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                <h1>🚗 Vehículo Eléctrico (ITC-BT-52)</h1>
+            </header>
+            <div class="seccion-bloque">
+                <h3>Protecciones Obligatorias y Esquemas</h3>
+                <table class="tabla-normativa">
+                    <thead>
+                        <tr>
+                            <th>Esquema</th>
+                            <th>Descripción</th>
+                            <th>Ubicación Contador</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Esquema 2</strong></td>
+                            <td>Línea individual desde el contador principal de la vivienda.</td>
+                            <td>Cuarto de contadores de la comunidad.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Esquema 4a / 4b</strong></td>
+                            <td>Circuito adicional desde el cuadro general de la vivienda (unifamiliares).</td>
+                            <td>Cuadro General de Mando y Protección (CGMP).</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4 style="color: var(--azul-brillante); margin-top: 20px;">Protecciones Exigidas:</h4>
+                <ul>
+                    <li><strong>Diferencial:</strong> Tipo A o Tipo B con protección para fugas de corriente continua.</li>
+                    <li><strong>Magnetotérmico (IGA/PIA):</strong> Curva C según la potencia del cargador (16A, 32A).</li>
+                    <li><strong>Sobretensiones:</strong> Protección permanente y transitoria (Tipo 2).</li>
+                </ul>
+        </div>
+        </section>
+
+        <!-- VISTA SOLAR FOTOVOLTAICA -->
+        <section id="vista-solar" class="vista-section oculto">
+            <header>
+                <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                <h1>🌞 Solar Fotovoltaica (ITC-BT-40)</h1>
+            </header>
+            <div class="seccion-bloque">
+                <div class="calc-grid">
+                    <div class="calc-field">
+                        <label>Potencia por Panel (Wp):</label>
+                        <input type="number" id="solar-w-panel" value="450">
+                    </div>
+                    <div class="calc-field">
+                        <label>Número Total de Paneles:</label>
+                        <input type="number" id="solar-num-paneles" value="10">
+                    </div>
+                    <div class="calc-field">
+                        <label>Tensión Voc del Panel (V):</label>
+                        <input type="number" id="solar-voc" value="49.5">
+                    </div>
+                </div>
+                <button type="button" onclick="calcularSolar()" style="width: 100%;">Calcular Potencia Pico y String</button>
+                <div id="solar-res-box" class="resultado-caja oculto"></div>
+        </div>
+        </section>
+
+        <!-- VISTA DOMÓTICA KNX -->
+        <section id="vista-knx" class="vista-section oculto">
+            <header>
+                <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                <h1>🟢 Domótica Estándar KNX</h1>
+            </header>
+            <div class="seccion-bloque">
+                <h3>Reglas Topológicas del Bus KNX TP-1</h3>
+                <table class="tabla-normativa">
+                    <thead>
+                        <tr>
+                            <th>Parámetro</th>
+                            <th>Límite Máximo</th>
+                            <th>Consideración Técnica</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dispositivos por Línea</td>
+                            <td>64 dispositivos (con fuente estándar)</td>
+                            <td>Hasta 256 con fuentes desacopladas.</td>
+                        </tr>
+                        <tr>
+                            <td>Longitud máxima de Línea</td>
+                            <td>1.000 metros</td>
+                            <td>Longitud total sumando todas las ramas.</td>
+                        </tr>
+                        <tr>
+                            <td>Distancia Fuente - Dispositivo</td>
+                            <td>350 metros</td>
+                            <td>Distancia máxima de cable entre fuente y nodo.</td>
+                        </tr>
+                        <tr>
+                            <td>Distancia entre dos Dispositivos</td>
+                            <td>700 metros</td>
+                            <td>Para evitar colisiones CSMA/CA.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="margin-top: 25px;">Generador de Direccionamiento Físico</h3>
+                <div class="calc-grid">
+                    <div class="calc-field">
+                        <label>Área (0-15):</label>
+                        <input type="number" id="knx-area" value="1" min="0" max="15">
+                    </div>
+                    <div class="calc-field">
+                        <label>Línea (0-15):</label>
+                        <input type="number" id="knx-linea" value="1" min="0" max="15">
+                    </div>
+                    <div class="calc-field">
+                        <label>Dispositivo (0-255):</label>
+                        <input type="number" id="knx-dispositivo" value="10" min="0" max="255">
+                    </div>
+                </div>
+                <button type="button" onclick="generarKNX()" style="width: 100%;">Generar Direcciones KNX / ETS</button>
+                <div id="knx-res-box" class="resultado-caja oculto"></div>
+      </div>
+      </section>
+
+        <!-- VISTA DOMÓTICA INALÁMBRICA -->
+        <section id="vista-domotica-inalambrica" class="vista-section oculto">
+            <header>
+                <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                <h1>🏠 Domótica Inalámbrica & IoT (Zigbee / Z-Wave / Google)</h1>
+            </header>
+
+            <div class="seccion-bloque">
+                <h3 style="color: var(--azul-brillante); margin-top: 0;">🌐 Comparativa de Protocolos Inalámbricos en el Instalador</h3>
+                <table class="tabla-normativa">
+                    <thead>
+                        <tr>
+                            <th>Protocolo</th>
+                            <th>Frecuencia</th>
+                            <th>Topología</th>
+                            <th>Ventaja Principal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Zigbee</strong></td>
+                            <td>2.4 GHz</td>
+                            <td>Red en Malla (Mesh)</td>
+                            <td>Económico, gran variedad de sensores y actuadores (Sonoff, Tuya, Aqara).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Z-Wave</strong></td>
+                            <td>868 MHz (UE)</td>
+                            <td>Red en Malla (Mesh)</td>
+                            <td>Libre de interferencias Wi-Fi/Bluetooth, alta seguridad S2 y certificación estricta.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Google Home / Thread</strong></td>
+                            <td>Wi-Fi / 2.4 GHz</td>
+                            <td>Directo / IP Mallada</td>
+                            <td>Control por voz nativo, automatizaciones en la nube y unificación con Matter.</td>
+                        </tr>
+                    </tbody>
+                </table>
+        </div>
+
+        <div class="seccion-bloque">
+                <h3 style="color: var(--azul-brillante); margin-top: 0;">⚙️ Arquitectura de Enlace: Dispositivo → Pasarela → Google</h3>
+                <div class="calc-grid">
+                    <div class="calc-field">
+                        <label>Dispositivo Final:</label>
+                        <select id="dom-dispositivo">
+                            <option value="sonoff-minir2">Relé / Micromódulo Sonoff Zigbee</option>
+                            <option value="sensor-puerta">Sensor Apertura Zigbee</option>
+                            <option value="termostato-zwave">Termostato Z-Wave 868 MHz</option>
+                        </select>
+                    </div>
+                    <div class="calc-field">
+                        <label>Pasarela / Hub:</label>
+                        <select id="dom-pasarela">
+                            <option value="bridge-local">Hub Zigbee / Coordinador USB (Home Assistant)</option>
+                            <option value="bridge-propietario">Pasarela Propietaria (Sonoff ZBBridge / Tuya)</option>
+                        </select>
+                    </div>
+                    <div class="calc-field">
+                        <label>Ecosistema Cloud / Voz:</label>
+                        <select id="dom-eco">
+                            <option value="google-home">Google Home (Control por voz / Nest Hub)</option>
+                            <option value="app-local">App Local Exclusiva</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="seccion-bloque">
-                    <h3>⚡ Calculadora de Motores y Protecciones</h3>
-                    <div class="calc-grid">
-                        <div class="calc-field">
-                            <label>Potencia del Motor (kW):</label>
-                            <input type="number" id="motor-kw" value="5.5" step="0.1">
-                        </div>
-                        <div class="calc-field">
-                            <label>Tensión de Trabajo:</label>
-                            <select id="motor-voltaje">
-                                <option value="400">400 V (Trifásico)</option>
-                                <option value="230">230 V (Trifásico)</option>
-                            </select>
-                        </div>
-                        <div class="calc-field">
-                            <label>Factor de Potencia (cos φ):</label>
-                            <input type="number" id="motor-fp" value="0.85" step="0.01">
-                        </div>
-                        <div class="calc-field">
-                            <label>Rendimiento (η):</label>
-                            <input type="number" id="motor-rend" value="0.88" step="0.01">
-                        </div>
-                    </div>
-                    <button type="button" onclick="calcularMotor()" style="width: 100%;">Calcular Intensidad y Guardamotor</button>
-                    <div id="motor-res-box" class="resultado-caja oculto"></div>
-                </div>
-            </section>
+                <button type="button" onclick="verificarArquitecturaIoT()" style="width: 100%;">Validar Esquema de Integración</button>
+                 
+                <div id="domotica-res-box" class="resultado-caja oculto">
+                    <h4 style="margin-top: 0; color: var(--verde-ia);">✅ Informe de Validación de Red:</h4>
+                    <p id="domotica-texto-resultado" style="color: #94a3b8; margin: 0;"></p>
+            </div>
+            </div>
+        </section>
 
-            <!-- VISTA CAÍDA DE TENSIÓN -->
-            <section id="vista-caida" class="vista-section oculto">
-                <header>
-                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>📏 Calculadora de Caída de Tensión y Sección</h1>
-                </header>
-                <div class="seccion-bloque">
-                    <div class="calc-grid">
-                        <div class="calc-field">
-                            <label>Tipo de Sistema:</label>
-                            <select id="calc-sistema">
-                                <option value="mono">Monofásico (230 V)</option>
-                                <option value="tri">Trifásico (400 V)</option>
-                            </select>
-                        </div>
-                        <div class="calc-field">
-                            <label>Potencia de Carga (W):</label>
-                            <input type="number" id="calc-potencia" value="3680" placeholder="W">
-                        </div>
-                        <div class="calc-field">
-                            <label>Longitud de Línea (metros):</label>
-                            <input type="number" id="calc-longitud" value="25" placeholder="m">
-                        </div>
-                        <div class="calc-field">
-                            <label>Conductor:</label>
-                            <select id="calc-material">
-                                <option value="56">Cobre (Cu - 56 m/(Ω·mm²))</option>
-                                <option value="35">Aluminio (Al - 35 m/(Ω·mm²))</option>
-                            </select>
-                        </div>
-                        <div class="calc-field">
-                            <label>Caída de Tensión Máxima (%):</label>
-                            <select id="calc-porcentaje-max">
-                                <option value="1.5">1,5% (Derivación Individual Centralizada)</option>
-                                <option value="3">3,0% (Alumbrado Interior)</option>
-                                <option value="5">5,0% (Usos Generales / Fuerza)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button type="button" onclick="calcularSeccionCable()" style="width: 100%;">⚡ Calcular Sección y Caída</button>
-                    <div id="resultado-caida-box" class="resultado-caja oculto"></div>
-                </div>
-            </section>
-
-            <!-- VISTA VEHÍCULO ELÉCTRICO -->
-            <section id="vista-ve" class="vista-section oculto">
-                <header>
-                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>🚗 Vehículo Eléctrico (ITC-BT-52)</h1>
-                </header>
-                <div class="seccion-bloque">
-                    <h3>Protecciones Obligatorias y Esquemas</h3>
-                    <table class="tabla-normativa">
-                        <thead>
-                            <tr>
-                                <th>Esquema</th>
-                                <th>Descripción</th>
-                                <th>Ubicación Contador</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Esquema 2</strong></td>
-                                <td>Línea individual desde el contador principal de la vivienda.</td>
-                                <td>Cuarto de contadores de la comunidad.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Esquema 4a / 4b</strong></td>
-                                <td>Circuito adicional desde el cuadro general de la vivienda (unifamiliares).</td>
-                                <td>Cuadro General de Mando y Protección (CGMP).</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <h4 style="color: var(--azul-brillante); margin-top: 20px;">Protecciones Exigidas:</h4>
-                    <ul>
-                        <li><strong>Diferencial:</strong> Tipo A o Tipo B con protección para fugas de corriente continua.</li>
-                        <li><strong>Magnetotérmico (IGA/PIA):</strong> Curva C según la potencia del cargador (16A, 32A).</li>
-                        <li><strong>Sobretensiones:</strong> Protección permanente y transitoria (Tipo 2).</li>
-                    </ul>
-                </div>
-            </section>
-
-            <!-- VISTA SOLAR FOTOVOLTAICA -->
-            <section id="vista-solar" class="vista-section oculto">
-                <header>
-                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>🌞 Solar Fotovoltaica (ITC-BT-40)</h1>
-                </header>
-                <div class="seccion-bloque">
-                    <div class="calc-grid">
-                        <div class="calc-field">
-                            <label>Potencia por Panel (Wp):</label>
-                            <input type="number" id="solar-w-panel" value="450">
-                        </div>
-                        <div class="calc-field">
-                            <label>Número Total de Paneles:</label>
-                            <input type="number" id="solar-num-paneles" value="10">
-                        </div>
-                        <div class="calc-field">
-                            <label>Tensión Voc del Panel (V):</label>
-                            <input type="number" id="solar-voc" value="49.5">
-                        </div>
-                    </div>
-                    <button type="button" onclick="calcularSolar()" style="width: 100%;">Calcular Potencia Pico y String</button>
-                    <div id="solar-res-box" class="resultado-caja oculto"></div>
-                </div>
-            </section>
-
-            <!-- VISTA DOMÓTICA KNX -->
-            <section id="vista-knx" class="vista-section oculto">
-                <header>
-                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>🟢 Domótica Estándar KNX</h1>
-                </header>
-                <div class="seccion-bloque">
-                    <h3>Reglas Topológicas del Bus KNX TP-1</h3>
-                    <table class="tabla-normativa">
-                        <thead>
-                            <tr>
-                                <th>Parámetro</th>
-                                <th>Límite Máximo</th>
-                                <th>Consideración Técnica</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Dispositivos por Línea</td>
-                                <td>64 dispositivos (con fuente estándar)</td>
-                                <td>Hasta 256 con fuentes desacopladas.</td>
-                            </tr>
-                            <tr>
-                                <td>Longitud máxima de Línea</td>
-                                <td>1.000 metros</td>
-                                <td>Longitud total sumando todas las ramas.</td>
-                            </tr>
-                            <tr>
-                                <td>Distancia Fuente - Dispositivo</td>
-                                <td>350 metros</td>
-                                <td>Distancia máxima de cable entre fuente y nodo.</td>
-                            </tr>
-                            <tr>
-                                <td>Distancia entre dos Dispositivos</td>
-                                <td>700 metros</td>
-                                <td>Para evitar colisiones CSMA/CA.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <h3 style="margin-top: 25px;">Generador de Direccionamiento Físico</h3>
-                    <div class="calc-grid">
-                        <div class="calc-field">
-                            <label>Área (0-15):</label>
-                            <input type="number" id="knx-area" value="1" min="0" max="15">
-                        </div>
-                        <div class="calc-field">
-                            <label>Línea (0-15):</label>
-                            <input type="number" id="knx-linea" value="1" min="0" max="15">
-                        </div>
-                        <div class="calc-field">
-                            <label>Dispositivo (0-255):</label>
-                            <input type="number" id="knx-dispositivo" value="10" min="0" max="255">
-                        </div>
-                    </div>
-                    <button type="button" onclick="generarKNX()" style="width: 100%;">Generar Direcciones KNX / ETS</button>
-                    <div id="knx-res-box" class="resultado-caja oculto"></div>
-                </div>
-            </section>
-
-            <!-- VISTA DOMÓTICA INALÁMBRICA -->
-            <section id="vista-domotica-inalambrica" class="vista-section oculto">
-                <header>
-                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>🏠 Domótica Inalámbrica & IoT (Zigbee / Z-Wave / Google)</h1>
-                </header>
-
-                <div class="seccion-bloque">
-                    <h3 style="color: var(--azul-brillante); margin-top: 0;">🌐 Comparativa de Protocolos Inalámbricos en el Instalador</h3>
-                    <table class="tabla-normativa">
-                        <thead>
-                            <tr>
-                                <th>Protocolo</th>
-                                <th>Frecuencia</th>
-                                <th>Topología</th>
-                                <th>Ventaja Principal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Zigbee</strong></td>
-                                <td>2.4 GHz</td>
-                                <td>Red en Malla (Mesh)</td>
-                                <td>Económico, gran variedad de sensores y actuadores (Sonoff, Tuya, Aqara).</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Z-Wave</strong></td>
-                                <td>868 MHz (UE)</td>
-                                <td>Red en Malla (Mesh)</td>
-                                <td>Libre de interferencias Wi-Fi/Bluetooth, alta seguridad S2 y certificación estricta.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Google Home / Thread</strong></td>
-                                <td>Wi-Fi / 2.4 GHz</td>
-                                <td>Directo / IP Mallada</td>
-                                <td>Control por voz nativo, automatizaciones en la nube y unificación con Matter.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="seccion-bloque">
-                    <h3 style="color: var(--azul-brillante); margin-top: 0;">⚙️ Arquitectura de Enlace: Dispositivo → Pasarela → Google</h3>
-                    <div class="calc-grid">
-                        <div class="calc-field">
-                            <label>Dispositivo Final:</label>
-                            <select id="dom-dispositivo">
-                                <option value="sonoff-minir2">Relé / Micromódulo Sonoff Zigbee</option>
-                                <option value="sensor-puerta">Sensor Apertura Zigbee</option>
-                                <option value="termostato-zwave">Termostato Z-Wave 868 MHz</option>
-                            </select>
-                        </div>
-                        <div class="calc-field">
-                            <label>Pasarela / Hub:</label>
-                            <select id="dom-pasarela">
-                                <option value="bridge-local">Hub Zigbee / Coordinador USB (Home Assistant)</option>
-                                <option value="bridge-propietario">Pasarela Propietaria (Sonoff ZBBridge / Tuya)</option>
-                            </select>
-                        </div>
-                        <div class="calc-field">
-                            <label>Ecosistema Cloud / Voz:</label>
-                            <select id="dom-eco">
-                                <option value="google-home">Google Home (Control por voz / Nest Hub)</option>
-                                <option value="app-local">App Local Exclusiva</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <button type="button" onclick="verificarArquitecturaIoT()" style="width: 100%;">Validar Esquema de Integración</button>
-                    
-                    <div id="domotica-res-box" class="resultado-caja oculto">
-                        <h4 style="margin-top: 0; color: var(--verde-ia);">✅ Informe de Validación de Red:</h4>
-                        <p id="domotica-texto-resultado" style="color: #94a3b8; margin: 0;"></p>
+        <!-- VISTA FACTURACIÓN -->
+        <section id="vista-facturacion" class="vista-section oculto">
+            <header>
+                <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                <h1>🧾 Generador de Facturas y Presupuestos</h1>
+            </header>
+            <div class="seccion-bloque">
+                <h3>Cálculo de Base e IVA (21%)</h3>
+                <div class="calc-grid">
+                    <div class="calc-field">
+                        <label>Importe Base Imponible (€):</label>
+                        <input type="number" id="fac-precio" value="150" step="1">
                     </div>
                 </div>
-            </section>
+                <button type="button" id="btn-calcular-factura" style="width: 100%;">Calcular Total Factura</button>
+                <div class="resultado-caja" style="margin-top: 15px;">
+                    <p>• <strong>Base Imponible:</strong> <span id="total-base">0.00 €</span></p>
+                    <p>• <strong>IVA (21%):</strong> <span id="total-iva">0.00 €</span></p>
+                    <p>• <strong>Total Factura:</strong> <span id="total-factura" style="color: var(--verde-ia); font-weight: bold; font-size: 1.1rem;">0.00 €</span></p>
+                </div>
+        </div>
+        </section>
 
-            <!-- VISTA FACTURACIÓN -->
-            <section id="vista-facturacion" class="vista-section oculto">
-                <header>
-                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>🧾 Generador de Facturas y Presupuestos</h1>
-                </header>
-                <div class="seccion-bloque">
-                    <h3>Cálculo de Base e IVA (21%)</h3>
-                    <div class="calc-grid">
-                        <div class="calc-field">
-                            <label>Importe Base Imponible (€):</label>
-                            <input type="number" id="fac-precio" value="150" step="1">
-                        </div>
+        <!-- VISTA TARIFAS -->
+        <section id="vista-tarifas" class="vista-section oculto">
+            <header>
+                <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                <h1>💶 Tarifas y Estimación de Mano de Obra</h1>
+            </header>
+            <div class="seccion-bloque">
+                <h3>Cálculo por Horas y Desplazamiento</h3>
+                <div class="calc-grid">
+                    <div class="calc-field">
+                        <label>Horas de Trabajo:</label>
+                        <input type="number" id="tarifa-horas" value="3" step="0.5">
                     </div>
-                    <button type="button" id="btn-calcular-factura" style="width: 100%;">Calcular Total Factura</button>
-                    <div class="resultado-caja" style="margin-top: 15px;">
-                        <p>• <strong>Base Imponible:</strong> <span id="total-base">0.00 €</span></p>
-                        <p>• <strong>IVA (21%):</strong> <span id="total-iva">0.00 €</span></p>
-                        <p>• <strong>Total Factura:</strong> <span id="total-factura" style="color: var(--verde-ia); font-weight: bold; font-size: 1.1rem;">0.00 €</span></p>
+                    <div class="calc-field">
+                        <label>Precio por Hora (€):</label>
+                        <input type="number" id="tarifa-precio-hora" value="45" step="1">
+                    </div>
+                    <div class="calc-field">
+                        <label>Plus Desplazamiento (€):</label>
+                        <input type="number" id="tarifa-desplazamiento" value="30" step="1">
                     </div>
                 </div>
-            </section>
-
-            <!-- VISTA TARIFAS -->
-            <section id="vista-tarifas" class="vista-section oculto">
-                <header>
-                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>💶 Tarifas y Estimación de Mano de Obra</h1>
-                </header>
-                <div class="seccion-bloque">
-                    <h3>Cálculo por Horas y Desplazamiento</h3>
-                    <div class="calc-grid">
-                        <div class="calc-field">
-                            <label>Horas de Trabajo:</label>
-                            <input type="number" id="tarifa-horas" value="3" step="0.5">
-                        </div>
-                        <div class="calc-field">
-                            <label>Precio por Hora (€):</label>
-                            <input type="number" id="tarifa-precio-hora" value="45" step="1">
-                        </div>
-                        <div class="calc-field">
-                            <label>Plus Desplazamiento (€):</label>
-                            <input type="number" id="tarifa-desplazamiento" value="30" step="1">
-                        </div>
-                    </div>
-                    <button type="button" id="btn-calcular-tarifa" style="width: 100%;">Calcular Presupuesto</button>
-                    <div class="resultado-caja" style="margin-top: 15px;">
-                        <p>• <strong>Subtotal Mano de Obra:</strong> <span id="subtotal-horas">0.00 €</span></p>
-                        <p>• <strong>Desplazamiento:</strong> <span id="subtotal-desplazamiento">0.00 €</span></p>
-                        <p>• <strong>Total Estimado:</strong> <span id="total-estimado" style="color: var(--verde-ia); font-weight: bold; font-size: 1.1rem;">0.00 €</span></p>
-                    </div>
+                <button type="button" id="btn-calcular-tarifa" style="width: 100%;">Calcular Presupuesto</button>
+                <div class="resultado-caja" style="margin-top: 15px;">
+                    <p>• <strong>Subtotal Mano de Obra:</strong> <span id="subtotal-horas">0.00 €</span></p>
+                    <p>• <strong>Desplazamiento:</strong> <span id="subtotal-desplazamiento">0.00 €</span></p>
+                    <p>• <strong>Total Estimado:</strong> <span id="total-estimado" style="color: var(--verde-ia); font-weight: bold; font-size: 1.1rem;">0.00 €</span></p>
                 </div>
-            </section>
+      </div>
+      </section>
 
-            <!-- VISTA VIDEOTECA TÉCNICA -->
-            <section id="vista-videoteca" class="vista-section oculto">
-                <header>
-                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>📺 Videoteca Técnica y Tutoriales Prácticos</h1>
-                </header>
-                <div class="seccion-bloque">
-                    <h3>Selecciona una Práctica Real de Taller:</h3>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-                        <button type="button" onclick="cargarVideoTecnico(0)">⚙️ Arranque Estrella-Triángulo</button>
-                        <button type="button" onclick="cargarVideoTecnico(1)">📱 Cableado Dispositivos Sonoff</button>
-                        <button type="button" onclick="cargarVideoTecnico(2)">🚗 Coches Eléctricos y Recarga</button>
-                        <button type="button" onclick="cargarVideoTecnico(3)">🌞 Solar Fotovoltaica</button>
-                        <button type="button" onclick="cargarVideoTecnico(4)">📡 ICT-2 y Telecomunicaciones</button>
-                    </div>
-                    <h4 id="video-titulo" style="color: var(--azul-brillante); margin-top: 5px;">⚙️ Arranque Estrella-Triángulo: Potencia y Mando Explicado</h4>
-                    <div class="video-container">
-                        <iframe id="iframe-video" src="https://www.youtube-nocookie.com/embed/AiT3uWCY6BQ" title="Videoteca Técnica J.F" allowfullscreen></iframe>
-                    </div>
+        <!-- VISTA VIDEOTECA TÉCNICA -->
+        <section id="vista-videoteca" class="vista-section oculto">
+            <header>
+                <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                <h1>📺 Videoteca Técnica y Tutoriales Prácticos</h1>
+            </header>
+            <div class="seccion-bloque">
+                <h3>Selecciona una Práctica Real de Taller:</h3>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+                    <button type="button" onclick="cargarVideoTecnico(0)">⚙️ Arranque Estrella-Triángulo</button>
+                    <button type="button" onclick="cargarVideoTecnico(1)">📱 Cableado Dispositivos Sonoff</button>
+                    <button type="button" onclick="cargarVideoTecnico(2)">🚗 Coches Eléctricos y Recarga</button>
+                    <button type="button" onclick="cargarVideoTecnico(3)">🌞 Solar Fotovoltaica</button>
+                    <button type="button" onclick="cargarVideoTecnico(4)">📡 ICT-2 y Telecomunicaciones</button>
                 </div>
-            </section>
+                <h4 id="video-titulo" style="color: var(--azul-brillante); margin-top: 5px;">⚙️ Arranque Estrella-Triángulo: Potencia y Mando Explicado</h4>
+                <div class="video-container">
+                    <iframe id="iframe-video" src="https://www.youtube-nocookie.com/embed/AiT3uWCY6BQ" title="Videoteca Técnica J.F" allowfullscreen></iframe>
+                </div>
+      </div>
+      </section>
 
-        </main>
+      </main>
     </div>
 
     <!-- BOTÓN FLOTANTE WHATSAPP -->
     <a href="https://wa.me/34642269680?text=Hola,%20solicito%20asistencia%20técnica%20sobre%20la%20aplicación%20J.F" 
-       class="btn-whatsapp-flotante" 
-       target="_blank" 
-       rel="noopener noreferrer">
+        class="btn-whatsapp-flotante" 
+        target="_blank" 
+        rel="noopener noreferrer">
         <span style="font-size: 1.2rem;">💬</span> WhatsApp
     </a>
 
