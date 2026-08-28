@@ -315,6 +315,7 @@
                             <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-rebt')"><span>⚖️ Buscador REBT / RITE</span></a></li>
                             <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-caida')"><span>📏 Caída de Tensión</span></a></li>
                             <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-ict')"><span>📡 Consultas ICT-2</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-electrotecnia')"><span>📖 Apuntes Electrotecnia</span></a></li>
                             <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-interiores')"><span>⚡ Instalaciones Interiores</span></a></li>
                         </ul>
                     </div>
@@ -409,6 +410,12 @@
                 </div>
 
                 <div class="portada-grid">
+                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-electrotecnia')">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">📖</div>
+                        <h3>Apuntes Electrotecnia</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Magnitudes, Ley de Ohm, corriente alterna/continua y motores.</p>
+                    </div>
+
                     <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-interiores')">
                         <div style="font-size: 2rem; margin-bottom: 10px;">⚡</div>
                         <h3>Instalaciones Interiores</h3>
@@ -478,6 +485,111 @@
                 </div>
             </section>
 
+            <!-- VISTA: APUNTES DE ELECTROTECNIA Y AUTOMATISMOS -->
+            <section id="vista-electrotecnia" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>📖 Apuntes de Electrotecnia & Automatismos (Manual Completo)</h1>
+                </header>
+
+                <!-- BLOQUE 1 -->
+                <div class="seccion-bloque">
+                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>⚡</span> Bloque 1: Magnitudes Eléctricas y Ley de Ohm
+                    </h2>
+                    <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 15px;">
+                        Las bases físicas y matemáticas de la electricidad explicadas de forma práctica:
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 15px;">
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--azul-brillante);">
+                            <strong style="color: var(--texto-brillante);">Tensión (U / E):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">La <em>presión o fuerza electromotriz</em>. Voltios (V).</span>
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--verde-ia);">
+                            <strong style="color: var(--texto-brillante);">Intensidad (I):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">El <em>caudal de electrones</em> (Q/t). Amperios (A).</span>
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--oro-candado);">
+                            <strong style="color: var(--texto-brillante);">Resistencia (R):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">La <em>oposición al paso</em> y el Efecto Joule (calor). Ohmios (Ω).</span>
+                        </div>
+                    </div>
+
+                    <div style="background: #0f172a; border: 1px solid var(--azul-brillante); padding: 15px; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 1.1rem; font-weight: bold; color: var(--azul-brillante);">Ley de Ohm y Densidad de Corriente:</span>
+                        <div style="font-size: 1.15rem; font-family: monospace; color: #fff; margin-top: 6px;">U = I · R &nbsp;&nbsp;|&nbsp;&nbsp; J = I / S (A/mm²)</div>
+                    </div>
+                </div>
+
+                <!-- BLOQUE 2 -->
+                <div class="seccion-bloque">
+                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>🔌</span> Bloque 2: Corriente Continua, Alterna y Redes
+                    </h2>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                            <strong>🔋 Corriente Continua (CC / DC):</strong> Flujo unidireccional constante (Pilas, baterías, paneles solares). Conductor positivo rojo, negativo negro.
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                            <strong>〰️ Corriente Alterna (CA / AC):</strong> Onda senoidal que oscila a 50 Hz en Europa. Código de colores: Fase (Marrón/Negro/Gris) y Neutro (Azul).
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                            <strong>🌐 Monofásico (230V) vs Trifásico (400V):</strong> Monofásico usa Fase + Neutro. Trifásico usa tres fases (L1, L2, L3) y neutro para alta potencia industrial y climatización.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BLOQUE 3 -->
+                <div class="seccion-bloque">
+                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>⚙️</span> Bloque 3: Componentes Pasivos, Impedancia y Factor de Potencia
+                    </h2>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                            <strong>📌 Resistencias (R):</strong> Oponen resistencia pura. Generan calor por Efecto Joule.
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
+                            <strong>🌀 Bobinas (L) y Condensadores (C):</strong> En alterna generan reactancia (XL y XC) provocando desfases de 90°. La combinación total se llama <strong>Impedancia (Z)</strong>.
+                        </div>
+                        <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--verde-ia);">
+                            <strong>⚡ Factor de Potencia (cos φ):</strong> Mide el aprovechamiento real de la energía en alterna. Un cos φ bajo requiere compensación con baterías de condensadores.
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-bottom: 8px;">📺 Vídeo Explicativo (Reactancia e Impedancia):</h3>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube-nocookie.com/embed/2Vv-BfVoq4g" title="Factor de Potencia y Reactancia" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- BLOQUE 4 -->
+                <div class="seccion-bloque">
+                    <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>🔄</span> Bloque 4: Motores de Inducción y Conexión Estrella - Triángulo
+                    </h2>
+                    <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 15px;">
+                        El sistema de arranque estrella-triángulo es el método clásico y obligatorio en muchos motores de inducción de mediana y gran potencia para evitar caídas de tensión severas en la red y proteger los devanados:
+                    </p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                        <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-top: 3px solid var(--oro-candado);">
+                            <strong style="color: var(--texto-brillante); font-size: 1.05rem;">1. Arranque en Estrella (Y):</strong>
+                            <p style="font-size: 0.88rem; color: #94a3b8; margin: 8px 0 0 0;">
+                                Al arrancar, el contactor principal y el de estrella cierran los puentes en los terminales finales. La tensión aplicada a cada fase se reduce, limitando drásticamente la intensidad de pico a un tercio de su valor nominal directo.
+                            </p>
+                        </div>
+                        <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-top: 3px solid var(--verde-ia);">
+                            <strong style="color: var(--texto-brillante); font-size: 1.05rem;">2. Conmutación a Triángulo (Δ):</strong>
+                            <p style="font-size: 0.88rem; color: #94a3b8; margin: 8px 0 0 0;">
+                                Una vez que el rotor alcanza aproximadamente el 80% de su velocidad de régimen mediante un temporizador electrónico, conmuta a triángulo. El motor opera al 100% de su par y potencia útil.
+                            </p>
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-bottom: 8px;">📺 Vídeo Explicativo Detallado (Arranque Estrella-Triángulo):</h3>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube-nocookie.com/embed/AiT3uWCY6BQ" title="Arranque Estrella Triángulo" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </section>
+
             <!-- VISTA: INSTALACIONES INTERIORES (REBT / ITC-BT-25) -->
             <section id="vista-interiores" class="vista-section oculto">
                 <header>
@@ -493,7 +605,6 @@
 
                     <!-- Slot para insertar tu foto real del cuadro -->
                     <div class="slot-imagen-real">
-                        <!-- Reemplaza el atributo src con el nombre de tu foto real de cuadro (ej: img/cuadro_real.jpg) -->
                         <img src="" alt="Fotografía real de cuadro eléctrico de interiores peinado">
                     </div>
                     <p style="text-align: center; color: #8a99ad; font-size: 0.82rem; margin-top: -10px; margin-bottom: 20px;">📷 Inserta aquí tu fotografía real de un cuadro de distribución correctamente peinado y etiquetado.</p>
