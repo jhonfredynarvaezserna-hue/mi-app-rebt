@@ -163,42 +163,6 @@
             top: 0; left: 0; width: 100%; height: 100%; border: 0;
         }
 
-        /* Estilos específicos añadidos para el banner interactivo del Diferencial */
-        .diferencial-banner-box {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            margin: 15px auto;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--bordes);
-            background: #000;
-        }
-        .diferencial-img-bg {
-            display: block;
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-        }
-        .diferencial-play-btn {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            cursor: pointer;
-            z-index: 3;
-            transition: transform 0.2s ease-in-out;
-        }
-        .diferencial-play-btn:hover {
-            transform: translate(-50%, -50%) scale(1.1);
-        }
-        .diferencial-play-svg {
-            width: 75px;
-            height: 75px;
-            fill: rgba(255, 255, 255, 0.85);
-            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.7));
-        }
-
         .btn-whatsapp-flotante {
             position: fixed;
             bottom: 25px;
@@ -360,7 +324,7 @@
                             <option value="Punto de Recarga VE">Punto de Recarga VE</option>
                             <option value="Infraestructura ICT">Infraestructura ICT</option>
                             <option value="Domótica Inalámbrica (Zigbee/Z-Wave/Google)">Domótica Inalámbrica (Zigbee/Z-Wave/Google)</option>
-                      </select>
+                        </select>
 
                         <textarea id="gestor-mensaje" rows="3" placeholder="Describe brevemente la consulta técnica..." style="width: 100%; resize: vertical;"></textarea>
 
@@ -370,10 +334,10 @@
                             </button>
                             <button type="button" onclick="enviarConsultaWhatsApp()" style="flex: 1; background-color: var(--verde-wa); padding: 12px; font-size: 1rem; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 6px;">
                                 📱 Enviar por WhatsApp
-                          </button>
-                      </div>
+                            </button>
+                        </div>
 
-                      <div id="gestor-ia-resultado" class="resultado-caja oculto"></div>
+                        <div id="gestor-ia-resultado" class="resultado-caja oculto"></div>
                 </div>
             </div>
 
@@ -461,6 +425,19 @@
                 <h1>⚡ Instalaciones Eléctricas de Interiores (REBT / ITC-BT-25)</h1>
             </header>
 
+            <!-- IMAGEN PROFESIONAL DEL CUADRO Y MAGNETOTÉRMICO -->
+            <div class="seccion-bloque" style="text-align: center;">
+                <h3 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <span>🛡️</span> Cuadro de Protección y Elementos de Maniobra
+                </h3>
+                <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 15px;">
+                    Vista técnica de los dispositivos de protección y magnetotérmicos instalados en el CGMP:
+                </p>
+                <div style="max-width: 450px; margin: 0 auto; border-radius: 8px; overflow: hidden; border: 1px solid var(--bordes); background: #000;">
+                    <img src="WhatsApp Image 2026-08-28 at 23.18.48.jpeg" alt="Manual del Electricista - Cuadro y Magnetotérmicos" style="width: 100%; height: auto; display: block; object-fit: cover;">
+                </div>
+            </div>
+
             <!-- ORDEN DE ELEMENTOS EN EL CUADRO -->
             <div class="seccion-bloque">
                 <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
@@ -502,11 +479,41 @@
                         </ul>
                     </div>
                 </div>
+            </div>
 
-                <!-- Vídeo explicativo del Cuadro y Protecciones -->
-                <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-top: 25px;">📺 Vídeo Explicativo (Montaje y Orden del Cuadro Eléctrico):</h3>
-                <div class="video-container">
-                    <iframe src="https://www.youtube-nocookie.com/embed/2Vv-BfVoq4g" title="Explicación Cuadro Electrico y Protecciones" allowfullscreen></iframe>
+            <!-- NUEVO MÓDULO: ESQUEMA Y REFERENCIADO DEL CUADRO ELÉCTRICO (CGMP) -->
+            <div class="seccion-bloque" style="border-top: 3px solid var(--azul-brillante);">
+                <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                    <span>⚡</span> Referenciado Técnico del Cuadro General (CGMP)
+                </h2>
+                <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 20px;">
+                    Esquema de conexionado y referenciado físico de los elementos de protección en el cuadro de distribución principal de la vivienda:
+                </p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px;">
+                    <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-left: 4px solid var(--oro-candado);">
+                        <span style="font-size: 0.75rem; color: var(--oro-candado); font-weight: bold;">REF. 01</span>
+                        <h4 style="margin: 5px 0 8px 0; color: var(--texto-brillante);">Sobretensiones (P+T)</h4>
+                        <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Protector contra sobretensiones permanentes y transitorias al inicio del cuadro.</p>
+                    </div>
+
+                    <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-left: 4px solid var(--verde-ia);">
+                        <span style="font-size: 0.75rem; color: var(--verde-ia); font-weight: bold;">REF. 02</span>
+                        <h4 style="margin: 5px 0 8px 0; color: var(--texto-brillante);">IGA (General Automático)</h4>
+                        <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Interruptor General Automático (25A, 32A o 40A) para corte general de sobrecarga.</p>
+                    </div>
+
+                    <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-left: 4px solid var(--azul-brillante);">
+                        <span style="font-size: 0.75rem; color: var(--azul-brillante); font-weight: bold;">REF. 03</span>
+                        <h4 style="margin: 5px 0 8px 0; color: var(--texto-brillante);">Interruptor Diferencial (ID)</h4>
+                        <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Alta sensibilidad (30 mA) para protección de personas ante derivaciones a tierra.</p>
+                    </div>
+
+                    <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-left: 4px solid #ef4444;">
+                        <span style="font-size: 0.75rem; color: #ef4444; font-weight: bold;">REF. 04</span>
+                        <h4 style="margin: 5px 0 8px 0; color: var(--texto-brillante);">PIAs Departamentales</h4>
+                        <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Magnetotérmicos sectorizados: 10A, 16A, 20A y 25A según cada circuito.</p>
+                    </div>
                 </div>
             </div>
 
@@ -515,61 +522,34 @@
                 <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
                     <span>🏠</span> 2. Configuración por Grados de Electrificación (ITC-BT-25)
                 </h2>
-                
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 15px;">
-                      <div style="background: var(--input-bg); padding: 18px; border-radius: 6px; border-top: 3px solid var(--azul-brillante);">
-                          <strong style="color: var(--texto-brillante); font-size: 1.1rem;">A. Electrificación Básica</strong>
-                          <p style="font-size: 0.85rem; color: #94a3b8; margin: 5px 0 10px 0;">Viviendas hasta 160 m² o potencia contratada ≤ 5,75 kW. Incluye 5 circuitos obligatorios:</p>
-                          <ul style="margin: 0; padding-left: 18px; color: #94a3b8; font-size: 0.88rem; display: flex; flex-direction: column; gap: 6px;">
-                              <li><strong>C1 (Iluminación):</strong> PIA 10A (1,5 mm²)</li>
-                              <li><strong>C2 (Tomas generales):</strong> PIA 16A (2,5 mm²)</li>
-                              <li><strong>C3 (Cocina / Horno):</strong> PIA 25A (6 mm²)</li>
-                              <li><strong>C4 (Lavadora/Termo):</strong> PIA 20A (4 mm²)</li>
-                              <li><strong>C5 (Baños/Auxiliar):</strong> PIA 16A (2,5 mm²)</li>
-                          </ul>
-                      </div>
+                    <div style="background: var(--input-bg); padding: 18px; border-radius: 6px; border-top: 3px solid var(--azul-brillante);">
+                        <strong style="color: var(--texto-brillante); font-size: 1.1rem;">A. Electrificación Básica</strong>
+                        <p style="font-size: 0.85rem; color: #94a3b8; margin: 5px 0 10px 0;">Hasta 160 m² o ≤ 5,75 kW (5 circuitos obligatorios: C1, C2, C3, C4, C5).</p>
+                    </div>
+                    <div style="background: var(--input-bg); padding: 18px; border-radius: 6px; border-top: 3px solid var(--verde-ia);">
+                        <strong style="color: var(--texto-brillante); font-size: 1.1rem;">B. Electrificación Elevada</strong>
+                        <p style="font-size: 0.85rem; color: #94a3b8; margin: 5px 0 10px 0;">Viviendas > 160 m², climatización, domótica o ≤ 9,2 kW (incluye circuitos C6 a C12).</p>
+                    </div>
+                </div>
+            </div>
 
-                      <div style="background: var(--input-bg); padding: 18px; border-radius: 6px; border-top: 3px solid var(--verde-ia);">
-                          <strong style="color: var(--texto-brillante); font-size: 1.1rem;">B. Electrificación Elevada</strong>
-                          <p style="font-size: 0.85rem; color: #94a3b8; margin: 5px 0 10px 0;">Viviendas > 160 m², climatización, domótica avanzada o potencia ≤ 9,2 kW. Incluye los 5 básicos más:</p>
-                          <ul style="margin: 0; padding-left: 18px; color: #94a3b8; font-size: 0.88rem; display: flex; flex-direction: column; gap: 6px;">
-                              <li><strong>C6:</strong> Iluminación adicional</li>
-                              <li><strong>C7:</strong> Tomas adicionales / exteriores</li>
-                              <li><strong>C8:</strong> Calefacción eléctrica</li>
-                              <li><strong>C9:</strong> Aire Acondicionado (RITE)</li>
-                              <li><strong>C10:</strong> Secadora independiente (16A)</li>
-                              <li><strong>C11:</strong> Domótica / Alarma / KNX</li>
-                              <li><strong>C12:</strong> Circuitos adicionales varios</li>
-                          </ul>
-                      </div>
-              </div>
-          </div>
-
-          <!-- CANALIZACIÓN Y SECCIONES -->
-          <div class="seccion-bloque">
-              <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
-                  <span>📐</span> 3. Secciones de Caja de Conexión y Canalización
-              </h2>
-              <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 15px;">
-                  Las cajas de derivación o registro se sitúan habitualmente a unos 20-30 cm del techo o marcos de puertas para albergar empalmes con bornes normalizados. Las secciones mínimas reglamentarias son:
-              </p>
-              
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
-                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
-                      <strong>Alumbrado:</strong> 1,5 mm²
-                  </div>
-                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
-                      <strong>Tomas Generales:</strong> 2,5 mm²
-                  </div>
-                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
-                      <strong>Lavadora / Termo:</strong> 4 mm²
-                  </div>
-                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
-                      <strong>Cocina y Horno:</strong> 6 mm²
-                  </div>
-              </div>
-          </div>
-        </section>
+            <!-- CANALIZACIÓN Y SECCIONES -->
+            <div class="seccion-bloque">
+                <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                    <span>📐</span> 3. Secciones de Caja de Conexión y Canalización
+                </h2>
+                <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 15px;">
+                    Las cajas de derivación o registro se sitúan habitualmente a unos 20-30 cm del techo o marcos de puertas para albergar empalmes con bornes normalizados. Las secciones mínimas reglamentarias son:
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                    <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;"><strong>Alumbrado:</strong> 1,5 mm²</div>
+                    <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;"><strong>Tomas Generales:</strong> 2,5 mm²</div>
+                    <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;"><strong>Lavadora / Termo:</strong> 4 mm²</div>
+                    <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;"><strong>Cocina y Horno:</strong> 6 mm²</div>
+                </div>
+            </div>
+          </section>
 
         <!-- VISTA ASESOR DE VOZ -->
         <section id="vista-asesor-voz" class="vista-section oculto">
@@ -663,26 +643,6 @@
                 <h1>⚙️ Automatismos Industriales & Simulador CADe SIMU</h1>
             </header>
 
-            <!-- NUEVO BLOQUE INTEGRADO: INTERRUPTOR DIFERENCAL (MULTIMEDIA) -->
-            <div class="seccion-bloque" style="border-top: 3px solid var(--azul-brillante);">
-                <h3 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
-                    <span>🛡️</span> Protección ante Fugas de Corriente: Interruptor Diferencial
-                </h3>
-                <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 10px;">
-                    Visualiza la explicación multimedia sobre el funcionamiento y ensayo periódico del interruptor diferencial en las instalaciones:
-                </p>
-
-                <!-- Banner interactivo de la imagen con botón play -->
-                <div class="diferencial-banner-box">
-                    <img src="image_b6c0f8.jpg" alt="Interruptor Diferencial" class="diferencial-img-bg">
-                    <div class="diferencial-play-btn" onclick="abrirVideoModal()">
-                        <svg class="diferencial-play-svg" viewBox="0 0 512 512">
-                            <path d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM350.5 269.2l-132.6 89.8c-4.7 3.2-10.9 3.5-15.9 1c-5-2.5-8.1-7.7-8.1-13.4v-179.6c0-5.7 3.1-10.8 8.1-13.4c5-2.5 11.2-2.2 15.9 1l132.6 89.8c4.3 2.9 6.9 7.6 6.9 12.4S354.8 266.3 350.5 269.2z"/>
-                      </svg>
-                </div>
-              </div>
-            </div>
-
             <div class="seccion-bloque">
                 <h3>🎮 Simulador de Maniobra Marcha / Paro (Retención KM1)</h3>
                 <p style="color: #94a3b8; font-size: 0.88rem;">Haz clic para activar o detener la maniobra del contactor KM1:</p>
@@ -722,7 +682,7 @@
                 </div>
             </div>
 
-          <!-- BANCO DE PRÁCTICAS CADe SIMU (Todos los esquemas integrados) -->
+          <!-- BANCO DE PRÁCTICAS CADe SIMU -->
           <div class="seccion-bloque" style="border-top: 3px solid var(--azul-brillante);">
                 <h3 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
                     <span>📥</span> Banco de Prácticas CADe SIMU (Esquemas del Taller)
@@ -754,30 +714,30 @@
             </div>
 
           <div class="seccion-bloque">
-              <h3>⚡ Calculadora de Motores y Protecciones</h3>
-              <div class="calc-grid">
-                  <div class="calc-field">
-                      <label>Potencia del Motor (kW):</label>
-                      <input type="number" id="motor-kw" value="5.5" step="0.1">
-                  </div>
-                  <div class="calc-field">
-                      <label>Tensión de Trabajo:</label>
-                      <select id="motor-voltaje">
-                          <option value="400">400 V (Trifásico)</option>
-                          <option value="230">230 V (Trifásico)</option>
-                      </select>
-                  </div>
-                  <div class="calc-field">
-                      <label>Factor de Potencia (cos φ):</label>
-                      <input type="number" id="motor-fp" value="0.85" step="0.01">
-                  </div>
-                  <div class="calc-field">
-                      <label>Rendimiento (η):</label>
-                      <input type="number" id="motor-rend" value="0.88" step="0.01">
-                  </div>
-              </div>
-              <button type="button" onclick="calcularMotor()" style="width: 100%;">Calcular Intensidad y Guardamotor</button>
-              <div id="motor-res-box" class="resultado-caja oculto"></div>
+                <h3>⚡ Calculadora de Motores y Protecciones</h3>
+                <div class="calc-grid">
+                    <div class="calc-field">
+                        <label>Potencia del Motor (kW):</label>
+                        <input type="number" id="motor-kw" value="5.5" step="0.1">
+                    </div>
+                    <div class="calc-field">
+                        <label>Tensión de Trabajo:</label>
+                        <select id="motor-voltaje">
+                            <option value="400">400 V (Trifásico)</option>
+                            <option value="230">230 V (Trifásico)</option>
+                        </select>
+                    </div>
+                    <div class="calc-field">
+                        <label>Factor de Potencia (cos φ):</label>
+                        <input type="number" id="motor-fp" value="0.85" step="0.01">
+                    </div>
+                    <div class="calc-field">
+                        <label>Rendimiento (η):</label>
+                        <input type="number" id="motor-rend" value="0.88" step="0.01">
+                    </div>
+                </div>
+                <button type="button" onclick="calcularMotor()" style="width: 100%;">Calcular Intensidad y Guardamotor</button>
+                <div id="motor-res-box" class="resultado-caja oculto"></div>
         </div>
         </section>
 
