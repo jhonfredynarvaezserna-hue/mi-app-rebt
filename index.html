@@ -283,6 +283,7 @@
                             <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-caida')"><span>📏 Caída de Tensión</span></a></li>
                             <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-ict')"><span>📡 Consultas ICT-2</span></a></li>
                             <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-electrotecnia')"><span>📖 Apuntes Electrotecnia</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-instalaciones-interiores')"><span>⚡ Instalaciones Interiores</span> <span>🔒</span></a></li>
                         </ul>
                     </div>
 
@@ -383,6 +384,13 @@
                     <p style="color: #a0aec0; font-size: 0.9rem;">Magnitudes, Ley de Ohm, corriente alterna/continua y componentes pasivos.</p>
                 </div>
 
+                <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-instalaciones-interiores')">
+                    <span class="insignia-candado">🔒 PRO</span>
+                    <div style="font-size: 2rem; margin-bottom: 10px;">⚡</div>
+                    <h3>Instalaciones Interiores</h3>
+                    <p style="color: #a0aec0; font-size: 0.9rem;">Cuadro CGMP, sobretensiones, IGA, diferencial, PIAs y electrificación básica/elevada.</p>
+                </div>
+
                 <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-asesor-voz')">
                     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                         <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80" alt="Elena" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--azul-brillante);">
@@ -446,109 +454,119 @@
             </div>
           </section>
 
-          <!-- VISTA: APUNTES DE ELECTROTECNIA Y AUTOMATISMOS -->
-          <section id="vista-electrotecnia" class="vista-section oculto">
+          <!-- VISTA NUEVA: INSTALACIONES ELÉCTRICAS DE INTERIORES (REBT / ITC-BT-25) PROTEGIDA CON CANDADO PRO -->
+          <section id="vista-instalaciones-interiores" class="vista-section oculto">
             <header>
                 <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                <h1>📖 Apuntes de Electrotecnia & Automatismos (Manual Completo)</h1>
-          </header>
+                <h1>⚡ Instalaciones Eléctricas de Interiores (REBT / ITC-BT-25)</h1>
+            </header>
 
-          <!-- BLOQUE 1 -->
+            <!-- ORDEN DE ELEMENTOS EN EL CUADRO -->
+            <div class="seccion-bloque">
+                <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                    <span>🎛️</span> 1. Orden de Elementos en el Cuadro General de Mando y Protección (CGMP)
+                </h2>
+                <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 20px;">
+                    Secuencia reglamentaria estricta de conexión de los dispositivos de protección y control desde la entrada de la línea general hasta los circuitos de la vivienda:
+                </p>
+
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-left: 4px solid var(--azul-brillante);">
+                        <strong style="color: var(--texto-brillante); font-size: 1.05rem;">1. IGT / Bornes de Entrada o ICP:</strong>
+                        <p style="font-size: 0.9rem; color: #94a3b8; margin: 5px 0 0 0;">Punto de llegada de la Derivación Individual procedente del contador. En contadores digitales modernos, el ICP está integrado de forma telemática.</p>
+                    </div>
+
+                    <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-left: 4px solid var(--oro-candado);">
+                        <strong style="color: var(--texto-brillante); font-size: 1.05rem;">2. Protector contra Sobretensiones Transitorias y Permanentes:</strong>
+                        <p style="font-size: 0.9rem; color: #94a3b8; margin: 5px 0 0 0;">Obligatorio por normativa actual. Protege toda la electrónica de la vivienda frente a rayos (transitorias) y subidas de tensión de la red eléctrica pública (permanentes).</p>
+                    </div>
+
+                    <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-left: 4px solid var(--verde-ia);">
+                        <strong style="color: var(--texto-brillante); font-size: 1.05rem;">3. IGA (Interruptor General Automático):</strong>
+                        <p style="font-size: 0.9rem; color: #94a3b8; margin: 5px 0 0 0;">Magnetotérmico general de corte omnipolar que protege a toda la instalación frente a sobreintensidades y cortocircuitos. Se dimensiona a 25A, 32A o 40A según la potencia contratada.</p>
+                    </div>
+
+                    <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-left: 4px solid var(--azul-brillante);">
+                        <strong style="color: var(--texto-brillante); font-size: 1.05rem;">4. Interruptores Diferenciales (ID):</strong>
+                        <p style="font-size: 0.9rem; color: #94a3b8; margin: 5px 0 0 0;">Dispositivo de alta sensibilidad (30 mA) para proteger a las personas frente a contactos indirectos y derivaciones a tierra. Se recomienda fraccionar la vivienda en 2 o más diferenciales.</p>
+                    </div>
+
+                    <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-left: 4px solid #ef4444;">
+                        <strong style="color: var(--texto-brillante); font-size: 1.05rem;">5. PIAs (Pequeños Interruptores Automáticos / Magnetotérmicos Departamentales):</strong>
+                        <p style="font-size: 0.9rem; color: #94a3b8; margin: 5px 0 0 0;">Protegen individualmente cada circuito interior:</p>
+                        <ul style="margin: 5px 0 0 20px; color: #94a3b8; font-size: 0.9rem;">
+                            <li><strong>10A:</strong> Exclusivo para iluminación (C1) con cable de 1,5 mm².</li>
+                            <li><strong>16A:</strong> Para tomas generales (C2), baños/cocina auxiliar (C5) y secadora (C10) con cable de 2,5 mm².</li>
+                            <li><strong>20A:</strong> Para lavadora, lavavajillas y termo eléctrico (C4) con cable de 4 mm².</li>
+                            <li><strong>25A:</strong> Para cocina y horno (C3) con cable de 6 mm².</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Vídeo explicativo del Cuadro y Protecciones -->
+                <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-top: 25px;">📺 Vídeo Explicativo (Montaje y Orden del Cuadro Eléctrico):</h3>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/2Vv-BfVoq4g" title="Explicación Cuadro Electrico y Protecciones" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <!-- GRADOS DE ELECTRIFICACIÓN -->
+            <div class="seccion-bloque">
+                <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                    <span>🏠</span> 2. Configuración por Grados de Electrificación (ITC-BT-25)
+                </h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 15px;">
+                      <div style="background: var(--input-bg); padding: 18px; border-radius: 6px; border-top: 3px solid var(--azul-brillante);">
+                          <strong style="color: var(--texto-brillante); font-size: 1.1rem;">A. Electrificación Básica</strong>
+                          <p style="font-size: 0.85rem; color: #94a3b8; margin: 5px 0 10px 0;">Viviendas hasta 160 m² o potencia contratada ≤ 5,75 kW. Incluye 5 circuitos obligatorios:</p>
+                          <ul style="margin: 0; padding-left: 18px; color: #94a3b8; font-size: 0.88rem; display: flex; flex-direction: column; gap: 6px;">
+                              <li><strong>C1 (Iluminación):</strong> PIA 10A (1,5 mm²)</li>
+                              <li><strong>C2 (Tomas generales):</strong> PIA 16A (2,5 mm²)</li>
+                              <li><strong>C3 (Cocina / Horno):</strong> PIA 25A (6 mm²)</li>
+                              <li><strong>C4 (Lavadora/Termo):</strong> PIA 20A (4 mm²)</li>
+                              <li><strong>C5 (Baños/Auxiliar):</strong> PIA 16A (2,5 mm²)</li>
+                          </ul>
+                      </div>
+
+                      <div style="background: var(--input-bg); padding: 18px; border-radius: 6px; border-top: 3px solid var(--verde-ia);">
+                          <strong style="color: var(--texto-brillante); font-size: 1.1rem;">B. Electrificación Elevada</strong>
+                          <p style="font-size: 0.85rem; color: #94a3b8; margin: 5px 0 10px 0;">Viviendas > 160 m², climatización, domótica avanzada o potencia ≤ 9,2 kW. Incluye los 5 básicos más:</p>
+                          <ul style="margin: 0; padding-left: 18px; color: #94a3b8; font-size: 0.88rem; display: flex; flex-direction: column; gap: 6px;">
+                              <li><strong>C6:</strong> Iluminación adicional</li>
+                              <li><strong>C7:</strong> Tomas adicionales / exteriores</li>
+                              <li><strong>C8:</strong> Calefacción eléctrica</li>
+                              <li><strong>C9:</strong> Aire Acondicionado (RITE)</li>
+                              <li><strong>C10:</strong> Secadora independiente (16A)</li>
+                              <li><strong>C11:</strong> Domótica / Alarma / KNX</li>
+                              <li><strong>C12:</strong> Circuitos adicionales varios</li>
+                          </ul>
+                      </div>
+              </div>
+          </div>
+
+          <!-- CANALIZACIÓN Y SECCIONES -->
           <div class="seccion-bloque">
               <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
-                  <span>⚡</span> Bloque 1: Magnitudes Eléctricas y Ley de Ohm
+                  <span>📐</span> 3. Secciones de Caja de Conexión y Canalización
               </h2>
               <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 15px;">
-                  Las bases físicas y matemáticas de la electricidad explicadas de forma práctica:
+                  Las cajas de derivación o registro se sitúan habitualmente a unos 20-30 cm del techo o marcos de puertas para albergar empalmes con bornes normalizados. Las secciones mínimas reglamentarias son:
               </p>
-            
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 15px;">
-                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--azul-brillante);">
-                      <strong style="color: var(--texto-brillante);">Tensión (U / E):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">La <em>presión o fuerza electromotriz</em>. Voltios (V).</span>
-                  </div>
-                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--verde-ia);">
-                      <strong style="color: var(--texto-brillante);">Intensidad (I):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">El <em>caudal de electrones</em> (Q/t). Amperios (A).</span>
-                  </div>
-                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--oro-candado);">
-                      <strong style="color: var(--texto-brillante);">Resistencia (R):</strong> <br><span style="font-size: 0.88rem; color: #94a3b8;">La <em>oposición al paso</em> y el Efecto Joule (calor). Ohmios (Ω).</span>
-                  </div>
-              </div>
-
-              <div style="background: #0f172a; border: 1px solid var(--azul-brillante); padding: 15px; border-radius: 8px; text-align: center;">
-                  <span style="font-size: 1.1rem; font-weight: bold; color: var(--azul-brillante);">Ley de Ohm y Densidad de Corriente:</span>
-                  <div style="font-size: 1.15rem; font-family: monospace; color: #fff; margin-top: 6px;">U = I · R &nbsp;&nbsp;|&nbsp;&nbsp; J = I / S (A/mm²)</div>
-              </div>
-          </div>
-
-          <!-- BLOQUE 2 -->
-          <div class="seccion-bloque">
-              <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
-                  <span>🔌</span> Bloque 2: Corriente Continua, Alterna y Redes
-              </h2>
-              <div style="display: flex; flex-direction: column; gap: 10px;">
+              
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
                   <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
-                      <strong>🔋 Corriente Continua (CC / DC):</strong> Flujo unidireccional constante (Pilas, baterías, paneles solares). Conductor positivo rojo, negativo negro.
+                      <strong>Alumbrado:</strong> 1,5 mm²
                   </div>
                   <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
-                      <strong>〰️ Corriente Alterna (CA / AC):</strong> Onda senoidal que oscila a 50 Hz en Europa. Código de colores: Fase (Marrón/Negro/Gris) y Neutro (Azul).
+                      <strong>Tomas Generales:</strong> 2,5 mm²
                   </div>
                   <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
-                      <strong>🌐 Monofásico (230V) vs Trifásico (400V):</strong> Monofásico usa Fase + Neutro. Trifásico usa tres fases (L1, L2, L3) y neutro para alta potencia industrial y climatización.
-                  </div>
-              </div>
-          </div>
-
-          <!-- BLOQUE 3 - VÍDEO TÉCNICO DE REACTANCIA E IMPEDANCIA -->
-          <div class="seccion-bloque">
-              <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
-                  <span>⚙️</span> Bloque 3: Componentes Pasivos, Impedancia y Factor de Potencia
-              </h2>
-              <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
-                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
-                      <strong>📌 Resistencias (R):</strong> Oponen resistencia pura. Generan calor por Efecto Joule.
+                      <strong>Lavadora / Termo:</strong> 4 mm²
                   </div>
                   <div style="background: var(--input-bg); padding: 12px; border-radius: 6px;">
-                      <strong>🌀 Bobinas (L) y Condensadores (C):</strong> En alterna generan reactancia (XL y XC) provocando desfases de 90°. La combinación total se llama <strong>Impedancia (Z)</strong>.
+                      <strong>Cocina y Horno:</strong> 6 mm²
                   </div>
-                  <div style="background: var(--input-bg); padding: 12px; border-radius: 6px; border-left: 3px solid var(--verde-ia);">
-                      <strong>⚡ Factor de Potencia (cos φ):</strong> Mide el aprovechamiento real de la energía en alterna. Un cos φ bajo requiere compensación con baterías de condensadores.
-                  </div>
-              </div>
-
-              <!-- VÍDEO 1 -->
-              <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-bottom: 8px;">📺 Vídeo Explicativo (Reactancia e Impedancia):</h3>
-              <div class="video-container">
-                  <iframe src="https://www.youtube-nocookie.com/embed/2Vv-BfVoq4g" title="Factor de Potencia y Reactancia" allowfullscreen></iframe>
-              </div>
-          </div>
-
-          <!-- BLOQUE 4 -->
-          <div class="seccion-bloque">
-              <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
-                  <span>🔄</span> Bloque 4: Motores de Inducción y Conexión Estrella - Triángulo
-              </h2>
-              <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 15px;">
-                  El sistema de arranque estrella-triángulo es el método clásico y obligatorio en muchos motores de inducción de mediana y gran potencia para evitar caídas de tensión severas en la red y proteger los devanados:
-              </p>
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 20px;">
-                  <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-top: 3px solid var(--oro-candado);">
-                      <strong style="color: var(--texto-brillante); font-size: 1.05rem;">1. Arranque en Estrella (Y):</strong>
-                      <p style="font-size: 0.88rem; color: #94a3b8; margin: 8px 0 0 0;">
-                          Al arrancar, el contactor principal y el de estrella cierran los puentes en los terminales finales. La tensión aplicada a cada fase se reduce, limitando drásticamente la intensidad de pico a un tercio de su valor nominal directo.
-                      </p>
-                  </div>
-                  <div style="background: var(--input-bg); padding: 15px; border-radius: 6px; border-top: 3px solid var(--verde-ia);">
-                      <strong style="color: var(--texto-brillante); font-size: 1.05rem;">2. Conmutación a Triángulo (Δ):</strong>
-                      <p style="font-size: 0.88rem; color: #94a3b8; margin: 8px 0 0 0;">
-                          Una vez que el rotor alcanza aproximadamente el 80% de su velocidad de régimen mediante un temporizador electrónico, conmuta a triángulo. El motor opera al 100% de su par y potencia útil.
-                      </p>
-                  </div>
-              </div>
-
-              <!-- VÍDEO 2 -->
-              <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-bottom: 8px;">📺 Vídeo Explicativo Detallado (Arranque Estrella-Triángulo):</h3>
-              <div class="video-container">
-                  <iframe src="https://www.youtube-nocookie.com/embed/AiT3uWCY6BQ" title="Arranque Estrella Triángulo" allowfullscreen></iframe>
               </div>
           </div>
         </section>
@@ -736,31 +754,31 @@
             </div>
 
           <div class="seccion-bloque">
-                <h3>⚡ Calculadora de Motores y Protecciones</h3>
-                <div class="calc-grid">
-                    <div class="calc-field">
-                        <label>Potencia del Motor (kW):</label>
-                        <input type="number" id="motor-kw" value="5.5" step="0.1">
-                    </div>
-                    <div class="calc-field">
-                        <label>Tensión de Trabajo:</label>
-                        <select id="motor-voltaje">
-                            <option value="400">400 V (Trifásico)</option>
-                            <option value="230">230 V (Trifásico)</option>
-                        </select>
-                    </div>
-                    <div class="calc-field">
-                        <label>Factor de Potencia (cos φ):</label>
-                        <input type="number" id="motor-fp" value="0.85" step="0.01">
-                    </div>
-                    <div class="calc-field">
-                        <label>Rendimiento (η):</label>
-                        <input type="number" id="motor-rend" value="0.88" step="0.01">
-                    </div>
-                </div>
-                <button type="button" onclick="calcularMotor()" style="width: 100%;">Calcular Intensidad y Guardamotor</button>
-                <div id="motor-res-box" class="resultado-caja oculto"></div>
-          </div>
+              <h3>⚡ Calculadora de Motores y Protecciones</h3>
+              <div class="calc-grid">
+                  <div class="calc-field">
+                      <label>Potencia del Motor (kW):</label>
+                      <input type="number" id="motor-kw" value="5.5" step="0.1">
+                  </div>
+                  <div class="calc-field">
+                      <label>Tensión de Trabajo:</label>
+                      <select id="motor-voltaje">
+                          <option value="400">400 V (Trifásico)</option>
+                          <option value="230">230 V (Trifásico)</option>
+                      </select>
+                  </div>
+                  <div class="calc-field">
+                      <label>Factor de Potencia (cos φ):</label>
+                      <input type="number" id="motor-fp" value="0.85" step="0.01">
+                  </div>
+                  <div class="calc-field">
+                      <label>Rendimiento (η):</label>
+                      <input type="number" id="motor-rend" value="0.88" step="0.01">
+                  </div>
+              </div>
+              <button type="button" onclick="calcularMotor()" style="width: 100%;">Calcular Intensidad y Guardamotor</button>
+              <div id="motor-res-box" class="resultado-caja oculto"></div>
+        </div>
         </section>
 
         <!-- VISTA CAÍDA DE TENSIÓN -->
