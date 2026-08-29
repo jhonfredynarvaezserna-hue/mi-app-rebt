@@ -248,7 +248,6 @@
             border-left: 4px solid var(--azul-brillante);
         }
 
-        /* Estilos para contenedores de fotos y manuales en Interiores */
         .slot-imagen-real {
             width: 100%;
             min-height: 220px;
@@ -413,13 +412,7 @@
                     <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-electrotecnia')">
                         <div style="font-size: 2rem; margin-bottom: 10px;">📖</div>
                         <h3>Apuntes Electrotecnia</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">Magnitudes, Ley de Ohm, corriente alterna/continua y motores.</p>
-                    </div>
-
-                    <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-interiores')">
-                        <div style="font-size: 2rem; margin-bottom: 10px;">⚡</div>
-                        <h3>Instalaciones Interiores</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">REBT, ITC-BT-25, CGMP, protecciones, viviendas básicas y elevadas.</p>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Magnitudes, Ley de Ohm, corriente alterna/continua y componentes pasivos.</p>
                     </div>
 
                     <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-asesor-voz')">
@@ -537,7 +530,7 @@
                     </div>
                 </div>
 
-                <!-- BLOQUE 3 -->
+                <!-- BLOQUE 3 - VÍDEO TÉCNICO DE REACTANCIA E IMPEDANCIA -->
                 <div class="seccion-bloque">
                     <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
                         <span>⚙️</span> Bloque 3: Componentes Pasivos, Impedancia y Factor de Potencia
@@ -618,6 +611,58 @@
                         <li><strong>Interruptores Diferenciales (ID):</strong> Dispositivo de alta sensibilidad (30 mA) para proteger a las personas frente a contactos indirectos y derivaciones a tierra. Se recomienda fraccionar la vivienda en 2 o más diferenciales.</li>
                         <li><strong>PIAs (Pequeños Interruptores Automáticos / Magnetotérmicos Departamentales):</strong> Protegen individualmente cada circuito interior.</li>
                     </ul>
+
+                    <!-- BLOQUE NUEVO ANEXADO: DIFERENCIAL VS MAGNETOTÉRMICO -->
+                    <div class="seccion-bloque" style="margin-top:20px;">
+                        <h3 style="color: var(--azul-brillante); margin-top: 0;">
+                            ⚡ Diferencial vs Magnetotérmico
+                        </h3>
+                        
+                        <div class="grid-electrificacion">
+                            <div class="card-electrificacion">
+                                <h4 style="color: var(--azul-brillante); margin-top: 0;">🛡️ Interruptor Diferencial (ID)</h4>
+                                <div class="slot-imagen-real" style="min-height: 160px; margin: 10px 0;">
+                                    <img src="diferencial.jpg" alt="Interruptor Diferencial" style="max-height: 180px;">
+                                </div>
+                                <ul style="font-size: 0.88rem; color: #e2e8f0; padding-left: 20px;">
+                                    <li>Protege a las personas.</li>
+                                    <li>Detecta fugas a tierra.</li>
+                                    <li>Sensibilidad habitual: 30 mA.</li>
+                                    <li>Dispone de botón TEST.</li>
+                                    <li>Obligatorio en viviendas.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="card-electrificacion">
+                                <h4 style="color: var(--azul-brillante); margin-top: 0;">⚙️ Interruptor Magnetotérmico (PIA)</h4>
+                                <div class="slot-imagen-real" style="min-height: 160px; margin: 10px 0;">
+                                    <img src="magnetotermico.jpg" alt="Interruptor Magnetotérmico PIA" style="max-height: 180px;">
+                                </div>
+                                <ul style="font-size: 0.88rem; color: #e2e8f0; padding-left: 20px;">
+                                    <li>Protege la instalación.</li>
+                                    <li>Protege contra sobrecargas.</li>
+                                    <li>Protege contra cortocircuitos.</li>
+                                    <li>Calibres típicos: 10A, 16A, 20A, 25A.</li>
+                                    <li>Cada circuito tiene su propio PIA.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="resultado-caja" style="margin-top: 20px;">
+                            <h4 style="color:var(--azul-brillante); margin-top:0;">
+                                Diferencia principal
+                            </h4>
+                            <p>
+                                El <strong>diferencial</strong> protege a las personas frente a contactos indirectos y fugas de corriente.
+                            </p>
+                            <p>
+                                El <strong>magnetotérmico</strong> protege cables y receptores frente a sobrecargas y cortocircuitos.
+                            </p>
+                            <p style="margin-bottom: 0;">
+                                Ambos dispositivos son complementarios y deben instalarse conjuntamente en el Cuadro General de Mando y Protección (CGMP).
+                            </p>
+                        </div>
+                    </div>
 
                     <h3 style="color: var(--azul-brillante); margin-top: 25px;">2. Diferenciación de Circuitos: Vivienda Básica vs. Elevada</h3>
                     
@@ -1154,6 +1199,28 @@
                         <p>• <strong>Subtotal Mano de Obra:</strong> <span id="subtotal-horas">0.00 €</span></p>
                         <p>• <strong>Desplazamiento:</strong> <span id="subtotal-desplazamiento">0.00 €</span></p>
                         <p>• <strong>Total Estimado:</strong> <span id="total-estimado" style="color: var(--verde-ia); font-weight: bold; font-size: 1.1rem;">0.00 €</span></p>
+                    </div>
+          </div>
+          </section>
+
+            <!-- VISTA VIDEOTECA TÉCNICA -->
+            <section id="vista-videoteca" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>📺 Videoteca Técnica y Tutoriales Prácticos</h1>
+                </header>
+                <div class="seccion-bloque">
+                    <h3>Selecciona una Práctica Real de Taller:</h3>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+                        <button type="button" onclick="cargarVideoTecnico(0)">⚙️ Arranque Estrella-Triángulo</button>
+                        <button type="button" onclick="cargarVideoTecnico(1)">📱 Cableado Dispositivos Sonoff</button>
+                        <button type="button" onclick="cargarVideoTecnico(2)">🚗 Coches Eléctricos y Recarga</button>
+                        <button type="button" onclick="cargarVideoTecnico(3)">🌞 Solar Fotovoltaica</button>
+                        <button type="button" onclick="cargarVideoTecnico(4)">📡 ICT-2 y Telecomunicaciones</button>
+                    </div>
+                    <h4 id="video-titulo" style="color: var(--azul-brillante); margin-top: 5px;">⚙️ Arranque Estrella-Triángulo: Potencia y Mando Explicado</h4>
+                    <div class="video-container">
+                        <iframe id="iframe-video" src="https://www.youtube-nocookie.com/embed/AiT3uWCY6BQ" title="Videoteca Técnica J.F" allowfullscreen></iframe>
                     </div>
           </div>
           </section>
