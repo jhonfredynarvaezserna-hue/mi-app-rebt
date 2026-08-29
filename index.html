@@ -555,7 +555,7 @@
 
                     <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-bottom: 8px;">📺 Vídeo Explicativo (Reactancia e Impedancia):</h3>
                     <div class="video-container">
-                        <iframe src="https://www.youtube-nocookie.com/embed/2Vv-BfVoq4g" title="Factor de Potencia y Reactancia" allowfullscreen></iframe>
+                        <iframe src="https://www.youtube-nocookie.com/embed/kWgXw6Nl-9U" title="Factor de Potencia y Reactancia" allowfullscreen></iframe>
                     </div>
                 </div>
 
@@ -584,7 +584,7 @@
 
                     <h3 style="color: var(--azul-brillante); font-size: 1rem; margin-bottom: 8px;">📺 Vídeo Explicativo Detallado (Arranque Estrella-Triángulo):</h3>
                     <div class="video-container">
-                        <iframe src="https://www.youtube-nocookie.com/embed/AiT3uWCY6BQ" title="Arranque Estrella Triángulo" allowfullscreen></iframe>
+                        <iframe src="https://www.youtube-nocookie.com/embed/9X5o48l6L3g" title="Arranque Estrella Triángulo" allowfullscreen></iframe>
                     </div>
                 </div>
             </section>
@@ -604,7 +604,7 @@
 
                     <!-- Slot para insertar tu foto real del cuadro -->
                     <div class="slot-imagen-real">
-                        <img src="" alt="Fotografía real de cuadro eléctrico de interiores peinado">
+                        <img src="" onerror="this.src='https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80'" alt="Fotografía real de cuadro eléctrico de interiores peinado">
                     </div>
                     <p style="text-align: center; color: #8a99ad; font-size: 0.82rem; margin-top: -10px; margin-bottom: 20px;">📷 Inserta aquí tu fotografía real de un cuadro de distribución correctamente peinado y etiquetado.</p>
 
@@ -618,10 +618,10 @@
                         <li><strong>PIAs (Pequeños Interruptores Automáticos / Magnetotérmicos Departamentales):</strong> Protegen individualmente cada circuito interior.</li>
                     </ul>
 
-                    <!-- BLOQUES ANEXADOS NUEVOS -->
+                    <!-- BLOQUES ANEXADOS CON SOPORTE DE IMAGEN LOCAL Y RESPALDO TÉCNICO -->
                     <h3 style="color: var(--azul-brillante); margin-top: 25px;">📸 Cuadro Eléctrico Vivienda Básica</h3>
                     <div class="slot-imagen-real">
-                        <img src="cuadro-basico.jpg" alt="Cuadro Eléctrico Vivienda Básica">
+                        <img src="cuadro-basico.jpg" onerror="this.src='https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=800&q=80'" alt="Cuadro Eléctrico Vivienda Básica">
                     </div>
                     <div class="resultado-caja">
                         <strong style="color: var(--azul-brillante);">Electrificación Básica:</strong>
@@ -636,7 +636,7 @@
 
                     <h3 style="color: var(--azul-brillante); margin-top: 25px;">📸 Cuadro Eléctrico Vivienda Electrificación Elevada</h3>
                     <div class="slot-imagen-real">
-                        <img src="cuadro-elevado.jpg" alt="Cuadro Eléctrico Vivienda Electrificación Elevada">
+                        <img src="cuadro-elevado.jpg" onerror="this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80'" alt="Cuadro Eléctrico Vivienda Electrificación Elevada">
                     </div>
                     <div class="resultado-caja">
                         <strong style="color: var(--azul-brillante);">Electrificación Elevada:</strong>
@@ -652,7 +652,7 @@
 
                     <h3 style="color: var(--azul-brillante); margin-top: 25px;">🛡️ Interruptor Diferencial</h3>
                     <div class="slot-imagen-real">
-                        <img src="diferencial.jpg" alt="Interruptor Diferencial">
+                        <img src="diferencial.jpg" onerror="this.src='https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=800&q=80'" alt="Interruptor Diferencial">
                     </div>
                     <div class="resultado-caja">
                         <ul style="padding-left: 20px; margin: 0;">
@@ -666,7 +666,7 @@
 
                     <h3 style="color: var(--azul-brillante); margin-top: 25px;">⚙️ Interruptor Magnetotérmico</h3>
                     <div class="slot-imagen-real">
-                        <img src="magnetotermico.jpg" alt="Interruptor Magnetotérmico">
+                        <img src="magnetotermico.jpg" onerror="this.src='https://images.unsplash.com/photo-1541888946425-d0fbb18f8f96?auto=format&fit=crop&w=800&q=80'" alt="Interruptor Magnetotérmico">
                     </div>
                     <div class="resultado-caja">
                         <ul style="padding-left: 20px; margin: 0;">
@@ -1235,7 +1235,8 @@
         function abrirVideoModal() {
             const modal = document.getElementById('video-modal');
             const player = document.getElementById('video-player');
-            player.src = "https://www.youtube-nocookie.com/embed/2Vv-BfVoq4g?autoplay=1";
+            // Vídeo técnico y oficial sobre interruptores diferenciales y protecciones
+            player.src = "https://www.youtube-nocookie.com/embed/kWgXw6Nl-9U?autoplay=1";
             modal.style.display = 'flex';
         }
         function cerrarVideoModal() {
