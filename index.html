@@ -248,25 +248,6 @@
             border-left: 4px solid var(--azul-brillante);
         }
 
-        .slot-imagen-real {
-            width: 100%;
-            min-height: 220px;
-            background: #1a2936;
-            border: 2px dashed var(--azul-brillante);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-        .slot-imagen-real img {
-            width: 100%;
-            height: auto;
-            max-height: 400px;
-            object-fit: cover;
-            border-radius: 6px;
-        }
         .grid-electrificacion {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -602,12 +583,6 @@
                         Guía técnica avanzada y reglamentaria de los dispositivos de protección y magnetotérmicos instalados en el CGMP según la ITC-BT-17 e ITC-BT-25.
                     </p>
 
-                    <!-- Slot para insertar tu foto real del cuadro -->
-                    <div class="slot-imagen-real">
-                        <img src="" onerror="this.src='https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80'" alt="Fotografía real de cuadro eléctrico de interiores peinado">
-                    </div>
-                    <p style="text-align: center; color: #8a99ad; font-size: 0.82rem; margin-top: -10px; margin-bottom: 20px;">📷 Inserta aquí tu fotografía real de un cuadro de distribución correctamente peinado y etiquetado.</p>
-
                     <h3 style="color: var(--azul-brillante); margin-top: 25px;">1. Orden de Elementos en el CGMP (ITC-BT-17)</h3>
                     <p style="color: #94a3b8; font-size: 0.9rem;">Secuencia reglamentaria estricta de conexión de los dispositivos de protección y control desde la entrada:</p>
                     <ul>
@@ -634,10 +609,7 @@
                     <h3 style="color:var(--azul-brillante); margin-top:0;">
                         🏠 Cuadro Eléctrico Vivienda Básica
                     </h3>
-                    <div class="slot-imagen-real">
-                        <img src="img/cuadro-basico.jpg" onerror="this.src='https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=800&q=80'" alt="Cuadro Eléctrico Vivienda Básica">
-                    </div>
-                    <div class="resultado-caja">
+                    <div class="resultado-caja" style="margin-top: 0;">
                         <h4 style="color: var(--azul-brillante); margin-top:0;">Elementos identificados</h4>
                         <ul style="margin-bottom:0; padding-left: 20px;">
                             <li>✅ IGA</li>
@@ -657,10 +629,7 @@
                     <h3 style="color:var(--azul-brillante); margin-top:0;">
                         ⚡ Cuadro Vivienda Electrificación Elevada
                     </h3>
-                    <div class="slot-imagen-real">
-                        <img src="img/cuadro-elevado.jpg" onerror="this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80'" alt="Cuadro Vivienda Electrificación Elevada">
-                    </div>
-                    <div class="resultado-caja">
+                    <div class="resultado-caja" style="margin-top: 0;">
                         <h4 style="color: var(--azul-brillante); margin-top:0;">Circuitos adicionales</h4>
                         <ul style="margin-bottom:0; padding-left: 20px;">
                             <li>✅ Doble diferencial</li>
@@ -678,10 +647,7 @@
                     <h3 style="color:var(--azul-brillante); margin-top:0;">
                         🛡️ Interruptor Diferencial
                     </h3>
-                    <div class="slot-imagen-real">
-                        <img src="img/diferencial.jpg" onerror="this.src='https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=800&q=80'" alt="Interruptor Diferencial">
-                    </div>
-                    <table class="tabla-normativa">
+                    <table class="tabla-normativa" style="margin-top: 0;">
                         <tr>
                             <th>Función</th>
                             <td>Protección de personas</td>
@@ -710,10 +676,7 @@
                     <h3 style="color:var(--azul-brillante); margin-top:0;">
                         ⚙️ Interruptor Magnetotérmico
                     </h3>
-                    <div class="slot-imagen-real">
-                        <img src="img/magnetotermico.jpg" onerror="this.src='https://images.unsplash.com/photo-1541888946425-d0fbb18f8f96?auto=format&fit=crop&w=800&q=80'" alt="Interruptor Magnetotérmico">
-                    </div>
-                    <table class="tabla-normativa">
+                    <table class="tabla-normativa" style="margin-top: 0;">
                         <tr>
                             <th>Función</th>
                             <td>Protección de la instalación</td>
@@ -742,10 +705,7 @@
                     <h3 style="color:var(--azul-brillante); margin-top:0;">
                         ⚡ Protector contra Sobretensiones (Transitorias y Permanentes)
                     </h3>
-                    <div class="slot-imagen-real">
-                        <img src="img/sobretensiones.jpg" onerror="this.src='https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80'" alt="Protector de Sobretensiones">
-                    </div>
-                    <table class="tabla-normativa">
+                    <table class="tabla-normativa" style="margin-top: 0;">
                         <tr>
                             <th>Función</th>
                             <td>Protección de equipos electrónicos y red interior</td>
