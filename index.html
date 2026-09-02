@@ -280,8 +280,8 @@
                         <ul>
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-ve')"><span>🚗 Vehículo Eléctrico (BT-52)</span> <span>🔒</span></a></li>
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-solar')"><span>🌞 Solar Fotovoltaica (BT-40)</span> <span>🔒</span></a></li>
-                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-industrial')"><span>⚙️ Automatismos CADe SIMU</span> <span>🔒</span></a></li>
-                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-knx')"><span>🟢 Domótica KNX</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-industrial')"><span>⚙️ Automatismos, Piscinas & Riego</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-knx')"><span>🟢 Domótica KNX & ETS5</span> <span>🔒</span></a></li>
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-domotica-inalambrica')"><span>🏠 Domótica Inalámbrica & IoT</span> <span>🔒</span></a></li>
                         </ul>
                     </div>
@@ -342,10 +342,12 @@
                         <select id="gestor-tipo" style="width: 100%;">
                             <option value="Avería Urgente">Avería Urgente</option>
                             <option value="Consulta Normativa REBT / RITE">Consulta Normativa REBT / RITE</option>
-                            <option value="Climatización / Suelo Radiante">Climatización / Suelo Radiante</option>
-                            <option value="Instalación Fotovoltaica">Instalación Fotovoltaica</option>
-                            <option value="Punto de Recarga VE">Punto de Recarga VE</option>
-                            <option value="Infraestructura ICT">Infraestructura ICT</option>
+                            <option value="Cuadro de Piscina / Riego (BT-31 / BT-32)">Cuadro de Piscina / Riego (BT-31 / BT-32)</option>
+                            <option value="Punto de Recarga VE (ITC-BT-52)">Punto de Recarga VE (ITC-BT-52)</option>
+                            <option value="Instalación Fotovoltaica (ITC-BT-40)">Instalación Fotovoltaica (ITC-BT-40)</option>
+                            <option value="Automatismo Industrial / Motor">Automatismo Industrial / Motor</option>
+                            <option value="Infraestructura ICT-2 (RD 346/2011)">Infraestructura ICT-2 (RD 346/2011)</option>
+                            <option value="Domótica KNX / Programación ETS5">Domótica KNX / Programación ETS5</option>
                             <option value="Domótica Inalámbrica (Zigbee/Z-Wave/Google)">Domótica Inalámbrica (Zigbee/Z-Wave/Google)</option>
                         </select>
 
@@ -368,7 +370,7 @@
                     <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-electrotecnia')">
                         <div style="font-size: 2rem; margin-bottom: 10px;">📖</div>
                         <h3>Apuntes Electrotecnia</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">Magnitudes, Ley de Ohm, corriente alterna/continua y componentes pasivos.</p>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Magnitudes, Ley de Ohm, corriente alterna/continua y motores.</p>
                     </div>
 
                     <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-interiores')">
@@ -400,35 +402,35 @@
                     <div class="tarjeta-modulo" onclick="abrirModuloDirecto('vista-ict')">
                         <div style="font-size: 2rem; margin-bottom: 10px;">📡</div>
                         <h3>Consultas ICT-2</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">Recintos RITI/RITS, cableados, registros y PAU (RD 346/2011).</p>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Recintos RITI/RITS, canalizaciones, registros y niveles reglamentarios.</p>
                     </div>
 
                     <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-ve')">
                         <span class="insignia-candado">🔒 PRO</span>
                         <div style="font-size: 2rem; margin-bottom: 10px;">🚗</div>
-                        <h3>Vehículo Eléctrico</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">ITC-BT-52, esquemas 1 a 4, protecciones 6mA DC y curvas.</p>
+                        <h3>Vehículo Eléctrico (BT-52)</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Esquemas 1 a 4, Modos 2 a 4, protecciones 6mA DC, curvas y rearme.</p>
                     </div>
 
                     <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-solar')">
                         <span class="insignia-candado">🔒 PRO</span>
                         <div style="font-size: 2rem; margin-bottom: 10px;">🌞</div>
-                        <h3>Solar Fotovoltaica</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">ITC-BT-40, cálculo de strings, inversor y protecciones DC/AC.</p>
+                        <h3>Solar Fotovoltaica (BT-40)</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Cálculo strings, protecciones gPV, descargadores DC/AC y anti-isla.</p>
                     </div>
 
                     <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-industrial')">
                         <span class="insignia-candado">🔒 PRO</span>
                         <div style="font-size: 2rem; margin-bottom: 10px;">⚙️</div>
-                        <h3>Automatismos CADe SIMU</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">Simulador interactivo Marcha/Paro con realimentación y cálculo motor.</p>
+                        <h3>Automatismos & Piscinas</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Simulador CADe SIMU, cálculo motor, piscinas BT-31 y pozos BT-32.</p>
                     </div>
 
                     <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-knx')">
                         <span class="insignia-candado">🔒 PRO</span>
                         <div style="font-size: 2rem; margin-bottom: 10px;">🟢</div>
-                        <h3>Domótica KNX</h3>
-                        <p style="color: #a0aec0; font-size: 0.9rem;">Topología de bus, límites y direccionamientos ETS.</p>
+                        <h3>Domótica KNX & ETS5</h3>
+                        <p style="color: #a0aec0; font-size: 0.9rem;">Laboratorio ETS5, topología TP-1, objetos de comunicación y DPTs.</p>
                     </div>
 
                     <div class="tarjeta-modulo" onclick="verificarYEntrar('vista-domotica-inalambrica')">
@@ -447,7 +449,6 @@
                     <h1>📖 Apuntes de Electrotecnia & Automatismos (Manual Completo)</h1>
                 </header>
 
-                <!-- BLOQUE 1 -->
                 <div class="seccion-bloque">
                     <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
                         <span>⚡</span> Bloque 1: Magnitudes Eléctricas y Ley de Ohm
@@ -474,7 +475,6 @@
                     </div>
                 </div>
 
-                <!-- BLOQUE 2 -->
                 <div class="seccion-bloque">
                     <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
                         <span>🔌</span> Bloque 2: Corriente Continua, Alterna y Redes
@@ -492,7 +492,6 @@
                     </div>
                 </div>
 
-                <!-- BLOQUE 3 -->
                 <div class="seccion-bloque">
                     <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
                         <span>⚙️</span> Bloque 3: Componentes Pasivos, Impedancia y Factor de Potencia
@@ -515,7 +514,6 @@
                     </div>
                 </div>
 
-                <!-- BLOQUE 4 -->
                 <div class="seccion-bloque">
                     <h2 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
                         <span>🔄</span> Bloque 4: Motores de Inducción y Conexión Estrella - Triángulo
@@ -607,9 +605,6 @@
                             <circle cx="117" cy="168" r="5" style="fill:#0f1923; stroke:#94a3b8; stroke-width:1"/>
 
                             <!-- PIAs C1-C5 -->
-                            <g id="pias-basica">
-                                <!-- generated below -->
-                            </g>
                             <rect x="160" y="55" width="34" height="120" rx="4" style="fill:#1a2936; stroke:#188fa7; stroke-width:1.5"/>
                             <text x="177" y="95" text-anchor="middle" style="fill:#e2e8f0; font-family:monospace; font-size:9px; font-weight:bold;">C1</text>
                             <rect x="168" y="120" width="18" height="30" rx="2" style="fill:#188fa7"/>
@@ -687,7 +682,7 @@
                             <text x="175" y="108" text-anchor="middle" style="fill:#94a3b8; font-family:monospace; font-size:9px;">30mA</text>
                             <rect x="163" y="122" width="24" height="32" rx="2" style="fill:#f59e0b"/>
 
-                            <!-- PIAs C1-C10 (compact) -->
+                            <!-- PIAs C1-C10 -->
                             <rect x="215" y="55" width="30" height="120" rx="4" style="fill:#1a2936; stroke:#188fa7; stroke-width:1.2"/>
                             <text x="230" y="95" text-anchor="middle" style="fill:#e2e8f0; font-family:monospace; font-size:8px; font-weight:bold;">C1</text>
                             <rect x="222" y="118" width="16" height="26" rx="2" style="fill:#188fa7"/>
@@ -949,11 +944,11 @@
                 </div>
             </section>
 
-            <!-- VISTA AUTOMATISMOS & SIMULADOR CADE SIMU -->
+            <!-- VISTA AUTOMATISMOS & SIMULADOR CADE SIMU, PISCINAS Y RIEGO -->
             <section id="vista-industrial" class="vista-section oculto">
                 <header>
                     <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>⚙️ Automatismos Industriales & Simulador CADe SIMU</h1>
+                    <h1>⚙️ Automatismos Industriales, Piscinas & Riego</h1>
                 </header>
 
                 <div class="seccion-bloque" style="border-top: 3px solid var(--azul-brillante);">
@@ -1008,8 +1003,49 @@
                     </div>
                 </div>
 
-              <!-- BANCO DE PRÁCTICAS CADe SIMU (Todos los esquemas integrados) -->
-              <div class="seccion-bloque" style="border-top: 3px solid var(--azul-brillante);">
+                <!-- CUADROS DE PISCINAS Y RIEGO REGLAMENTARIOS -->
+                <div class="seccion-bloque" style="border-top: 3px solid var(--verde-ia);">
+                    <h3 style="color: var(--azul-brillante); margin-top: 0;">🏊 Cuadros para Piscinas, Fuentes y Riego (ITC-BT-31 & ITC-BT-32)</h3>
+                    <table class="tabla-normativa">
+                        <thead>
+                            <tr>
+                                <th>Circuito / Zona</th>
+                                <th>Protección Exigida</th>
+                                <th>Prescripción Reglamentaria</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Envolvente del Cuadro</strong></td>
+                                <td>Mínimo IP55 / IP65</td>
+                                <td>Estanqueidad obligatoria frente al polvo y chorros de agua en casetas técnicas o exteriores.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Bomba de Filtración</strong></td>
+                                <td>Diferencial 30 mA Tipo A + Guardamotor</td>
+                                <td>Guardamotor ajustado a In de placa. Diferencial Tipo A superinmunizado frente a cloradores salinos.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Focos Subacuáticos</strong></td>
+                                <td>SELV máx. 12 V CA</td>
+                                <td>Transformador de seguridad (UNE-EN 61558-2-6) ubicado <strong>fuera de volúmenes 0, 1 y 2</strong>. Prohibido autotransformador.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Volúmenes de Seguridad</strong></td>
+                                <td>Vol. 0 (IPX8), Vol. 1 (IPX5)</td>
+                                <td>Prohibida la instalación de tomas de corriente, cajas de empalme e interruptores en volúmenes 0 y 1.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Pozos y Riego (BT-32)</strong></td>
+                                <td>Relé de Sondas / Boya</td>
+                                <td>Protección de bombas sumergibles contra funcionamiento en seco y sobrecalentamiento.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- BANCO DE PRÁCTICAS CADe SIMU -->
+                <div class="seccion-bloque" style="border-top: 3px solid var(--azul-brillante);">
                     <h3 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
                         <span>📥</span> Banco de Prácticas CADe SIMU (Esquemas del Taller)
                     </h3>
@@ -1039,7 +1075,7 @@
                     </div>
                 </div>
 
-              <div class="seccion-bloque">
+                <div class="seccion-bloque">
                     <h3>⚡ Calculadora de Motores y Protecciones</h3>
                     <div class="calc-grid">
                         <div class="calc-field">
@@ -1064,7 +1100,7 @@
                     </div>
                     <button type="button" onclick="calcularMotor()" style="width: 100%;">Calcular Intensidad y Guardamotor</button>
                     <div id="motor-res-box" class="resultado-caja oculto"></div>
-              </div>
+                </div>
             </section>
 
             <!-- VISTA CAÍDA DE TENSIÓN -->
@@ -1108,15 +1144,36 @@
                     </div>
                     <button type="button" onclick="calcularSeccionCable()" style="width: 100%;">⚡ Calcular Sección y Caída</button>
                     <div id="resultado-caida-box" class="resultado-caja oculto"></div>
-            </div>
+                </div>
             </section>
 
-            <!-- VISTA VEHÍCULO ELÉCTRICO -->
+            <!-- VISTA VEHÍCULO ELÉCTRICO AMPLIADA (ITC-BT-52) -->
             <section id="vista-ve" class="vista-section oculto">
                 <header>
                     <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
                     <h1>🚗 Vehículo Eléctrico (ITC-BT-52)</h1>
                 </header>
+
+                <div class="seccion-bloque">
+                    <h3 style="color: var(--azul-brillante); margin-top: 0;">⚡ Calculadora de Punto de Carga VE</h3>
+                    <div class="calc-grid">
+                        <div class="calc-field">
+                            <label>Potencia del Cargador:</label>
+                            <select id="ve-potencia">
+                                <option value="3.7">3,7 kW (Monofásico 16A)</option>
+                                <option value="7.4" selected>7,4 kW (Monofásico 32A)</option>
+                                <option value="11">11 kW (Trifásico 16A)</option>
+                                <option value="22">22 kW (Trifásico 32A)</option>
+                            </select>
+                        </div>
+                        <div class="calc-field">
+                            <label>Longitud de la Línea (m):</label>
+                            <input type="number" id="ve-longitud" value="25" min="1" max="250">
+                        </div>
+                    </div>
+                    <button type="button" onclick="calcularVE()" style="width: 100%;">⚡ Dimensionar Protecciones y Cable VE</button>
+                </div>
+
                 <div class="seccion-bloque">
                     <h3>Protecciones Obligatorias y Esquemas</h3>
                     <table class="tabla-normativa">
@@ -1125,38 +1182,64 @@
                                 <th>Esquema</th>
                                 <th>Descripción</th>
                                 <th>Ubicación Contador</th>
+                                <th>Caída Máxima</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
+                                <td><strong>Esquema 1</strong></td>
+                                <td>Colectivo con contador principal común para la recarga en garajes.</td>
+                                <td>Módulo de contadores exclusivo VE.</td>
+                                <td>1,5% línea principal</td>
+                            </tr>
+                            <tr>
                                 <td><strong>Esquema 2</strong></td>
                                 <td>Línea individual desde el contador principal de la vivienda.</td>
                                 <td>Cuarto de contadores de la comunidad.</td>
+                                <td><strong>0,5%</strong> máx.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Esquema 3a / 3b</strong></td>
+                                <td>Línea individual con contador exclusivo para la estación de carga.</td>
+                                <td>Centralización de contadores comunitaria.</td>
+                                <td>1,5% máx.</td>
                             </tr>
                             <tr>
                                 <td><strong>Esquema 4a / 4b</strong></td>
                                 <td>Circuito adicional desde el cuadro general de la vivienda (unifamiliares).</td>
                                 <td>Cuadro General de Mando y Protección (CGMP).</td>
+                                <td><strong>1,5%</strong> máx.</td>
                             </tr>
                         </tbody>
                     </table>
 
-                    <h4 style="color: var(--azul-brillante); margin-top: 20px;">Protecciones Exigidas:</h4>
+                    <h4 style="color: var(--azul-brillante); margin-top: 20px;">Protecciones Exigidas y Normativa:</h4>
                     <ul>
-                        <li><strong>Diferencial:</strong> Tipo A o Tipo B con protección para fugas de corriente continua.</li>
-                        <li><strong>Magnetotérmico (IGA/PIA):</strong> Curva C según la potencia del cargador (16A, 32A).</li>
-                        <li><strong>Sobretensiones:</strong> Protección permanente y transitoria (Tipo 2).</li>
+                        <li><strong>Diferencial:</strong> Tipo A con detección de 6 mA DC (RDC-DD) o Tipo B para corriente continua pura.</li>
+                        <li><strong>Magnetotérmico (IGA/PIA):</strong> Curva C según potencia nominal con corte omnipolar (16A, 32A).</li>
+                        <li><strong>Sobretensiones:</strong> Protección combinada permanente (> 275V) y transitoria (Tipo 2).</li>
+                        <li><strong>Rearme Automático:</strong> Obligatorio en Esquema 2 cuando se comparte contador de la vivienda.</li>
                     </ul>
-            </div>
+
+                    <h4 style="color: var(--texto-brillante); margin-top: 15px;">Modos de Carga del Vehículo Eléctrico (UNE-EN 61851):</h4>
+                    <ul style="color: #cbd5e1; font-size: 0.92rem; line-height: 1.6;">
+                        <li><strong>Modo 1:</strong> Toma doméstica sin comunicación (Prohibido para recarga habitual).</li>
+                        <li><strong>Modo 2:</strong> Cable con caja de control integrada (ICCB) conectado a Schuko (máx. 10A-16A).</li>
+                        <li><strong>Modo 3:</strong> Estación dedicada (Wallbox) con control continuo PWM y conector Tipo 2 Mennekes. (Estándar recomendado).</li>
+                        <li><strong>Modo 4:</strong> Carga rápida en corriente continua (DC - CCS Combo 2 / CHAdeMO) de 50 kW a 350 kW.</li>
+                    </ul>
+                </div>
             </section>
 
-            <!-- VISTA SOLAR FOTOVOLTAICA -->
+            <!-- VISTA SOLAR FOTOVOLTAICA AMPLIADA (ITC-BT-40) -->
             <section id="vista-solar" class="vista-section oculto">
                 <header>
                     <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>🌞 Solar Fotovoltaica (ITC-BT-40)</h1>
+                    <h1>🌞 Solar Fotovoltaica (ITC-BT-40 & RD 244/2019)</h1>
                 </header>
+
                 <div class="seccion-bloque">
+                    <h3 style="color: var(--azul-brillante); margin-top: 0;">⚡ Calculadora de Strings y Potencia Pico</h3>
                     <div class="calc-grid">
                         <div class="calc-field">
                             <label>Potencia por Panel (Wp):</label>
@@ -1173,17 +1256,68 @@
                     </div>
                     <button type="button" onclick="calcularSolar()" style="width: 100%;">Calcular Potencia Pico y String</button>
                     <div id="solar-res-box" class="resultado-caja oculto"></div>
-            </div>
+                </div>
+
+                <div class="seccion-bloque">
+                    <h3 style="color: var(--azul-brillante); margin-top: 0;">🛡️ Manual de Protecciones Obligatorias (Lado DC y Lado AC)</h3>
+                    <table class="tabla-normativa">
+                        <thead>
+                            <tr>
+                                <th>Zona</th>
+                                <th>Elemento Requerido</th>
+                                <th>Criterio Técnico Reglamentario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Lado DC</strong></td>
+                                <td>Fusibles gPV</td>
+                                <td>Dimensionados a <strong>1,5 × Isc</strong> del string (obligatorios con 3 o más strings en paralelo).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lado DC</strong></td>
+                                <td>Descargador de Sobretensiones (SPD)</td>
+                                <td>Tipo 2 para continua, tensión máxima de servicio según Voc en frío (600 V o 1000 V DC).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lado DC</strong></td>
+                                <td>Seccionador de Corte en Carga</td>
+                                <td>Corte omnipolar bajo carga para aislamiento seguro del inversor antes de mantenimiento.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lado AC</strong></td>
+                                <td>Interruptor Diferencial</td>
+                                <td>Sensibilidad 30 mA <strong>Clase A Superinmunizado</strong> o <strong>Tipo B</strong> (si no hay aislamiento galvánico).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lado AC</strong></td>
+                                <td>Magnetotérmico (PIA)</td>
+                                <td>Curva C dimensionado al <strong>125% de la corriente nominal</strong> de salida del inversor.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lado AC</strong></td>
+                                <td>Sobretensiones Transitorias y Permanentes</td>
+                                <td>Protección combinada obligatoria aguas arriba de la conexión de inyección.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Red</strong></td>
+                                <td>Sistema Anti-Isla (Relé de Red)</td>
+                                <td>Corte automático homologado (UNE-EN 50438) ante caída de la red distribuidora para proteger operarios.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
 
-            <!-- VISTA DOMÓTICA KNX -->
+            <!-- VISTA DOMÓTICA KNX & LABORATORIO ETS5 -->
             <section id="vista-knx" class="vista-section oculto">
                 <header>
                     <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
-                    <h1>🟢 Domótica Estándar KNX</h1>
+                    <h1>🟢 Domótica Estándar KNX & Software ETS5</h1>
                 </header>
+
                 <div class="seccion-bloque">
-                    <h3>Reglas Topológicas del Bus KNX TP-1</h3>
+                    <h3 style="color: var(--azul-brillante); margin-top: 0;">📐 Reglas Topológicas del Bus KNX TP-1 (Cable Verde)</h3>
                     <table class="tabla-normativa">
                         <thead>
                             <tr>
@@ -1196,27 +1330,32 @@
                             <tr>
                                 <td>Dispositivos por Línea</td>
                                 <td>64 dispositivos (con fuente estándar)</td>
-                                <td>Hasta 256 con fuentes desacopladas.</td>
+                                <td>Hasta 256 con fuentes desacopladas y sin repetidores.</td>
                             </tr>
                             <tr>
                                 <td>Longitud máxima de Línea</td>
                                 <td>1.000 metros</td>
-                                <td>Longitud total sumando todas las ramas.</td>
+                                <td>Longitud total sumando todas las ramas del segmento.</td>
                             </tr>
                             <tr>
                                 <td>Distancia Fuente - Dispositivo</td>
                                 <td>350 metros</td>
-                                <td>Distancia máxima de cable entre fuente y nodo.</td>
+                                <td>Garantiza una tensión mínima de 21 V DC en el nodo terminal.</td>
                             </tr>
                             <tr>
                                 <td>Distancia entre dos Dispositivos</td>
                                 <td>700 metros</td>
-                                <td>Para evitar colisiones CSMA/CA.</td>
+                                <td>Evita colisiones temporales en el protocolo CSMA/CA.</td>
+                            </tr>
+                            <tr>
+                                <td>Topología Permitida</td>
+                                <td>Árbol, Estrella, Línea</td>
+                                <td><strong>PROHIBIDO CERRAR ANILLOS O BUCLES</strong> (bucle infinito de telegramas).</td>
                             </tr>
                         </tbody>
                     </table>
 
-                    <h3 style="margin-top: 25px;">Generador de Direccionamiento Físico</h3>
+                    <h3 style="margin-top: 25px;">Generador de Direccionamiento Físico ETS</h3>
                     <div class="calc-grid">
                         <div class="calc-field">
                             <label>Área (0-15):</label>
@@ -1233,8 +1372,89 @@
                     </div>
                     <button type="button" onclick="generarKNX()" style="width: 100%;">Generar Direcciones KNX / ETS</button>
                     <div id="knx-res-box" class="resultado-caja oculto"></div>
-          </div>
-          </section>
+                </div>
+
+                <!-- GUÍA Y FLUJO DE TRABAJO ETS5 / ETS6 -->
+                <div class="seccion-bloque" style="border-top: 3px solid var(--azul-brillante);">
+                    <h3 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>💻</span> Flujo de Proyecto en ETS5 (Engineering Tool Software)
+                    </h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">
+                        Pasos metódicos para crear, configurar y volcar una instalación KNX desde el software ETS5:
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 15px;">
+                        <div style="background: var(--input-bg); padding: 14px; border-radius: 6px; border-left: 3px solid var(--azul-brillante);">
+                            <strong style="color: #fff;">1. Crear Proyecto e Importar:</strong>
+                            <p style="font-size: 0.85rem; color: #94a3b8; margin: 6px 0 0 0;">
+                                Definir nombre y topología (ej: 1.1). Importar los archivos de catálogo del fabricante (<code>.knxprod</code>) de pulsadores, actuadores y pasarelas.
+                            </p>
+                        </div>
+                        <div style="background: var(--input-bg); padding: 14px; border-radius: 6px; border-left: 3px solid var(--verde-ia);">
+                            <strong style="color: #fff;">2. Asignar Direcciones Físicas:</strong>
+                            <p style="font-size: 0.85rem; color: #94a3b8; margin: 6px 0 0 0;">
+                                Asignar la dirección <code>Área.Línea.Dispositivo</code> (ej: 1.1.1 para la fuente/interfaz, 1.1.2 para el actuador de conmutación).
+                            </p>
+                        </div>
+                        <div style="background: var(--input-bg); padding: 14px; border-radius: 6px; border-left: 3px solid var(--oro-candado);">
+                            <strong style="color: #fff;">3. Enlazar Direcciones de Grupo:</strong>
+                            <p style="font-size: 0.85rem; color: #94a3b8; margin: 6px 0 0 0;">
+                                Crear grupos funcionales (ej: <code>1/1/1 Luz Salón ON/OFF</code>) y arrastrar sobre él los Objetos de Comunicación del pulsador y del actuador.
+                            </p>
+                        </div>
+                        <div style="background: var(--input-bg); padding: 14px; border-radius: 6px; border-left: 3px solid #ef4444;">
+                            <strong style="color: #fff;">4. Descarga del Bus:</strong>
+                            <p style="font-size: 0.85rem; color: #94a3b8; margin: 6px 0 0 0;">
+                                Conectar mediante interfaz USB o IP router. Pulsar el botón de programación física en el equipo (LED rojo) y descargar aplicación y parámetros.
+                            </p>
+                        </div>
+                    </div>
+
+                    <h4 style="color: var(--texto-brillante); margin-top: 20px;">Tabla de Tipos de Puntos de Datos (DPT) en ETS5:</h4>
+                    <table class="tabla-normativa">
+                        <thead>
+                            <tr>
+                                <th>DPT (Data Point Type)</th>
+                                <th>Formato y Longitud</th>
+                                <th>Rango de Valores</th>
+                                <th>Aplicación Práctica</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>DPT 1.001</strong></td>
+                                <td>1 bit (Booleano)</td>
+                                <td>0 (OFF) / 1 (ON)</td>
+                                <td>Conmutación de luces, marcha/paro y alarmas.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DPT 3.007</strong></td>
+                                <td>4 bits (Control de paso)</td>
+                                <td>Atenuar / Aumentar</td>
+                                <td>Regulación dimmer relativa y subida/bajada de persianas.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DPT 5.001</strong></td>
+                                <td>1 byte (Entero 0-255)</td>
+                                <td>0 % a 100 %</td>
+                                <td>Posicionamiento porcentual de persiana o intensidad de luz.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DPT 9.001</strong></td>
+                                <td>2 bytes (Coma flotante)</td>
+                                <td>-273 °C a +670.760 °C</td>
+                                <td>Sondas de temperatura ambiente y climatización.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="margin-top: 15px; padding: 12px; background: var(--input-bg); border-radius: 6px;">
+                        <strong style="color: var(--azul-brillante);">Herramientas Oficiales de la Asociación KNX:</strong><br>
+                        • <a href="https://my.knx.org" target="_blank" rel="noopener noreferrer" style="color: var(--verde-ia); text-decoration: underline; font-weight: bold;">Portal MyKNX (Descarga de ETS5 / ETS6 Demo y Licencias) ↗</a><br>
+                        • <a href="https://www.knx.org/knx-software" target="_blank" rel="noopener noreferrer" style="color: var(--verde-ia); text-decoration: underline; font-weight: bold;">Curso Gratuito Oficial ETS eCampus (Con certificado y descuento de licencia) ↗</a>
+                    </div>
+                </div>
+            </section>
 
             <!-- VISTA DOMÓTICA INALÁMBRICA -->
             <section id="vista-domotica-inalambrica" class="vista-section oculto">
@@ -1275,9 +1495,9 @@
                             </tr>
                         </tbody>
                     </table>
-            </div>
+                </div>
 
-            <div class="seccion-bloque">
+                <div class="seccion-bloque">
                     <h3 style="color: var(--azul-brillante); margin-top: 0;">⚙️ Arquitectura de Enlace: Dispositivo → Pasarela → Google</h3>
                     <div class="calc-grid">
                         <div class="calc-field">
@@ -1309,7 +1529,7 @@
                     <div id="domotica-res-box" class="resultado-caja oculto">
                         <h4 style="margin-top: 0; color: var(--verde-ia);">✅ Informe de Validación de Red:</h4>
                         <p id="domotica-texto-resultado" style="color: #94a3b8; margin: 0;"></p>
-                </div>
+                    </div>
                 </div>
             </section>
 
@@ -1333,7 +1553,7 @@
                         <p>• <strong>IVA (21%):</strong> <span id="total-iva">0.00 €</span></p>
                         <p>• <strong>Total Factura:</strong> <span id="total-factura" style="color: var(--verde-ia); font-weight: bold; font-size: 1.1rem;">0.00 €</span></p>
                     </div>
-            </div>
+                </div>
             </section>
 
             <!-- VISTA TARIFAS -->
@@ -1364,7 +1584,7 @@
                         <p>• <strong>Desplazamiento:</strong> <span id="subtotal-desplazamiento">0.00 €</span></p>
                         <p>• <strong>Total Estimado:</strong> <span id="total-estimado" style="color: var(--verde-ia); font-weight: bold; font-size: 1.1rem;">0.00 €</span></p>
                     </div>
-            </div>
+                </div>
             </section>
 
         </main>
