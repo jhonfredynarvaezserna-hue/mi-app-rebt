@@ -3,26 +3,48 @@
 // ==========================================
 
 const TELEFONO_WHATSAPP = "34642269680";
-const CLAVE_MAESTRA = "JF-PRO-2026"; // Clave maestra única de acceso
 let destinoPendiente = null;
 
-// --- FUNCIÓN AUXILIAR DE FORMATEO MARKDOWN TÉCNICO ---
+// Hashes SHA-256 de las claves autorizadas
+// 1 Maestra (JF-ADMIN-2026-X) + 5 Clientes (JF-PRO-CLI-101 a 105)
+const CLAVES_HASH_VALIDAS = [
+    "ef592ddff62d1694eb38541e2b69dd073c6a4634f198f3ce57134268e378c805", // JF-ADMIN-2026-X (Tuya)
+    "e6c1e549175d2757270d41838618683bb51ea67858c4fdf4c6f9e6128fa7585f", // JF-PRO-CLI-101
+    "bf87be940ae0cfb3f9bcf01a35567b4382590fc3b89a8115598bb1cb79624823", // JF-PRO-CLI-102
+    "4c2975949514e820623a8c7db66a6a0b1bc6784d12bb80b7218b37651a7e44a4", // JF-PRO-CLI-103
+    "a87b508f7528e18cb66687ebff3ca5c0ce4cff7f12e8b6b077a28ebdf24a3501", // JF-PRO-CLI-104
+    "9c013b5bf95a5fbc40d249aa3b4dbbb0dffce14972d312bc656b2fcffae0a30b"  // JF-PRO-CLI-105
+];
+
+// Cálculo nativo SHA-256 seguro en el navegador
+async function generarHashSHA256(cadena) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(cadena.trim());
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// --- FUNCIÓN AUXILIAR DE FORMATEO (CON PROTECCIÓN XSS) ---
 function formatearTextoElena(texto) {
     if (!texto) return "";
-    let html = texto;
-    // Convierte enlaces Markdown [Texto](url) en enlaces clicables
-    html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--azul-brillante); text-decoration:underline; font-weight:bold;">$1 ↗</a>');
-    // Convierte negritas **texto**
-    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    // Convierte saltos de línea en <br>
-    html = html.replace(/\n/g, '<br>');
-    return html;
+    let seguro = texto
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    seguro = seguro.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--azul-brillante); text-decoration:underline; font-weight:bold;">$1 ↗</a>');
+    seguro = seguro.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    seguro = seguro.replace(/\n/g, '<br>');
+    return seguro;
 }
 
 // --- SISTEMA DE LICENCIAS PRO ---
 function tieneLicencia() {
-    const clave = localStorage.getItem("licencia_sm_activa");
-    return (clave === CLAVE_MAESTRA);
+    const hashGuardado = localStorage.getItem("licencia_sm_hash");
+    return CLAVES_HASH_VALIDAS.includes(hashGuardado);
 }
 
 function verificarYEntrar(idVista) {
@@ -46,13 +68,23 @@ function cerrarModalLicencia() {
     destinoPendiente = null;
 }
 
-function validarClaveAcceso() {
+async function validarClaveAcceso() {
     const inputEl = document.getElementById('input-clave-licencia');
     const val = inputEl ? inputEl.value.trim() : '';
     const err = document.getElementById('error-clave-licencia');
 
-    if (val === CLAVE_MAESTRA) {
-        localStorage.setItem("licencia_sm_activa", val);
+    if (!val) {
+        if (err) {
+            err.textContent = "❌ Por favor introduce una clave.";
+            err.style.display = 'block';
+        }
+        return;
+    }
+
+    const hashIngresado = await generarHashSHA256(val);
+
+    if (CLAVES_HASH_VALIDAS.includes(hashIngresado)) {
+        localStorage.setItem("licencia_sm_hash", hashIngresado);
         cerrarModalLicencia();
         actualizarBotonEstado();
 
@@ -62,7 +94,7 @@ function validarClaveAcceso() {
         }
     } else {
         if (err) {
-            err.textContent = "❌ Clave incorrecta";
+            err.textContent = "❌ Clave incorrecta o no válida";
             err.style.display = 'block';
         }
     }
@@ -70,8 +102,8 @@ function validarClaveAcceso() {
 
 function gestionarBotonLicencia() {
     if (tieneLicencia()) {
-        if (confirm("¿Deseas cerrar sesión y bloquear los módulos de nuevo?")) {
-            localStorage.removeItem("licencia_sm_activa");
+        if (confirm("¿Deseas cerrar sesión y bloquear los módulos Pro de nuevo?")) {
+            localStorage.removeItem("licencia_sm_hash");
             actualizarBotonEstado();
             abrirModuloDirecto('vista-inicio');
         }
@@ -110,7 +142,7 @@ function abrirModuloDirecto(idVista) {
     });
 }
 
-// --- SÍNTESIS DE VOZ DE ELENA (INGENIERA TÉCNICA) ---
+// --- SÍNTESIS DE VOZ DE ELENA ---
 function hablarComoElena(texto) {
     if (!('speechSynthesis' in window)) return;
 
@@ -161,6 +193,12 @@ function hablarComoElena(texto) {
     window.speechSynthesis.speak(utterance);
 }
 
+function silenciarAElena() {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+    }
+}
+
 // --- GESTOR TÉCNICO Y WHATSAPP ---
 function enviarConsultaWhatsApp() {
     const nombre = document.getElementById('gestor-nombre')?.value.trim() || 'Cliente';
@@ -174,7 +212,7 @@ function enviarConsultaWhatsApp() {
         `📝 *Detalle:* ${encodeURIComponent(mensaje)}`;
 
     const url = `https://wa.me/${TELEFONO_WHATSAPP}?text=${textoWhatsApp}`;
-    window.open(url, '_blank');
+    window.open(url, '_blank', 'noopener,noreferrer');
 }
 
 // ==========================================
@@ -401,7 +439,6 @@ async function consultarICTConIA() {
         hablarComoElena(raw);
     } catch (err) {
         console.warn("Error en consulta ICT online, cargando base técnica oficial:", err);
-        // Respaldo oficial ICT-2 con enlaces reales al BOE y tablas de dimensiones
         resBox.innerHTML = `
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
                 <span style="font-size:1.3rem;">📡📘</span>
@@ -426,8 +463,8 @@ async function consultarICTConIA() {
                 • Barra equipotencial conectada a tierra general con cable ≥ 25 mm² Cu.</p>
 
                 <p><strong>4. Enlaces Oficiales de Consulta:</strong><br>
-                • <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2011-5900" target="_blank" style="color:var(--azul-brillante); font-weight:bold;">Real Decreto 346/2011 (Reglamento ICT-2) ↗</a><br>
-                • <a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2019-14144" target="_blank" style="color:var(--azul-brillante); font-weight:bold;">Orden ECE/983/2019 (Actualización técnica ICT) ↗</a>
+                • <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2011-5900" target="_blank" rel="noopener noreferrer" style="color:var(--azul-brillante); font-weight:bold;">Real Decreto 346/2011 (Reglamento ICT-2) ↗</a><br>
+                • <a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2019-14144" target="_blank" rel="noopener noreferrer" style="color:var(--azul-brillante); font-weight:bold;">Orden ECE/983/2019 (Actualización técnica ICT) ↗</a>
                 </p>
             </div>
         `;
@@ -531,17 +568,17 @@ function calcularSolar() {
 
 // --- CÁLCULO MOTOR ---
 function calcularMotor() {
-    const kw = parseFloat(document.getElementById('motor-kw')?.value || document.getElementById('ind-potencia-motor')?.value || 5.5);
-    const v = parseFloat(document.getElementById('motor-voltaje')?.value || document.getElementById('ind-tension-red')?.value || 400);
-    const fp = parseFloat(document.getElementById('motor-fp')?.value || document.getElementById('ind-cos-phi')?.value || 0.85);
-    const rend = parseFloat(document.getElementById('motor-rend')?.value || document.getElementById('ind-rendimiento')?.value || 0.88);
+    const kw = parseFloat(document.getElementById('motor-kw')?.value || 5.5);
+    const v = parseFloat(document.getElementById('motor-voltaje')?.value || 400);
+    const fp = parseFloat(document.getElementById('motor-fp')?.value || 0.85);
+    const rend = parseFloat(document.getElementById('motor-rend')?.value || 0.88);
 
     const potenciaW = kw * 1000;
     const iNominal = potenciaW / (Math.sqrt(3) * v * fp * rend);
     const iRegulacionMin = (iNominal * 0.9).toFixed(1);
     const iRegulacionMax = (iNominal * 1.15).toFixed(1);
 
-    const box = document.getElementById('motor-res-box') || document.getElementById('resultado-calculo-motor');
+    const box = document.getElementById('motor-res-box');
     if (box) {
         box.classList.remove('oculto');
         box.innerHTML = `
@@ -560,7 +597,7 @@ function generarKNX() {
     const disp = document.getElementById('knx-dispositivo')?.value || 10;
     const dirFisica = `${area}.${linea}.${disp}`;
 
-    const box = document.getElementById('knx-res-box') || document.getElementById('resultado-knx');
+    const box = document.getElementById('knx-res-box');
     if (box) {
         box.classList.remove('oculto');
         box.innerHTML = `
@@ -572,7 +609,7 @@ function generarKNX() {
     }
 }
 
-// --- VIDEOTECA TÉCNICA (YOUTUBE REAL TÉCNICO) ---
+// --- VIDEOTECA TÉCNICA ---
 function cargarVideo(id, titulo) {
     const elTitulo = document.getElementById('video-titulo');
     const elIframe = document.getElementById('iframe-video') || document.getElementById('reproductor-youtube');
@@ -780,6 +817,7 @@ window.gestionarBotonLicencia = gestionarBotonLicencia;
 window.actualizarBotonEstado = actualizarBotonEstado;
 window.abrirModuloDirecto = abrirModuloDirecto;
 window.hablarComoElena = hablarComoElena;
+window.silenciarAElena = silenciarAElena;
 window.enviarConsultaWhatsApp = enviarConsultaWhatsApp;
 window.diagnosticarConIA = diagnosticarConIA;
 window.buscarTermino = buscarTermino;
