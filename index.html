@@ -945,6 +945,61 @@
                     <h1>⚙️ Automatismos Industriales, Piscinas & Riego</h1>
                 </header>
 
+                <!-- BLOQUE DIDÁCTICO: CONTACTOR ABB A26, TEMPORIZADOR Y FUSIBLE -->
+                <div class="seccion-bloque" style="border-top: 3px solid var(--azul-brillante);">
+                    <h3 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>🔌</span> Desglose Práctico de Maniobra: Contactor ABB, Temporizador y Fusible
+                    </h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">
+                        Identificación técnica, marcado de bornas y función de cada elemento real en este conjunto de taller para arranque de motores:
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; align-items: start; margin-top: 15px;">
+                        
+                        <!-- FOTO REAL DEL CONJUNTO -->
+                        <div style="background: #0f172a; border: 1px solid var(--bordes); border-radius: 8px; padding: 10px; text-align: center;">
+                            <img src="taller-contactor-abb.jpg" alt="Contactor ABB A26 con Temporizador y Portafusibles" style="width: 100%; max-height: 420px; object-fit: contain; border-radius: 6px; display: block; margin: 0 auto; background: #0c1520;">
+                            <span style="display: block; font-size: 0.75rem; color: #64748b; margin-top: 6px;">Montaje real de taller: ABB A26-30-10 + Relé de Tiempo + Base Seccionable</span>
+                        </div>
+
+                        <!-- EXPLICACIÓN TÉCNICA PASO A PASO -->
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            
+                            <!-- 1. TEMPORIZADOR -->
+                            <div style="background: var(--input-bg); padding: 14px; border-radius: 6px; border-left: 3px solid #38bdf8;">
+                                <strong style="color: #fff; font-size: 0.95rem;">⏱️ 1. Módulo Temporizador (Type 0335 - 120s)</strong>
+                                <p style="margin: 6px 0 0 0; font-size: 0.85rem; color: #94a3b8; line-height: 1.5;">
+                                    • <strong>Función:</strong> Temporizador de retardo regulable hasta 120 segundos (tensión de trabajo 230V AC/DC).<br>
+                                    • <strong>Aplicación:</strong> Conmutación automática en arranques <strong>Estrella-Triángulo (Y-Δ)</strong>, retardo al paro de ventiladores de extracción o escalonamiento de bombas para evitar golpes de ariete.<br>
+                                    • <strong>Conexión:</strong> Se alimenta por los dos hilos superiores con terminales de puntera azul para excitar o desenclavar la bobina de control tras el tiempo programado.
+                                </p>
+                            </div>
+
+                            <!-- 2. CONTACTOR ABB -->
+                            <div style="background: var(--input-bg); padding: 14px; border-radius: 6px; border-left: 3px solid #ef4444;">
+                                <strong style="color: #fff; font-size: 0.95rem;">⚡ 2. Contactor Tripolar ABB A26-30-10</strong>
+                                <p style="margin: 6px 0 0 0; font-size: 0.85rem; color: #94a3b8; line-height: 1.5;">
+                                    • <strong>Significado de A26-30-10:</strong> Calibre de 26 Amperios nominales en categoría AC-3 (motores trifásicos de hasta 11 kW a 400V). El <strong>"30"</strong> indica 3 polos de potencia normalmente abiertos; el <strong>"10"</strong> indica 1 contacto auxiliar NA integrado.<br>
+                                    • <strong>Circuito de Potencia (Fuerza):</strong> Entrada de las fases por bornas superiores <code>1L1, 3L2, 5L3</code> y salida hacia el motor por <code>2T1, 4T2, 6T3</code>.<br>
+                                    • <strong>Bobina Electromagnética:</strong> Bornas <code>A1 y A2</code> (cable azul superior con terminal de horquilla roja). Al recibir 230V atrae la armadura móvil cerrando los contactos.<br>
+                                    • <strong>Contacto de Retención:</strong> Bornas <code>13NO y 14NO</code>. Se conecta en paralelo con el pulsador de marcha (S2) para mantener el contactor activado al soltar el botón.
+                                </p>
+                            </div>
+
+                            <!-- 3. SECCIONADOR PORTAFUSIBLES -->
+                            <div style="background: var(--input-bg); padding: 14px; border-radius: 6px; border-left: 3px solid var(--oro-candado);">
+                                <strong style="color: #fff; font-size: 0.95rem;">🛡️ 3. Seccionador Portafusibles de Maniobra (Inferior)</strong>
+                                <p style="margin: 6px 0 0 0; font-size: 0.85rem; color: #94a3b8; line-height: 1.5;">
+                                    • <strong>Función:</strong> Protección individualizada del circuito de mando y bobinas mediante cartucho fusible cilíndrico (calibre 31,5).<br>
+                                    • <strong>Seguridad Técnica:</strong> Si se produce un cortocircuito en la bobina o en el temporizador, el fusible funde aislando la maniobra sin disparar las protecciones generales de fuerza del taller.<br>
+                                    • <strong>Aislamiento Visible:</strong> Su maneta negra basculante permite abrir el circuito mecánicamente para realizar pruebas o reparaciones sin riesgo eléctrico.
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
                 <div class="seccion-bloque" style="border-top: 3px solid var(--azul-brillante);">
                     <h3 style="color: var(--azul-brillante); margin-top: 0; display: flex; align-items: center; gap: 8px;">
                         <span>🛡️</span> Protección ante Fugas de Corriente: Interruptor Diferencial
@@ -1396,7 +1451,7 @@
                                 Crear grupos funcionales (ej: <code>1/1/1 Luz Salón ON/OFF</code>) y arrastrar sobre él los Objetos de Comunicación del pulsador y del actuador.
                             </p>
                         </div>
-                        <div style="background: var(--input-bg); padding: 14px; border-radius: 6px; border-left: 3px solid #ef4444;">
+                        <div style="background: var(--input-bg); padding: 14px; border-radius: 6px; border-left: 3px solid var(--ef4444);">
                             <strong style="color: #fff;">4. Descarga del Bus:</strong>
                             <p style="font-size: 0.85rem; color: #94a3b8; margin: 6px 0 0 0;">
                                 Conectar mediante interfaz USB o IP router. Pulsar el botón de programación física en el equipo (LED rojo) y descargar aplicación y parámetros.
