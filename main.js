@@ -60,7 +60,6 @@ function cerrarModalLicencia() {
 
 function validarClaveAcceso() {
     const inputEl = document.getElementById('input-clave-licencia');
-    // Convierte a mayúsculas y quita espacios para evitar fallos tontos
     const val = inputEl ? inputEl.value.trim().toUpperCase() : '';
     const err = document.getElementById('error-clave-licencia');
 
@@ -626,7 +625,6 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("Servicio y Gestión SM iniciado correctamente");
     actualizarBotonEstado();
 
-    // Soporte para Enter en el campo de clave de licencia
     const inputClaveModal = document.getElementById('input-clave-licencia');
     if (inputClaveModal) {
         inputClaveModal.addEventListener('keypress', (e) => {
@@ -802,6 +800,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ==========================================
+// REGISTRO SERVICE WORKER (MODO OFFLINE PWA)
+// ==========================================
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('Service Worker registrado correctamente en Servicio y Gestión SM:', reg.scope))
+            .catch(err => console.log('Error en el registro del Service Worker:', err));
+    });
+}
 
 // ==========================================
 // EXPOSICIÓN GLOBAL DE FUNCIONES
