@@ -5,25 +5,15 @@
 const TELEFONO_WHATSAPP = "34642269680";
 let destinoPendiente = null;
 
-// Hashes SHA-256 de las claves autorizadas
-// 1 Maestra (JF-ADMIN-2026-X) + 5 Clientes (JF-PRO-CLI-101 a 105)
-const CLAVES_HASH_VALIDAS = [
-    "ef592ddff62d1694eb38541e2b69dd073c6a4634f198f3ce57134268e378c805", // JF-ADMIN-2026-X (Tuya)
-    "e6c1e549175d2757270d41838618683bb51ea67858c4fdf4c6f9e6128fa7585f", // JF-PRO-CLI-101
-    "bf87be940ae0cfb3f9bcf01a35567b4382590fc3b89a8115598bb1cb79624823", // JF-PRO-CLI-102
-    "4c2975949514e820623a8c7db66a6a0b1bc6784d12bb80b7218b37651a7e44a4", // JF-PRO-CLI-103
-    "a87b508f7528e18cb66687ebff3ca5c0ce4cff7f12e8b6b077a28ebdf24a3501", // JF-PRO-CLI-104
-    "9c013b5bf95a5fbc40d249aa3b4dbbb0dffce14972d312bc656b2fcffae0a30b"  // JF-PRO-CLI-105
+// Lista de claves autorizadas (1 Maestra + 5 Clientes)
+const CLAVES_VALIDAS = [
+    "JF-ADMIN-2026-X", // Tuya (Maestra)
+    "JF-PRO-CLI-101",  // Cliente 1
+    "JF-PRO-CLI-102",  // Cliente 2
+    "JF-PRO-CLI-103",  // Cliente 3
+    "JF-PRO-CLI-104",  // Cliente 4
+    "JF-PRO-CLI-105"   // Cliente 5
 ];
-
-// Cálculo nativo SHA-256 seguro en el navegador
-async function generarHashSHA256(cadena) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(cadena.trim());
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
 
 // --- FUNCIÓN AUXILIAR DE FORMATEO (CON PROTECCIÓN XSS) ---
 function formatearTextoElena(texto) {
@@ -43,8 +33,8 @@ function formatearTextoElena(texto) {
 
 // --- SISTEMA DE LICENCIAS PRO ---
 function tieneLicencia() {
-    const hashGuardado = localStorage.getItem("licencia_sm_hash");
-    return CLAVES_HASH_VALIDAS.includes(hashGuardado);
+    const claveGuardada = localStorage.getItem("licencia_sm_activa");
+    return CLAVES_VALIDAS.includes(claveGuardada);
 }
 
 function verificarYEntrar(idVista) {
@@ -68,9 +58,10 @@ function cerrarModalLicencia() {
     destinoPendiente = null;
 }
 
-async function validarClaveAcceso() {
+function validarClaveAcceso() {
     const inputEl = document.getElementById('input-clave-licencia');
-    const val = inputEl ? inputEl.value.trim() : '';
+    // Convierte a mayúsculas y quita espacios para evitar fallos tontos
+    const val = inputEl ? inputEl.value.trim().toUpperCase() : '';
     const err = document.getElementById('error-clave-licencia');
 
     if (!val) {
@@ -81,10 +72,8 @@ async function validarClaveAcceso() {
         return;
     }
 
-    const hashIngresado = await generarHashSHA256(val);
-
-    if (CLAVES_HASH_VALIDAS.includes(hashIngresado)) {
-        localStorage.setItem("licencia_sm_hash", hashIngresado);
+    if (CLAVES_VALIDAS.includes(val)) {
+        localStorage.setItem("licencia_sm_activa", val);
         cerrarModalLicencia();
         actualizarBotonEstado();
 
@@ -103,7 +92,7 @@ async function validarClaveAcceso() {
 function gestionarBotonLicencia() {
     if (tieneLicencia()) {
         if (confirm("¿Deseas cerrar sesión y bloquear los módulos Pro de nuevo?")) {
-            localStorage.removeItem("licencia_sm_hash");
+            localStorage.removeItem("licencia_sm_activa");
             actualizarBotonEstado();
             abrirModuloDirecto('vista-inicio');
         }
@@ -636,6 +625,14 @@ function cargarVideoTecnico(index) {
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Servicio y Gestión SM iniciado correctamente");
     actualizarBotonEstado();
+
+    // Soporte para Enter en el campo de clave de licencia
+    const inputClaveModal = document.getElementById('input-clave-licencia');
+    if (inputClaveModal) {
+        inputClaveModal.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') validarClaveAcceso();
+        });
+    }
 
     const inputBusqueda = document.getElementById('entrada-busqueda');
     if (inputBusqueda) {
