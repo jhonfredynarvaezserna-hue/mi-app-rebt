@@ -1,6 +1,5 @@
 // ==========================================
-// SERVICIO Y GESTIÓN SM - API DE ELENA
-// Gemini API mediante REST
+// SERVICIO Y GESTIÓN SM - API DEL AGENTE GLOBAL (VERSIÓN COMPLETA)
 // ==========================================
 
 export default async function handler(req, res) {
@@ -16,52 +15,32 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // ------------------------------------------
-  // Solo permitimos POST
-  // ------------------------------------------
   if (req.method !== 'POST') {
-    return res.status(405).json({
-      error: 'Método no permitido'
-    });
+    return res.status(405).json({ error: 'Método no permitido' });
   }
 
-  // ------------------------------------------
-  // API KEY
-  // ------------------------------------------
-  const apiKey =
-    process.env.GEMINI_API_KEY ||
-    process.env.GEMINI_KEY;
+  const apiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_KEY;
 
   if (!apiKey) {
     console.error('ERROR: No existe GEMINI_API_KEY');
-
-    return res.status(500).json({
-      error: 'Falta configurar GEMINI_API_KEY en Vercel.'
-    });
+    return res.status(500).json({ error: 'Falta configurar GEMINI_API_KEY en Vercel.' });
   }
 
   try {
-
-    // ------------------------------------------
-    // RECIBIR PROMPT
-    // ------------------------------------------
     const body = req.body || {};
-    const prompt = typeof body.prompt === 'string'
-      ? body.prompt.trim()
-      : '';
+    const prompt = typeof body.prompt === 'string' ? body.prompt.trim() : '';
 
     if (!prompt) {
-      return res.status(400).json({
-        error: 'El mensaje está vacío.'
-      });
+      return res.status(400).json({ error: 'El mensaje está vacío.' });
     }
 
     // ------------------------------------------
-    // INSTRUCCIONES AVANZADAS DE ELENA
+    // INSTRUCCIONES TÉCNICAS COMPLETAS + CITAS + PAGOS
     // ------------------------------------------
     const sistemaInstruccion = `
-Eres Elena, ingeniera técnica industrial y eléctrica de la empresa "Servicio y Gestión SM" en España.
-Tu función es asesorar con el máximo rigor reglamentario, técnico y didáctico a instaladores autorizados, técnicos y electricistas.
+Eres el agente virtual oficial de la empresa "Servicio y Gestión SM" en Alicante.
+Tu imagen visual es la de un técnico especialista experto (con gafas, entorno profesional con polímetro, autómatas Siemens LOGO! y paneles KNX).
+Tu función es asesorar con el máximo rigor reglamentario, técnico y didáctico en todo el abanico de servicios: averías eléctricas urgentes, climatización, instalaciones REBT, domótica KNX, automatismos industriales, placas solares, interiorismo y proyectos de ampliación.
 
 Tus áreas de especialización exhaustiva abarcan:
 
@@ -100,122 +79,70 @@ Tus áreas de especialización exhaustiva abarcan:
    - Registros Secundarios y RTR de vivienda: armario de 500 × 600 × 80 mm con enchufe doble conectado al circuito C2 del REBT.
    - Parámetros de señal: Niveles TDT (47 a 70 dBµV con C/N ≥ 25 dB) y FI Satélite (47 a 77 dBµV con C/N ≥ 11 dB). Roseta óptica FTTH con conectores monomodo SC/APC (atenuación total < 2 dB) y filtro LTE 5G con corte en canal 48 (694 MHz).
 
+6. GESTIÓN DE CITAS, URGENCIAS Y MONETIZACIÓN DE AMPLIACIONES:
+   - Citas y Averías: Si el cliente agenda una revisión, mantenimiento de aire o avería eléctrica urgente, recaba los datos y añade al final:
+     [CITA_CONFIRMADA: {"tipo": "cita_o_urgencia", "nombre": "...", "servicio": "...", "fechaHora": "YYYY-MM-DDTHH:mm:00"}]
+   - Consultas Avanzadas / Pagos: Si solicitan estudios profundos (como diseño solar avanzado, interiorismo técnico o ampliaciones complejas), dale asesoramiento base y añade al final:
+     [ACTIVAR_PAGO: {"concepto": "Estudio / Proyecto Técnico Avanzado", "precio": "XX.XX"}]
+
 Pautas de redacción:
-- Responde siempre en español y en primera persona femenina ("Soy Elena, ingeniera técnica...").
-- Ve directa al grano, con explicaciones claras, prácticas y aplicables en obra o taller.
-- Estructura las respuestas con etiquetas HTML sencillas para facilitar la visualización: <strong>, <br>, <ul> y <li>.
-- NUNCA dejes la respuesta a medias ni la cortes bruscamente; finaliza cada apartado con cifras, secciones en mm², presiones, amperajes o voltajes exactos.
-- Cita siempre el Real Decreto, la ITC o la norma UNE de aplicación correspondiente.
+- Responde siempre en español y con un tono técnico, profesional y riguroso.
+- Estructura las respuestas con etiquetas HTML sencillas: <strong>, <br>, <ul> y <li>.
+- NUNCA dejes la respuesta a medias; finaliza cada apartado con cifras exactas, secciones en mm², amperajes o voltajes.
+- Cita siempre el Real Decreto, la ITC o la norma UNE correspondiente.
 `;
 
-    // ------------------------------------------
-    // URL GEMINI
-    // ------------------------------------------
-    const url =
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
-    // ------------------------------------------
-    // PETICIÓN A GEMINI
-    // ------------------------------------------
     const respuestaGemini = await fetch(url, {
       method: 'POST',
-
       headers: {
         'Content-Type': 'application/json',
         'x-goog-api-key': apiKey
       },
-
       body: JSON.stringify({
-
         systemInstruction: {
-          parts: [
-            {
-              text: sistemaInstruccion
-            }
-          ]
+          parts: [{ text: sistemaInstruccion }]
         },
-
         contents: [
           {
             role: 'user',
-            parts: [
-              {
-                text: prompt
-              }
-            ]
+            parts: [{ text: prompt }]
           }
         ],
-
         generationConfig: {
           temperature: 0.25,
           maxOutputTokens: 8192
         }
-
       })
     });
 
-    // ------------------------------------------
-    // LEER RESPUESTA DE GOOGLE
-    // ------------------------------------------
     const datos = await respuestaGemini.json();
 
-    // ------------------------------------------
-    // SI GEMINI DEVUELVE ERROR
-    // ------------------------------------------
     if (!respuestaGemini.ok) {
-
-      console.error(
-        'Error de Gemini:',
-        JSON.stringify(datos, null, 2)
-      );
-
-      const mensajeGoogle =
-        datos?.error?.message ||
-        'Error desconocido de Gemini';
-
+      console.error('Error de Gemini:', JSON.stringify(datos, null, 2));
       return res.status(respuestaGemini.status).json({
         error: 'Gemini ha rechazado la solicitud.',
-        details: mensajeGoogle
+        details: datos?.error?.message || 'Error desconocido'
       });
     }
 
-    // ------------------------------------------
-    // EXTRAER TEXTO
-    // ------------------------------------------
-    const textoRespuesta =
-      datos?.candidates?.[0]?.content?.parts
-        ?.map(part => part.text || '')
-        .join('')
-        .trim();
+    const textoRespuesta = datos?.candidates?.[0]?.content?.parts
+      ?.map(part => part.text || '')
+      .join('')
+      .trim();
 
     if (!textoRespuesta) {
-
-      console.error(
-        'Gemini respondió sin texto:',
-        JSON.stringify(datos, null, 2)
-      );
-
-      return res.status(502).json({
-        error: 'Gemini no devolvió texto.',
-        details: 'La respuesta no contiene candidates/content/parts.'
-      });
+      return res.status(502).json({ error: 'Gemini no devolvió texto.' });
     }
 
-    // ------------------------------------------
-    // RESPUESTA FINAL A MAIN.JS
-    // ------------------------------------------
     return res.status(200).json({
       text: textoRespuesta,
       respuesta: textoRespuesta
     });
 
   } catch (error) {
-
-    console.error(
-      'ERROR INTERNO API ELENA:',
-      error
-    );
-
+    console.error('ERROR INTERNO API:', error);
     return res.status(500).json({
       error: 'Error interno del servidor.',
       details: error?.message || String(error)
