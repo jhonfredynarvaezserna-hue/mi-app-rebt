@@ -28,7 +28,11 @@ export default async function handler(req, res) {
 
   try {
     const body = req.body || {};
-    const prompt = typeof body.prompt === 'string' ? body.prompt.trim() : '';
+
+    // Acepta el mensaje venga como "prompt" o como "message"
+    // (por ejemplo, Make/Integromat suele mandarlo como "message")
+    const rawPrompt = body.prompt ?? body.message ?? '';
+    const prompt = typeof rawPrompt === 'string' ? rawPrompt.trim() : '';
 
     if (!prompt) {
       return res.status(400).json({ error: 'El mensaje está vacío.' });
