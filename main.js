@@ -1,8 +1,7 @@
 // ==========================================
-// SERVICIO Y GESTIÓN SM - LÓGICA PRINCIPAL
+// J.F - LÓGICA PRINCIPAL
 // ==========================================
 
-const TELEFONO_WHATSAPP = "34642269680";
 let destinoPendiente = null;
 
 // Lista de claves autorizadas (1 Maestra + 5 Clientes)
@@ -188,19 +187,24 @@ function silenciarAElena() {
 }
 
 // --- GESTOR TÉCNICO Y WHATSAPP ---
+// Único número de contacto: J.F
+const TELEFONO_JF = "34642269680";
+
 function enviarConsultaWhatsApp() {
     const nombre = document.getElementById('gestor-nombre')?.value.trim() || 'Cliente';
     const tipo = document.getElementById('gestor-tipo')?.value || 'Consulta General';
     const mensaje = document.getElementById('gestor-mensaje')?.value.trim() || 'Sin detalles adicionales.';
 
-    const textoWhatsApp =
-        `*CONSULTA TÉCNICA - GESTIÓN SM*%0A` +
-        `👤 *Nombre:* ${encodeURIComponent(nombre)}%0A` +
-        `🏷️ *Tipo:* ${encodeURIComponent(tipo)}%0A` +
-        `📝 *Detalle:* ${encodeURIComponent(mensaje)}`;
+    const texto =
+        `*CONSULTA TÉCNICA - J.F*\n` +
+        `👤 *Nombre:* ${nombre}\n` +
+        `🏷️ *Tipo:* ${tipo}\n` +
+        `📝 *Detalle:* ${mensaje}`;
 
-    const url = `https://wa.me/${TELEFONO_WHATSAPP}?text=${textoWhatsApp}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
+    const url = `https://wa.me/${TELEFONO_JF}?text=${encodeURIComponent(texto)}`;
+
+    // location.href en vez de window.open: funciona correctamente dentro de WebView/PWA/App empaquetada
+    window.location.href = url;
 }
 
 // ==========================================
@@ -622,7 +626,7 @@ function cargarVideoTecnico(index) {
 // INICIALIZACIÓN DE EVENTOS DEL DOM
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Servicio y Gestión SM iniciado correctamente");
+    console.log("J.F iniciado correctamente");
     actualizarBotonEstado();
 
     const inputClaveModal = document.getElementById('input-clave-licencia');
@@ -807,7 +811,7 @@ document.addEventListener('DOMContentLoaded', () => {
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('Service Worker registrado correctamente en Servicio y Gestión SM:', reg.scope))
+            .then(reg => console.log('Service Worker registrado correctamente en J.F:', reg.scope))
             .catch(err => console.log('Error en el registro del Service Worker:', err));
     });
 }
