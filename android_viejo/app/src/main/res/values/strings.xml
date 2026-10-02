@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">JF Plataforma Tecnica</string>
+    <string name="title_activity_main">JF Plataforma Tecnica</string>
+    <string name="package_name">com.jfaires.app</string>
+    <string name="custom_url_scheme">com.jfaires.app</string>
+</resources>

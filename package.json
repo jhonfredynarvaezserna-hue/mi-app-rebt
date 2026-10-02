@@ -1,13 +1,17 @@
 {
-  "name": "servicio-gestion-sm",
+  "name": "jf-aires-lacala",
   "version": "1.0.0",
-  "type": "module",
-  "description": "Plataforma Integral de Normativa, Ingeniería y Gestión Eléctrica (REBT, RITE, ICT-2, KNX, Fotovoltaica)",
+  "type": "commonjs",
+  "description": "Plataforma Integral de Normativa, Ingeniería y Gestión Eléctrica y Climática (J.F & Aires La Cala)",
+  "main": "server.js",
   "scripts": {
-    "start": "npx live-server --port=8080",
-    "dev": "npx live-server --port=8080"
+    "start": "node server.js"
   },
-  "devDependencies": {
-    "live-server": "^1.2.2"
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@google/generative-ai": "^0.24.1",
+    "express": "^4.19.2"
   }
 }
