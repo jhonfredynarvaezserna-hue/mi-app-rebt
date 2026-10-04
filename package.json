@@ -1,17 +1,9 @@
 {
-  "name": "jf-aires-lacala",
+  "name": "jf-clima-electricidad",
   "version": "1.0.0",
-  "type": "commonjs",
-  "description": "Plataforma Integral de Normativa, Ingeniería y Gestión Eléctrica y Climática (J.F & Aires La Cala)",
-  "main": "server.js",
+  "private": true,
+  "type": "module",
   "scripts": {
     "start": "node server.js"
-  },
-  "dependencies": {
-    "@capacitor/android": "^8.5.2",
-    "@capacitor/cli": "^8.5.2",
-    "@capacitor/core": "^8.5.2",
-    "@google/generative-ai": "^0.24.1",
-    "express": "^4.19.2"
   }
 }

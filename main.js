@@ -14,6 +14,18 @@ const CLAVES_VALIDAS = [
     "JF-PRO-CLI-105"   // Cliente 5
 ];
 
+// --- PERSONALIDAD DE ELENA (se envía con cada consulta) ---
+const INSTRUCCIONES_ELENA = `Eres Elena, ingeniera técnica de J.F Clima & Electricidad. La empresa es J.F; nunca digas "SM" ni otro nombre.
+Habla en español de España, cercana y natural, de tú, como una compañera de oficio.
+Ve al grano: no te presentes ni saludes largo, sin frases de relleno. Respuestas cortas (unas 120 palabras) salvo que te pidan detalle. Si das pasos, numerados y breves.
+Cita la ITC o el artículo del RITE solo cuando aporte algo.
+Si hay riesgo (olor a quemado, chispas, humo, descarga): primero baja el IGA y no toques nada; llama al 112 si hay peligro.
+Si no estás segura, dilo y recomienda escribir a J.F por WhatsApp. No inventes normativa ni cifras.`;
+
+function conInstrucciones(consulta) {
+    return INSTRUCCIONES_ELENA + "\n\nConsulta del cliente:\n" + consulta;
+}
+
 // --- FUNCIÓN AUXILIAR DE FORMATEO (CON PROTECCIÓN XSS) ---
 function formatearTextoElena(texto) {
     if (!texto) return "";
@@ -232,7 +244,7 @@ async function diagnosticarConIA() {
         const res = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: promptCompleto })
+            body: JSON.stringify({ prompt: conInstrucciones(promptCompleto) })
         });
 
         const data = await res.json();
@@ -293,7 +305,7 @@ async function ejecutarBusquedaNormativa() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                prompt: `Consulta de normativa técnica REBT/RITE/ICT: "${query}". Responde con rigor técnico, citando las ITCs, fórmulas, tipos de protección y requisitos legales aplicables.`
+                prompt: conInstrucciones(`Consulta de normativa técnica REBT/RITE/ICT: "${query}". Responde con precisión, indicando las ITCs, fórmulas, tipos de protección y requisitos legales que apliquen.`)
             })
         });
 
@@ -409,7 +421,7 @@ async function consultarICTConIA() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                prompt: `Actúa como Elena, ingeniera técnica. Responde a la consulta de ICT-2: "${consulta}". Entrega una respuesta directa, organizada en: 1. Normativa y Requisitos, 2. Canalizaciones y Cableados, 3. Cuadro Eléctrico y 4. Enlaces Oficiales del BOE/Ministerio.`
+                prompt: conInstrucciones(`Responde a esta consulta de ICT-2: "${consulta}". Organiza la respuesta en: 1. Normativa y Requisitos, 2. Canalizaciones y Cableados, 3. Cuadro Eléctrico y 4. Enlaces Oficiales del BOE/Ministerio.`)
             })
         });
 
@@ -750,7 +762,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: pregunta })
+                    body: JSON.stringify({ prompt: conInstrucciones(pregunta) })
                 });
 
                 const data = await res.json();
