@@ -20,7 +20,7 @@ function demasiadasPeticiones(ip) {
   return lista.length > MAX_POR_MINUTO;
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
 
   if (req.method !== "POST") {
@@ -97,4 +97,4 @@ export default async function handler(req, res) {
     console.error("Fallo al llamar a Gemini:", err);
     return res.status(500).json({ error: "Error interno del servidor." });
   }
-}
+};
