@@ -1,7 +1,7 @@
 // ==========================================
-// api/chat.js  ·  Función de Vercel para Elena y las propuestas KNX
+// api/chat.js  ·  Función para Elena y las propuestas KNX
 // Recibe { prompt } (o { message }) y devuelve { text }.
-// La clave se lee de la variable de entorno GEMINI_API_KEY (panel de Vercel).
+// La clave se lee de la variable de entorno GEMINI_API_KEY.
 // ==========================================
 
 const MODELO = process.env.GEMINI_MODEL || "gemini-2.5-flash";
@@ -9,7 +9,7 @@ const MAX_CARACTERES = 8000;      // tamaño máximo de cada consulta
 const MAX_POR_MINUTO = 15;        // consultas por minuto y por IP
 const MAX_SALIDA = 8192;          // tokens máximos de respuesta
 
-// Límite básico por IP (en memoria: frena abusos simples, no es un límite perfecto)
+// Límite básico por IP (en memoria)
 const registro = new Map();
 function demasiadasPeticiones(ip) {
   const ahora = Date.now();
@@ -22,6 +22,13 @@ function demasiadasPeticiones(ip) {
 
 module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
 
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método no permitido. Usa POST." });
@@ -29,7 +36,7 @@ module.exports = async function handler(req, res) {
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    console.error("Falta la variable GEMINI_API_KEY en Vercel");
+    console.error("Falta la variable GEMINI_API_KEY en el entorno");
     return res.status(500).json({ error: "El servidor no está configurado todavía." });
   }
 
@@ -53,7 +60,6 @@ module.exports = async function handler(req, res) {
   }
 
   const generationConfig = { maxOutputTokens: MAX_SALIDA, temperature: 0.4 };
-  // En Gemini 2.5 Flash se desactiva el "pensamiento" para que no consuma la respuesta
   if (MODELO.startsWith("gemini-2.5-flash")) {
     generationConfig.thinkingConfig = { thinkingBudget: 0 };
   }
@@ -74,7 +80,6 @@ module.exports = async function handler(req, res) {
     const data = await r.json().catch(() => ({}));
 
     if (!r.ok) {
-      // El detalle real solo se guarda en los Logs de Vercel, no se enseña al usuario
       console.error("Error de Gemini:", r.status, JSON.stringify(data).slice(0, 500));
       const msg = r.status === 429
         ? "El servicio de IA está saturado. Inténtalo en un minuto."
