@@ -1,0 +1,140 @@
+<!--
+=====================================================================
+PARCHES PARA TU index.html  (4 pasos, cada bloque se pega entero)
+=====================================================================
+
+PASO 1 · MENÚ LATERAL
+Busca:   <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-industrial')">
+Pega ESTA línea justo ANTES de esa:
+-->
+<li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-vuelta-auto')"><span>🔁 Inversión de giro</span></a></li>
+
+
+<!--
+PASO 2 · SECCIÓN NUEVA
+Busca:   </main>
+Pega TODO este bloque justo ANTES de </main>
+-->
+<section id="vista-vuelta-auto" class="vista-section oculto">
+    <header>
+        <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+        <h1>🔁 Inversión de giro con vuelta automática</h1>
+    </header>
+
+    <div class="seccion-bloque">
+        <h3 style="color:var(--azul-brillante); margin-top:0;">Elementos del circuito</h3>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px;">
+            <div style="background:var(--input-bg); padding:12px; border-radius:6px; border-left:3px solid var(--azul-brillante);"><strong>S1 (NA)</strong><br><span style="font-size:.88rem; color:#94a3b8;">Marcha del giro 1.</span></div>
+            <div style="background:var(--input-bg); padding:12px; border-radius:6px; border-left:3px solid #ef4444;"><strong>S3 (NC)</strong><br><span style="font-size:.88rem; color:#94a3b8;">Paro general.</span></div>
+            <div style="background:var(--input-bg); padding:12px; border-radius:6px; border-left:3px solid var(--verde-ia);"><strong>Q11 / Q12</strong><br><span style="font-size:.88rem; color:#94a3b8;">Contactores de cada sentido, con autorretención 13-14.</span></div>
+            <div style="background:var(--input-bg); padding:12px; border-radius:6px; border-left:3px solid var(--oro-candado);"><strong>B1 (NC + NA)</strong><br><span style="font-size:.88rem; color:#94a3b8;">Corta Q11 y conecta Q12.</span></div>
+            <div style="background:var(--input-bg); padding:12px; border-radius:6px; border-left:3px solid var(--oro-candado);"><strong>B2 (NC)</strong><br><span style="font-size:.88rem; color:#94a3b8;">Corta Q12 al final de la vuelta.</span></div>
+        </div>
+        <div class="resultado-caja">
+            <ol style="margin:0;">
+                <li>S1 activa Q11 y se mantiene por autorretención.</li>
+                <li>Al llegar a B1: su NC desconecta Q11 y su NA conecta Q12.</li>
+                <li>Q12 se mantiene y el motor retrocede hasta B2.</li>
+                <li>B2 corta Q12. S3 para todo en cualquier momento.</li>
+            </ol>
+        </div>
+        <p style="font-size:.85rem; color:#f59e0b; margin-bottom:0;">⚠️ En el montaje real añade un NC de Q12 en serie con Q11 (y al revés) como enclavamiento.</p>
+    </div>
+
+    <div class="seccion-bloque">
+        <h3 style="margin-top:0;">🎮 Simulador de vuelta automática</h3>
+        <div class="cade-cuadro">
+            <div style="position:relative; height:46px; background:#1e293b; border-radius:6px; margin:10px 0 20px 0;" id="va-riel">
+                <div id="va-fc2" style="position:absolute; left:0; top:-8px; width:34px; height:60px; border-radius:4px; background:#334155; border:2px solid #475569; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:bold;">B2</div>
+                <div id="va-fc1" style="position:absolute; right:0; top:-8px; width:34px; height:60px; border-radius:4px; background:#334155; border:2px solid #475569; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:bold;">B1</div>
+                <div id="va-carro" style="position:absolute; left:0; top:6px; width:40px; height:34px; border-radius:6px; background:#188fa7; border:2px solid #fff;"></div>
+            </div>
+            <div class="circuito-grid">
+                <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                    <button type="button" id="va-s1" style="background-color:#10b981; width:75px; height:75px; border-radius:50%; font-size:11px;">S1 (MARCHA)</button>
+                    <button type="button" id="va-s3" style="background-color:#ef4444; width:75px; height:75px; border-radius:50%; font-size:11px;">S3 (PARO)</button>
+                    <button type="button" id="va-reset" style="background-color:#475569; width:75px; height:75px; border-radius:50%; font-size:11px;">↺ REINICIAR</button>
+                </div>
+                <div>
+                    <div class="estado-borne"><span>Q11 (giro 1):</span><strong id="va-q11" style="color:#94a3b8;">DESACTIVADO</strong></div>
+                    <div class="estado-borne"><span>Q12 (giro 2):</span><strong id="va-q12" style="color:#94a3b8;">DESACTIVADO</strong></div>
+                    <div class="estado-borne"><span>Motor:</span><strong id="va-motor" style="color:#94a3b8;">PARADO</strong></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        var q11 = false, q12 = false, pos = 0, s1 = false, MAX = 100;
+        var $ = function (i) { return document.getElementById(i); };
+        function pintar(id, on, t) { var e = $(id); e.textContent = t; e.style.color = on ? '#10b981' : '#94a3b8'; }
+        function ciclo() {
+            var b1 = pos >= MAX - 2, b2 = pos <= 2;
+            var n11 = (s1 || q11) && !b1;
+            var n12 = (b1 || q12) && !b2;
+            if (n11 && n12) n11 = false;
+            q11 = n11; q12 = n12; s1 = false;
+            if (q11) pos = Math.min(MAX, pos + 1);
+            if (q12) pos = Math.max(0, pos - 1);
+            var ancho = $('va-riel').clientWidth - 40;
+            $('va-carro').style.left = (pos / MAX * ancho) + 'px';
+            $('va-fc1').style.background = b1 ? '#f59e0b' : '#334155';
+            $('va-fc2').style.background = b2 ? '#f59e0b' : '#334155';
+            pintar('va-q11', q11, q11 ? 'ACTIVADO' : 'DESACTIVADO');
+            pintar('va-q12', q12, q12 ? 'ACTIVADO' : 'DESACTIVADO');
+            pintar('va-motor', q11 || q12, q11 ? 'GIRO 1 (ida)' : q12 ? 'GIRO 2 (vuelta)' : 'PARADO');
+        }
+        $('va-s1').addEventListener('click', function () { s1 = true; });
+        $('va-s3').addEventListener('click', function () { q11 = false; q12 = false; s1 = false; });
+        $('va-reset').addEventListener('click', function () { q11 = false; q12 = false; s1 = false; pos = 0; });
+        setInterval(ciclo, 40);
+    })();
+    </script>
+</section>
+
+
+<!--
+PASO 3 · CIRCUITOS ELEVADA CORREGIDOS (ITC-BT-25)
+Busca:   <h3 ...>⚡ Cuadro Vivienda Electrificación Elevada</h3>
+Dentro de esa misma seccion-bloque, BORRA el <div class="esquema-caja"> con su <svg> y la lista
+"Circuitos adicionales", y pega en su lugar este bloque:
+-->
+<div class="esquema-caja">
+    <svg id="svg-elevada" viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cuadro electrificación elevada"></svg>
+</div>
+<script>
+(function () {
+    var s = '<rect x="5" y="5" width="630" height="190" rx="10" style="fill:#0f1923;stroke:#223347;stroke-width:2"/>' +
+        '<text x="20" y="30" style="fill:#188fa7;font:bold 15px system-ui,sans-serif">CGMP · Electrificación Elevada</text>' +
+        '<rect x="20" y="50" width="45" height="110" rx="4" style="fill:#1a2936;stroke:#188fa7;stroke-width:2"/><text x="42" y="110" text-anchor="middle" style="fill:#fff;font:bold 10px monospace">IGA</text>' +
+        '<rect x="75" y="50" width="45" height="110" rx="4" style="fill:#1a2936;stroke:#f59e0b;stroke-width:2"/><text x="97" y="110" text-anchor="middle" style="fill:#fff;font:bold 9px monospace">ID-1</text>' +
+        '<rect x="130" y="50" width="45" height="110" rx="4" style="fill:#1a2936;stroke:#f59e0b;stroke-width:2"/><text x="152" y="110" text-anchor="middle" style="fill:#fff;font:bold 9px monospace">ID-2</text>';
+    for (var i = 1; i <= 12; i++) {
+        var x = 185 + (i - 1) * 37, extra = i > 5;
+        s += '<rect x="' + x + '" y="50" width="32" height="110" rx="4" style="fill:#1a2936;stroke:' + (extra ? '#10b981' : '#188fa7') + ';stroke-width:1.5"/>' +
+             '<text x="' + (x + 16) + '" y="110" text-anchor="middle" style="fill:#e2e8f0;font:bold 9px monospace">C' + i + '</text>';
+    }
+    s += '<text x="20" y="185" style="fill:#5b7086;font:9px system-ui,sans-serif">Esquema orientativo · C6 a C12 solo en electrificación elevada (ITC-BT-25)</text>';
+    document.getElementById('svg-elevada').innerHTML = s;
+})();
+</script>
+<div class="resultado-caja" style="margin-top:12px;">
+    <h4 style="color:var(--azul-brillante); margin-top:0;">Circuitos adicionales (elevada)</h4>
+    <ul style="margin-bottom:0; padding-left:20px;">
+        <li>✅ C6 Alumbrado adicional</li>
+        <li>✅ C7 Tomas de uso general adicionales</li>
+        <li>✅ C8 Calefacción</li>
+        <li>✅ C9 Aire acondicionado</li>
+        <li>✅ C10 Secadora</li>
+        <li>✅ C11 Automatización</li>
+        <li>✅ C12 Circuitos adicionales de otro tipo</li>
+    </ul>
+</div>
+
+
+<!--
+PASO 4 · KNX
+Busca:   Hasta 256 con fuentes desacopladas y sin repetidores.
+Cámbialo por:   Hasta 256 por línea usando repetidores o acopladores.
+-->
