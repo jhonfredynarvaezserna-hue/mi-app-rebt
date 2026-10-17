@@ -2,7 +2,7 @@
 <html lang="es" style="background-color: #0a1118; color-scheme: dark;">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>J.F Clima & Electricidad - Plataforma Técnica Integral</title>
 
     <link rel="manifest" href="./manifest.json">
@@ -113,6 +113,7 @@
                         <ul>
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-ve')"><span>🚗 Vehículo Eléctrico (BT-52)</span> <span>🔒</span></a></li>
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-solar')"><span>🌞 Solar Fotovoltaica (BT-40)</span> <span>🔒</span></a></li>
+                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-vuelta-auto')"><span>🔁 Inversión de giro</span></a></li>
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-industrial')"><span>⚙️ Automatismos, Piscinas & Riego</span> <span>🔒</span></a></li>
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-knx')"><span>🟢 Domótica KNX & ETS5</span> <span>🔒</span></a></li>
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-domotica-inalambrica')"><span>🏠 Domótica Inalámbrica & IoT</span> <span>🔒</span></a></li>
@@ -719,55 +720,34 @@
                 <div class="seccion-bloque">
                     <h3 style="color:var(--azul-brillante); margin-top:0;">⚡ Cuadro Vivienda Electrificación Elevada</h3>
                     <div class="esquema-caja">
-                        <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Esquema cuadro eléctrico electrificación elevada con doble diferencial">
-                            <rect x="5" y="5" width="550" height="210" rx="10" style="fill:#0f1923; stroke:#223347; stroke-width:2"/>
-                            <text x="20" y="30" style="fill:#188fa7; font-family:system-ui,sans-serif; font-size:15px; font-weight:bold;">CGMP · Electrificación Elevada</text>
-                            <line x1="20" y1="45" x2="540" y2="45" style="stroke:#223347; stroke-width:2"/>
-                            <rect x="20" y="55" width="50" height="120" rx="4" style="fill:#1a2936; stroke:#188fa7; stroke-width:2"/>
-                            <text x="45" y="100" text-anchor="middle" style="fill:#fff; font-family:monospace; font-size:10px; font-weight:bold;">IGA</text>
-                            <text x="45" y="113" text-anchor="middle" style="fill:#94a3b8; font-family:monospace; font-size:9px;">40A</text>
-                            <rect x="33" y="128" width="24" height="34" rx="2" style="fill:#10b981"/>
-                            <rect x="85" y="55" width="50" height="120" rx="4" style="fill:#1a2936; stroke:#f59e0b; stroke-width:2"/>
-                            <text x="110" y="95" text-anchor="middle" style="fill:#fff; font-family:monospace; font-size:9px; font-weight:bold;">ID-1</text>
-                            <text x="110" y="108" text-anchor="middle" style="fill:#94a3b8; font-family:monospace; font-size:9px;">30mA</text>
-                            <rect x="98" y="122" width="24" height="32" rx="2" style="fill:#f59e0b"/>
-                            <rect x="150" y="55" width="50" height="120" rx="4" style="fill:#1a2936; stroke:#f59e0b; stroke-width:2"/>
-                            <text x="175" y="95" text-anchor="middle" style="fill:#fff; font-family:monospace; font-size:9px; font-weight:bold;">ID-2</text>
-                            <text x="175" y="108" text-anchor="middle" style="fill:#94a3b8; font-family:monospace; font-size:9px;">30mA</text>
-                            <rect x="163" y="122" width="24" height="32" rx="2" style="fill:#f59e0b"/>
-                            <rect x="215" y="55" width="30" height="120" rx="4" style="fill:#1a2936; stroke:#188fa7; stroke-width:1.2"/>
-                            <text x="230" y="95" text-anchor="middle" style="fill:#e2e8f0; font-family:monospace; font-size:8px; font-weight:bold;">C1</text>
-                            <rect x="222" y="118" width="16" height="26" rx="2" style="fill:#188fa7"/>
-                            <rect x="250" y="55" width="30" height="120" rx="4" style="fill:#1a2936; stroke:#188fa7; stroke-width:1.2"/>
-                            <text x="265" y="95" text-anchor="middle" style="fill:#e2e8f0; font-family:monospace; font-size:8px; font-weight:bold;">C2</text>
-                            <rect x="257" y="118" width="16" height="26" rx="2" style="fill:#188fa7"/>
-                            <rect x="285" y="55" width="30" height="120" rx="4" style="fill:#1a2936; stroke:#188fa7; stroke-width:1.2"/>
-                            <text x="300" y="95" text-anchor="middle" style="fill:#e2e8f0; font-family:monospace; font-size:8px; font-weight:bold;">C6</text>
-                            <rect x="292" y="118" width="16" height="26" rx="2" style="fill:#10b981"/>
-                            <rect x="320" y="55" width="30" height="120" rx="4" style="fill:#1a2936; stroke:#188fa7; stroke-width:1.2"/>
-                            <text x="335" y="95" text-anchor="middle" style="fill:#e2e8f0; font-family:monospace; font-size:8px; font-weight:bold;">C7</text>
-                            <rect x="327" y="118" width="16" height="26" rx="2" style="fill:#10b981"/>
-                            <rect x="355" y="55" width="30" height="120" rx="4" style="fill:#1a2936; stroke:#188fa7; stroke-width:1.2"/>
-                            <text x="370" y="95" text-anchor="middle" style="fill:#e2e8f0; font-family:monospace; font-size:8px; font-weight:bold;">C8</text>
-                            <rect x="362" y="118" width="16" height="26" rx="2" style="fill:#10b981"/>
-                            <rect x="390" y="55" width="30" height="120" rx="4" style="fill:#1a2936; stroke:#188fa7; stroke-width:1.2"/>
-                            <text x="405" y="95" text-anchor="middle" style="fill:#e2e8f0; font-family:monospace; font-size:8px; font-weight:bold;">C9</text>
-                            <rect x="397" y="118" width="16" height="26" rx="2" style="fill:#10b981"/>
-                            <rect x="425" y="55" width="34" height="120" rx="4" style="fill:#1a2936; stroke:#188fa7; stroke-width:1.2"/>
-                            <text x="442" y="95" text-anchor="middle" style="fill:#e2e8f0; font-family:monospace; font-size:8px; font-weight:bold;">C10</text>
-                            <rect x="433" y="118" width="18" height="26" rx="2" style="fill:#10b981"/>
-                            <text x="20" y="200" style="fill:#5b7086; font-family:system-ui,sans-serif; font-size:9px;">Esquema orientativo · Doble diferencial recomendado para fraccionar cargas críticas</text>
-                        </svg>
+                        <svg id="svg-elevada" viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cuadro electrificación elevada"></svg>
                     </div>
-                    <div class="resultado-caja" style="margin-top: 12px;">
-                        <h4 style="color: var(--azul-brillante); margin-top:0;">Circuitos adicionales</h4>
-                        <ul style="margin-bottom:0; padding-left: 20px;">
-                            <li>✅ Doble diferencial</li>
-                            <li>✅ C6 Calefacción</li>
-                            <li>✅ C7 Aire acondicionado</li>
-                            <li>✅ C8 Secadora</li>
-                            <li>✅ C9 Automatización</li>
-                            <li>✅ C10 Circuitos especiales</li>
+                    <script>
+                    (function () {
+                        var s = '<rect x="5" y="5" width="630" height="190" rx="10" style="fill:#0f1923;stroke:#223347;stroke-width:2"/>' +
+                            '<text x="20" y="30" style="fill:#188fa7;font:bold 15px system-ui,sans-serif">CGMP · Electrificación Elevada</text>' +
+                            '<rect x="20" y="50" width="45" height="110" rx="4" style="fill:#1a2936;stroke:#188fa7;stroke-width:2"/><text x="42" y="110" text-anchor="middle" style="fill:#fff;font:bold 10px monospace">IGA</text>' +
+                            '<rect x="75" y="50" width="45" height="110" rx="4" style="fill:#1a2936;stroke:#f59e0b;stroke-width:2"/><text x="97" y="110" text-anchor="middle" style="fill:#fff;font:bold 9px monospace">ID-1</text>' +
+                            '<rect x="130" y="50" width="45" height="110" rx="4" style="fill:#1a2936;stroke:#f59e0b;stroke-width:2"/><text x="152" y="110" text-anchor="middle" style="fill:#fff;font:bold 9px monospace">ID-2</text>';
+                        for (var i = 1; i <= 12; i++) {
+                            var x = 185 + (i - 1) * 37, extra = i > 5;
+                            s += '<rect x="' + x + '" y="50" width="32" height="110" rx="4" style="fill:#1a2936;stroke:' + (extra ? '#10b981' : '#188fa7') + ';stroke-width:1.5"/>' +
+                                 '<text x="' + (x + 16) + '" y="110" text-anchor="middle" style="fill:#e2e8f0;font:bold 9px monospace">C' + i + '</text>';
+                        }
+                        s += '<text x="20" y="185" style="fill:#5b7086;font:9px system-ui,sans-serif">Esquema orientativo · C6 a C12 solo en electrificación elevada (ITC-BT-25)</text>';
+                        document.getElementById('svg-elevada').innerHTML = s;
+                    })();
+                    </script>
+                    <div class="resultado-caja" style="margin-top:12px;">
+                        <h4 style="color:var(--azul-brillante); margin-top:0;">Circuitos adicionales (elevada)</h4>
+                        <ul style="margin-bottom:0; padding-left:20px;">
+                            <li>✅ C6 Alumbrado adicional</li>
+                            <li>✅ C7 Tomas de uso general adicionales</li>
+                            <li>✅ C8 Calefacción</li>
+                            <li>✅ C9 Aire acondicionado</li>
+                            <li>✅ C10 Secadora</li>
+                            <li>✅ C11 Automatización</li>
+                            <li>✅ C12 Circuitos adicionales de otro tipo</li>
                         </ul>
                     </div>
                 </div>
@@ -1014,7 +994,9 @@
                         <div class="calc-field">
                             <label>Caída de Tensión Máxima (%):</label>
                             <select id="calc-porcentaje-max">
-                                <option value="1.5">1,5% (Derivación Individual Centralizada)</option>
+                                <option value="1">1% (DI con contadores totalmente centralizados)</option>
+                                <option value="1.5" selected>1,5% (DI de un único usuario)</option>
+                                <option value="2">2% (DI con contadores parcialmente centralizados)</option>
                                 <option value="3">3,0% (Alumbrado Interior)</option>
                                 <option value="5">5,0% (Usos Generales / Fuerza)</option>
                             </select>
@@ -1234,7 +1216,7 @@
                             <tr>
                                 <td>Dispositivos por Línea</td>
                                 <td>64 dispositivos (con fuente estándar)</td>
-                                <td>Hasta 256 con fuentes desacopladas y sin repetidores.</td>
+                                <td>Hasta 256 por línea usando repetidores o acopladores.</td>
                             </tr>
                             <tr>
                                 <td>Longitud máxima de Línea</td>
@@ -1476,6 +1458,86 @@
                 </div>
             </section>
 
+        
+            <!-- ==================== VISTA INVERSIÓN DE GIRO ==================== -->
+            <section id="vista-vuelta-auto" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>🔁 Inversión de giro con vuelta automática</h1>
+                </header>
+
+                <div class="seccion-bloque">
+                    <h3 style="color:var(--azul-brillante); margin-top:0;">Elementos del circuito</h3>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px;">
+                        <div style="background:var(--input-bg); padding:12px; border-radius:6px; border-left:3px solid var(--azul-brillante);"><strong>S1 (NA)</strong><br><span style="font-size:.88rem; color:#94a3b8;">Marcha del giro 1.</span></div>
+                        <div style="background:var(--input-bg); padding:12px; border-radius:6px; border-left:3px solid #ef4444;"><strong>S3 (NC)</strong><br><span style="font-size:.88rem; color:#94a3b8;">Paro general.</span></div>
+                        <div style="background:var(--input-bg); padding:12px; border-radius:6px; border-left:3px solid var(--verde-ia);"><strong>Q11 / Q12</strong><br><span style="font-size:.88rem; color:#94a3b8;">Contactores de cada sentido, con autorretención 13-14.</span></div>
+                        <div style="background:var(--input-bg); padding:12px; border-radius:6px; border-left:3px solid var(--oro-candado);"><strong>B1 (NC + NA)</strong><br><span style="font-size:.88rem; color:#94a3b8;">Corta Q11 y conecta Q12.</span></div>
+                        <div style="background:var(--input-bg); padding:12px; border-radius:6px; border-left:3px solid var(--oro-candado);"><strong>B2 (NC)</strong><br><span style="font-size:.88rem; color:#94a3b8;">Corta Q12 al final de la vuelta.</span></div>
+                    </div>
+                    <div class="resultado-caja">
+                        <ol style="margin:0;">
+                            <li>S1 activa Q11 y se mantiene por autorretención.</li>
+                            <li>Al llegar a B1: su NC desconecta Q11 y su NA conecta Q12.</li>
+                            <li>Q12 se mantiene y el motor retrocede hasta B2.</li>
+                            <li>B2 corta Q12. S3 para todo en cualquier momento.</li>
+                        </ol>
+                    </div>
+                    <p style="font-size:.85rem; color:#f59e0b; margin-bottom:0;">⚠️ En el montaje real añade un NC de Q12 en serie con Q11 (y al revés) como enclavamiento.</p>
+                </div>
+
+                <div class="seccion-bloque">
+                    <h3 style="margin-top:0;">🎮 Simulador de vuelta automática</h3>
+                    <div class="cade-cuadro">
+                        <div style="position:relative; height:46px; background:#1e293b; border-radius:6px; margin:10px 0 20px 0;" id="va-riel">
+                            <div id="va-fc2" style="position:absolute; left:0; top:-8px; width:34px; height:60px; border-radius:4px; background:#334155; border:2px solid #475569; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:bold;">B2</div>
+                            <div id="va-fc1" style="position:absolute; right:0; top:-8px; width:34px; height:60px; border-radius:4px; background:#334155; border:2px solid #475569; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:bold;">B1</div>
+                            <div id="va-carro" style="position:absolute; left:0; top:6px; width:40px; height:34px; border-radius:6px; background:#188fa7; border:2px solid #fff;"></div>
+                        </div>
+                        <div class="circuito-grid">
+                            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                                <button type="button" id="va-s1" style="background-color:#10b981; width:75px; height:75px; border-radius:50%; font-size:11px;">S1 (MARCHA)</button>
+                                <button type="button" id="va-s3" style="background-color:#ef4444; width:75px; height:75px; border-radius:50%; font-size:11px;">S3 (PARO)</button>
+                                <button type="button" id="va-reset" style="background-color:#475569; width:75px; height:75px; border-radius:50%; font-size:11px;">↺ REINICIAR</button>
+                            </div>
+                            <div>
+                                <div class="estado-borne"><span>Q11 (giro 1):</span><strong id="va-q11" style="color:#94a3b8;">DESACTIVADO</strong></div>
+                                <div class="estado-borne"><span>Q12 (giro 2):</span><strong id="va-q12" style="color:#94a3b8;">DESACTIVADO</strong></div>
+                                <div class="estado-borne"><span>Motor:</span><strong id="va-motor" style="color:#94a3b8;">PARADO</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                (function () {
+                    var q11 = false, q12 = false, pos = 0, s1 = false, MAX = 100;
+                    var $ = function (i) { return document.getElementById(i); };
+                    function pintar(id, on, t) { var e = $(id); e.textContent = t; e.style.color = on ? '#10b981' : '#94a3b8'; }
+                    function ciclo() {
+                        var b1 = pos >= MAX - 2, b2 = pos <= 2;
+                        var n11 = (s1 || q11) && !b1;
+                        var n12 = (b1 || q12) && !b2;
+                        if (n11 && n12) n11 = false;
+                        q11 = n11; q12 = n12; s1 = false;
+                        if (q11) pos = Math.min(MAX, pos + 1);
+                        if (q12) pos = Math.max(0, pos - 1);
+                        var ancho = $('va-riel').clientWidth - 40;
+                        $('va-carro').style.left = (pos / MAX * ancho) + 'px';
+                        $('va-fc1').style.background = b1 ? '#f59e0b' : '#334155';
+                        $('va-fc2').style.background = b2 ? '#f59e0b' : '#334155';
+                        pintar('va-q11', q11, q11 ? 'ACTIVADO' : 'DESACTIVADO');
+                        pintar('va-q12', q12, q12 ? 'ACTIVADO' : 'DESACTIVADO');
+                        pintar('va-motor', q11 || q12, q11 ? 'GIRO 1 (ida)' : q12 ? 'GIRO 2 (vuelta)' : 'PARADO');
+                    }
+                    $('va-s1').addEventListener('click', function () { s1 = true; });
+                    $('va-s3').addEventListener('click', function () { q11 = false; q12 = false; s1 = false; });
+                    $('va-reset').addEventListener('click', function () { q11 = false; q12 = false; s1 = false; pos = 0; });
+                    setInterval(ciclo, 40);
+                })();
+                </script>
+            </section>
+
         </main>
     </div>
 
@@ -1503,9 +1565,6 @@
 
             <div style="border-top: 1px solid var(--bordes); padding-top: 12px;">
                 <p style="margin: 0; font-size: 0.78rem; color: #64748b;">Licencia profesional corporativa para instaladores autorizados.</p>
-                <!-- Enlace de PayPal neutralizado para cumplimiento de la política de pagos de Google Play Store:
-                <a href="https://paypal.me/JFMANTENIMIENTO/4" target="_blank" rel="noopener noreferrer">Obtener Licencia Pro</a>
-                -->
             </div>
         </div>
     </div>
@@ -1534,5 +1593,6 @@
     <script src="main.js" defer></script>
     <script src="propuesta-knx.js" defer></script>
     <script src="correcciones.js" defer></script>
+    <script src="modulos-extra.js" defer></script>
 </body>
 </html>
