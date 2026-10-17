@@ -4,16 +4,6 @@
 
 let destinoPendiente = null;
 
-// Lista de claves autorizadas (1 Maestra + 5 Clientes)
-const CLAVES_VALIDAS = [
-    "JF-ADMIN-2026-X", // Tuya (Maestra)
-    "JF-PRO-CLI-101",  // Cliente 1
-    "JF-PRO-CLI-102",  // Cliente 2
-    "JF-PRO-CLI-103",  // Cliente 3
-    "JF-PRO-CLI-104",  // Cliente 4
-    "JF-PRO-CLI-105"   // Cliente 5
-];
-
 // --- PERSONALIDAD DE ELENA (se envía con cada consulta) ---
 const INSTRUCCIONES_ELENA = `Eres Elena, ingeniera técnica de J.F Clima & Electricidad. La empresa es J.F; nunca digas "SM" ni otro nombre.
 Habla en español de España, cercana y natural, de tú, como una compañera de oficio.
@@ -22,30 +12,79 @@ Cita la ITC o el artículo del RITE solo cuando aporte algo.
 Si hay riesgo (olor a quemado, chispas, humo, descarga): primero baja el IGA y no toques nada; llama al 112 si hay peligro.
 Si no estás segura, dilo y recomienda escribir a J.F por WhatsApp. No inventes normativa ni cifras.`;
 
+const AVISO_ORIENTATIVO = '<p style="margin:12px 0 0 0; font-size:0.78rem; color:#64748b;">Orientativo. Consulta siempre el texto oficial del REBT / RITE.</p>';
+
 function conInstrucciones(consulta) {
     return INSTRUCCIONES_ELENA + "\n\nConsulta del cliente:\n" + consulta;
 }
 
-// --- FUNCIÓN AUXILIAR DE FORMATEO (CON PROTECCIÓN XSS) ---
-function formatearTextoElena(texto) {
-    if (!texto) return "";
-    let seguro = texto
+// --- ESCAPE HTML ---
+function escaparHTML(texto) {
+    return String(texto == null ? "" : texto)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+}
 
+// --- FORMATEO DE TEXTO DE ELENA (CON PROTECCIÓN XSS) ---
+function formatearTextoElena(texto) {
+    if (!texto) return "";
+    let seguro = escaparHTML(texto);
     seguro = seguro.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--azul-brillante); text-decoration:underline; font-weight:bold;">$1 ↗</a>');
     seguro = seguro.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     seguro = seguro.replace(/\n/g, '<br>');
     return seguro;
 }
 
-// --- SISTEMA DE LICENCIAS PRO ---
+// --- LLAMADA A ELENA (/api/chat) ---
+async function consultarElena(prompt) {
+    let res;
+    try {
+        res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: prompt })
+        });
+    } catch (e) {
+        throw new Error("Sin conexión con el servidor. Comprueba tu internet.");
+    }
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+        throw new Error(data.error || data.details || ("El servidor no respondió bien (error " + res.status + ")."));
+    }
+    return data.text || data.respuesta || "";
+}
+
+// --- ALMACENAMIENTO SEGURO ---
+function leerLicencia() {
+    try { return localStorage.getItem("licencia_sm_activa"); } catch (e) { return null; }
+}
+function guardarLicencia(v) {
+    try { localStorage.setItem("licencia_sm_activa", v); } catch (e) { }
+}
+function borrarLicencia() {
+    try { localStorage.removeItem("licencia_sm_activa"); } catch (e) { }
+}
+
+// --- SISTEMA DE LICENCIAS PRO (validación en el servidor) ---
 function tieneLicencia() {
-    const claveGuardada = localStorage.getItem("licencia_sm_activa");
-    return CLAVES_VALIDAS.includes(claveGuardada);
+    return !!leerLicencia();
+}
+
+async function comprobarClave(clave) {
+    try {
+        const res = await fetch('/api/licencia', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ clave: clave })
+        });
+        const data = await res.json().catch(() => ({}));
+        return data.ok === true;
+    } catch (e) {
+        return null; // sin conexión
+    }
 }
 
 function verificarYEntrar(idVista) {
@@ -69,40 +108,36 @@ function cerrarModalLicencia() {
     destinoPendiente = null;
 }
 
-function validarClaveAcceso() {
+async function validarClaveAcceso() {
     const inputEl = document.getElementById('input-clave-licencia');
     const val = inputEl ? inputEl.value.trim().toUpperCase() : '';
     const err = document.getElementById('error-clave-licencia');
 
     if (!val) {
-        if (err) {
-            err.textContent = "❌ Por favor introduce una clave.";
-            err.style.display = 'block';
-        }
+        if (err) { err.textContent = "❌ Por favor introduce una clave."; err.style.display = 'block'; }
         return;
     }
+    if (err) { err.textContent = "⏳ Comprobando..."; err.style.display = 'block'; }
 
-    if (CLAVES_VALIDAS.includes(val)) {
-        localStorage.setItem("licencia_sm_activa", val);
+    const ok = await comprobarClave(val);
+
+    if (ok === true) {
+        const destino = destinoPendiente; // guardarlo ANTES de cerrar el modal
+        guardarLicencia(val);
         cerrarModalLicencia();
         actualizarBotonEstado();
-
-        if (destinoPendiente) {
-            abrirModuloDirecto(destinoPendiente);
-            destinoPendiente = null;
-        }
+        if (destino) abrirModuloDirecto(destino);
+    } else if (ok === null) {
+        if (err) err.textContent = "❌ Sin conexión. Inténtalo de nuevo.";
     } else {
-        if (err) {
-            err.textContent = "❌ Clave incorrecta o no válida";
-            err.style.display = 'block';
-        }
+        if (err) err.textContent = "❌ Clave incorrecta o no válida";
     }
 }
 
 function gestionarBotonLicencia() {
     if (tieneLicencia()) {
         if (confirm("¿Deseas cerrar sesión y bloquear los módulos Pro de nuevo?")) {
-            localStorage.removeItem("licencia_sm_activa");
+            borrarLicencia();
             actualizarBotonEstado();
             abrirModuloDirecto('vista-inicio');
         }
@@ -113,32 +148,18 @@ function gestionarBotonLicencia() {
 
 function actualizarBotonEstado() {
     const b = document.getElementById('btn-estado-licencia');
-
     if (b) {
-        b.innerHTML = tieneLicencia()
-            ? '🟢 Licencia Activa (Cerrar)'
-            : '🔑 Activar Licencia Pro';
-
-        b.style.color = tieneLicencia()
-            ? '#10b981'
-            : '#94a3b8';
+        b.innerHTML = tieneLicencia() ? '🟢 Licencia Activa (Cerrar)' : '🔑 Activar Licencia Pro';
+        b.style.color = tieneLicencia() ? '#10b981' : '#94a3b8';
     }
 }
 
 // --- NAVEGACIÓN ENTRE MÓDULOS ---
 function abrirModuloDirecto(idVista) {
-    document
-        .querySelectorAll('.vista-section')
-        .forEach(sec => sec.classList.add('oculto'));
-
+    document.querySelectorAll('.vista-section').forEach(sec => sec.classList.add('oculto'));
     const destino = document.getElementById(idVista);
-
     if (destino) destino.classList.remove('oculto');
-
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // --- SÍNTESIS DE VOZ DE ELENA ---
@@ -148,7 +169,11 @@ function hablarComoElena(texto) {
     window.speechSynthesis.cancel();
 
     const avatarBox = document.getElementById('elena-avatar-container');
-    const limpio = texto.replace(/<[^>]*>?/gm, '').replace(/https?:\/\/\S+/g, '');
+    const limpio = String(texto)
+        .replace(/<[^>]*>?/gm, '')
+        .replace(/https?:\/\/\S+/g, '')
+        .replace(/\*+/g, '')
+        .replace(/[#_`]/g, '');
 
     const utterance = new SpeechSynthesisUtterance(limpio);
     utterance.lang = 'es-ES';
@@ -184,22 +209,16 @@ function hablarComoElena(texto) {
             v.name.toLowerCase().includes('google español')
         )
     );
-
-    if (vozFemenina) {
-        utterance.voice = vozFemenina;
-    }
+    if (vozFemenina) utterance.voice = vozFemenina;
 
     window.speechSynthesis.speak(utterance);
 }
 
 function silenciarAElena() {
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-    }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 }
 
 // --- GESTOR TÉCNICO Y WHATSAPP ---
-// Único número de contacto: J.F
 const TELEFONO_JF = "34642269680";
 
 function enviarConsultaWhatsApp() {
@@ -213,10 +232,8 @@ function enviarConsultaWhatsApp() {
         `🏷️ *Tipo:* ${tipo}\n` +
         `📝 *Detalle:* ${mensaje}`;
 
-    const url = `https://wa.me/${TELEFONO_JF}?text=${encodeURIComponent(texto)}`;
-
-    // location.href en vez de window.open: funciona correctamente dentro de WebView/PWA/App empaquetada
-    window.location.href = url;
+    // location.href funciona correctamente dentro de WebView/PWA/App empaquetada
+    window.location.href = `https://wa.me/${TELEFONO_JF}?text=${encodeURIComponent(texto)}`;
 }
 
 // ==========================================
@@ -235,30 +252,20 @@ async function diagnosticarConIA() {
 
     if (resBox) {
         resBox.classList.remove('oculto');
-        resBox.innerHTML = `<em>Elena está analizando la consulta técnica con Gemini...</em>`;
+        resBox.innerHTML = `<em>Elena está analizando la consulta técnica...</em>`;
     }
 
     const promptCompleto = `Consulta técnica: ${tipo}. Cliente: ${nombre || 'No especificado'}. Descripción del problema: ${mensaje}`;
 
     try {
-        const res = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: conInstrucciones(promptCompleto) })
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.details || data.error || `Error HTTP ${res.status}`);
-
-        const raw = data.text || data.respuesta || "Diagnóstico completado.";
-        const respuestaFormateada = formatearTextoElena(raw);
-
+        const raw = (await consultarElena(conInstrucciones(promptCompleto))) || "Diagnóstico completado.";
         if (resBox) {
             resBox.innerHTML = `
                 <h4 style="margin: 0 0 10px 0; color: var(--verde-ia);">📋 Diagnóstico Técnico de Elena:</h4>
                 <div style="line-height: 1.6; max-height: 450px; overflow-y: auto; padding-right: 10px;">
-                    ${respuestaFormateada}
+                    ${formatearTextoElena(raw)}
                 </div>
+                ${AVISO_ORIENTATIVO}
             `;
         }
         hablarComoElena(raw);
@@ -268,7 +275,7 @@ async function diagnosticarConIA() {
             resBox.innerHTML = `
                 <p style="color:#ef4444;">
                     <strong>❌ Error al conectar con Elena</strong><br><br>
-                    ${err.message}<br><br>
+                    ${escaparHTML(err.message)}<br><br>
                     Puedes pulsar en <strong>Enviar por WhatsApp</strong> para soporte directo.
                 </p>
             `;
@@ -276,7 +283,7 @@ async function diagnosticarConIA() {
     }
 }
 
-// --- BUSCADOR NORMATIVO DIRECTO A GEMINI ---
+// --- BUSCADOR NORMATIVO ---
 function buscarTermino(term) {
     const input = document.getElementById('entrada-busqueda');
     if (input) input.value = term;
@@ -301,29 +308,20 @@ async function ejecutarBusquedaNormativa() {
     `;
 
     try {
-        const res = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                prompt: conInstrucciones(`Consulta de normativa técnica REBT/RITE/ICT: "${query}". Responde con precisión, indicando las ITCs, fórmulas, tipos de protección y requisitos legales que apliquen.`)
-            })
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.details || data.error || `Error HTTP ${res.status}`);
-
-        const raw = data.text || data.respuesta || "No se obtuvo respuesta.";
-        const respuestaFormateada = formatearTextoElena(raw);
+        const raw = (await consultarElena(conInstrucciones(
+            `Consulta de normativa técnica REBT/RITE/ICT: "${query}". Responde con precisión, indicando las ITCs, fórmulas, tipos de protección y requisitos legales que apliquen.`
+        ))) || "No se obtuvo respuesta.";
 
         resBox.innerHTML = `
             <div style="padding:10px 0;">
                 <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
                     <span style="font-size:1.3rem;">👩‍💼⚡</span>
-                    <strong style="color:var(--verde-ia); font-size:1.05rem;">Respuesta Oficial de Elena:</strong>
+                    <strong style="color:var(--verde-ia); font-size:1.05rem;">Respuesta de Elena:</strong>
                 </div>
                 <div style="line-height:1.6; color:var(--texto-principal); font-size:0.95rem; max-height:450px; overflow-y:auto; padding-right:10px;">
-                    ${respuestaFormateada}
+                    ${formatearTextoElena(raw)}
                 </div>
+                ${AVISO_ORIENTATIVO}
             </div>
         `;
         hablarComoElena(raw);
@@ -332,33 +330,33 @@ async function ejecutarBusquedaNormativa() {
         const baseDatos = [
             {
                 k: "diferencial",
-                t: "ITC-BT-24 / Tipos de Interruptores Diferenciales",
-                d: "• <strong>Tipo AC:</strong> Solo corriente alterna senoidal.<br>• <strong>Tipo A:</strong> Alterna y continua pulsante (obligatorio en VE y electrónica doméstica).<br>• <strong>Tipo F:</strong> Para monofásicos con variador de frecuencia (bombas de calor, lavadoras inverter).<br>• <strong>Tipo B:</strong> Corriente continua pura (fotovoltaica trifásica, cargadores VE rápidos)."
+                t: "Tipos de Interruptores Diferenciales",
+                d: "• <strong>Tipo AC:</strong> Solo corriente alterna senoidal.<br>• <strong>Tipo A:</strong> Alterna y continua pulsante (electrónica doméstica).<br>• <strong>Tipo F:</strong> Para monofásicos con variador de frecuencia (bombas de calor, lavadoras inverter).<br>• <strong>Tipo B:</strong> Corriente continua pura (fotovoltaica, cargadores VE rápidos)."
             },
             {
                 k: "itc-bt-14",
                 t: "ITC-BT-14: Línea General de Alimentación (LGA)",
-                d: "Enlaza la CGP con los contadores. Caída máxima: 0,5% (centralizados) y 1,5% (repartidos). Conductores unipolares 0,6/1 kV LSHF."
+                d: "Enlaza la CGP con los contadores. Caída de tensión máxima: 0,5% con contadores totalmente centralizados y 1% con contadores parcialmente centralizados. Verifica en el texto oficial."
             },
             {
                 k: "itc-bt-15",
                 t: "ITC-BT-15: Derivaciones Individuales",
-                d: "Caída máxima: 1,5% para contadores centralizados y 0,5% para contadores individuales. Sección mínima: 6 mm² Cu libre de halógenos."
+                d: "Caída de tensión máxima: 1% con contadores totalmente centralizados, 2% con contadores parcialmente centralizados y 1,5% para un único usuario. Sección mínima 6 mm² Cu. Verifica en el texto oficial."
             },
             {
                 k: "itc-bt-19",
                 t: "ITC-BT-19: Instalaciones Interiores",
-                d: "Caída máxima permitida: 3% para circuitos de alumbrado y 5% para usos generales y fuerza motriz."
+                d: "Caída de tensión máxima desde el origen de la instalación interior: 3% en alumbrado y 5% en el resto de usos."
             },
             {
                 k: "itc-bt-25",
                 t: "ITC-BT-25: Circuitos en Viviendas",
-                d: "C1 (Ilum 10A - 1,5mm²), C2 (Tomas 16A - 2,5mm²), C3 (Horno/Cocina 25A - 6mm²), C4 (Lavadora/Termo 20A - 4mm²), C5 (Baños/Cocina 16A - 2,5mm²)."
+                d: "C1 (Iluminación 10A - 1,5mm²), C2 (Tomas generales 16A - 2,5mm²), C3 (Cocina/Horno 25A - 6mm²), C4 (Lavadora/Lavavajillas/Termo 20A - 4mm²), C5 (Baños/Cocina 16A - 2,5mm²)."
             },
             {
                 k: "itc-bt-52",
                 t: "ITC-BT-52: Vehículos Eléctricos",
-                d: "Diferencial con detección de 6mA DC Clase A o Tipo B, magnetotérmico Curva C y protección contra sobretensiones Tipo 2."
+                d: "Diferencial con detección de 6 mA DC (o Tipo B), magnetotérmico y protección contra sobretensiones. Consulta el esquema aplicable en el texto oficial."
             },
             {
                 k: "rite",
@@ -378,20 +376,20 @@ async function ejecutarBusquedaNormativa() {
                     <strong style="color:var(--azul-brillante); font-size:1.05rem;">${m.t}</strong>
                     <p style="margin:6px 0 0 0; color:#cbd5e1; font-size:0.92rem; line-height:1.5;">${m.d}</p>
                 </div>
-            `).join('<hr style="border-color:var(--bordes); margin:12px 0;">');
+            `).join('<hr style="border-color:var(--bordes); margin:12px 0;">') + AVISO_ORIENTATIVO;
         } else {
             resBox.innerHTML = `
                 <p style="color:#ef4444;">
                     <strong>❌ Error al conectar con Elena</strong><br><br>
-                    ${err.message}<br><br>
-                    Verifica que el endpoint <code>/api/chat</code> esté desplegado y <code>GEMINI_API_KEY</code> configurada.
+                    ${escaparHTML(err.message)}<br><br>
+                    Inténtalo de nuevo en unos segundos o escribe a J.F por WhatsApp.
                 </p>
             `;
         }
     }
 }
 
-// --- CONSULTOR AVANZADO ICT-2 Y TELECOMUNICACIONES ---
+// --- CONSULTOR ICT-2 ---
 function buscarTerminoICT(term) {
     const input = document.getElementById('ict-busqueda-input');
     if (input) input.value = term;
@@ -412,24 +410,14 @@ async function consultarICTConIA() {
     resBox.innerHTML = `
         <div style="display:flex; align-items:center; gap:10px; color:var(--azul-brillante);">
             <span>⏳</span>
-            <em>Elena está analizando la normativa ICT-2 (RD 346/2011) y REBT con Gemini...</em>
+            <em>Elena está analizando la normativa ICT-2 (RD 346/2011) y REBT...</em>
         </div>
     `;
 
     try {
-        const res = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                prompt: conInstrucciones(`Responde a esta consulta de ICT-2: "${consulta}". Organiza la respuesta en: 1. Normativa y Requisitos, 2. Canalizaciones y Cableados, 3. Cuadro Eléctrico y 4. Enlaces Oficiales del BOE/Ministerio.`)
-            })
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.details || data.error || `Error HTTP ${res.status}`);
-
-        const raw = data.text || data.respuesta || "No se obtuvo respuesta del servidor.";
-        const respuestaFormateada = formatearTextoElena(raw);
+        const raw = (await consultarElena(conInstrucciones(
+            `Responde a esta consulta de ICT-2: "${consulta}". Organiza la respuesta en: 1. Normativa y Requisitos, 2. Canalizaciones y Cableados, 3. Cuadro Eléctrico y 4. Enlaces Oficiales del BOE/Ministerio.`
+        ))) || "No se obtuvo respuesta del servidor.";
 
         resBox.innerHTML = `
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
@@ -437,38 +425,32 @@ async function consultarICTConIA() {
                 <strong style="color:var(--verde-ia); font-size:1.05rem;">Resolución Técnica de Elena:</strong>
             </div>
             <div style="line-height:1.6; font-size:0.95rem; max-height:450px; overflow-y:auto; padding-right:10px;">
-                ${respuestaFormateada}
+                ${formatearTextoElena(raw)}
             </div>
+            ${AVISO_ORIENTATIVO}
         `;
         hablarComoElena(raw);
     } catch (err) {
-        console.warn("Error en consulta ICT online, cargando base técnica oficial:", err);
+        console.warn("Error en consulta ICT online, cargando base local:", err);
         resBox.innerHTML = `
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
                 <span style="font-size:1.3rem;">📡📘</span>
-                <strong style="color:var(--azul-brillante); font-size:1.05rem;">Normativa Oficial ICT-2 (RD 346/2011 y Orden ECE/983/2019):</strong>
+                <strong style="color:var(--azul-brillante); font-size:1.05rem;">Normativa ICT-2 (RD 346/2011) · Resumen orientativo</strong>
             </div>
             <div style="line-height:1.6; font-size:0.92rem; color:#cbd5e1;">
-                <p><strong>1. Dimensiones Mínimas de Recintos (RITI y RITS):</strong></p>
+                <p style="color:#f59e0b;"><strong>⚠️ Sin conexión con Elena.</strong> Las cifras siguientes son orientativas: verifícalas en el texto oficial antes de aplicarlas.</p>
+                <p><strong>Dimensiones de recintos (RITI y RITS):</strong></p>
                 <table class="tabla-normativa" style="margin-bottom:15px;">
                     <tr><th>Edificación</th><th>RITI (Inferior)</th><th>RITS (Superior)</th></tr>
                     <tr><td>Hasta 20 PAU</td><td>2,00 × 1,00 × 2,30 m</td><td>2,00 × 1,00 × 2,30 m</td></tr>
                     <tr><td>De 21 a 45 PAU</td><td>2,00 × 1,50 × 2,30 m</td><td>2,00 × 1,50 × 2,30 m</td></tr>
                     <tr><td>Más de 45 PAU</td><td>2,00 × 2,00 × 2,30 m</td><td>2,00 × 2,00 × 2,30 m</td></tr>
                 </table>
-
-                <p><strong>2. Canalizaciones de Enlace y Vertical:</strong><br>
-                • <strong>Enlace Superior:</strong> Mínimo 2 tubos de 40 mm hacia las antenas.<br>
-                • <strong>Canalización Principal (vertical):</strong> Mínimo 5 tubos de 50 mm (hasta 20 PAU) para coaxial, pares, fibra óptica y reserva (ocupación máxima del 50%).</p>
-
-                <p><strong>3. Cuadro Eléctrico y REBT:</strong><br>
-                • Magnetotérmico de 16A para enchufes y 10A para alumbrado.<br>
-                • Interruptor Diferencial 25A / 30mA Tipo A o Superinmunizado.<br>
-                • Barra equipotencial conectada a tierra general con cable ≥ 25 mm² Cu.</p>
-
-                <p><strong>4. Enlaces Oficiales de Consulta:</strong><br>
-                • <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2011-5900" target="_blank" rel="noopener noreferrer" style="color:var(--azul-brillante); font-weight:bold;">Real Decreto 346/2011 (Reglamento ICT-2) ↗</a><br>
-                • <a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2019-14144" target="_blank" rel="noopener noreferrer" style="color:var(--azul-brillante); font-weight:bold;">Orden ECE/983/2019 (Actualización técnica ICT) ↗</a>
+                <p><strong>Cuadro eléctrico y REBT:</strong><br>
+                • Barra equipotencial conectada a la tierra general del edificio.<br>
+                • Protecciones según el REBT y el anexo del RD 346/2011.</p>
+                <p><strong>Enlaces oficiales:</strong><br>
+                • <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2011-5900" target="_blank" rel="noopener noreferrer" style="color:var(--azul-brillante); font-weight:bold;">Real Decreto 346/2011 (Reglamento ICT) ↗</a>
                 </p>
             </div>
         `;
@@ -486,12 +468,12 @@ function calcularSeccionCable() {
     const V = (sistema === 'mono') ? 230 : 400;
     const eVoltios = (V * ePorc) / 100;
 
-    let seccionCalculada = (sistema === 'mono')
+    const seccionCalculada = (sistema === 'mono')
         ? ((2 * L * P) / (conductividad * eVoltios * V))
         : ((L * P) / (conductividad * eVoltios * V));
 
     const seccionesNormalizadas = [1.5, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95, 120, 150, 185, 240];
-    const seccionComercial = seccionesNormalizadas.find(s => s >= seccionCalculada) || "Superior a 240 mm²";
+    const seccionComercial = seccionesNormalizadas.find(s => s >= seccionCalculada) || "Superior a 240";
     const resBox = document.getElementById('resultado-caida-box');
 
     if (resBox) {
@@ -501,6 +483,7 @@ function calcularSeccionCable() {
             <p>• <strong>Sección Teórica Requerida:</strong> ${seccionCalculada.toFixed(2)} mm²</p>
             <p>• <strong>Sección Comercial Recomendada:</strong> <span style="color:var(--azul-brillante); font-size:1.15rem; font-weight:bold;">${seccionComercial} mm²</span></p>
             <p>• <strong>Caída Admisible:</strong> ${eVoltios.toFixed(2)} V (${ePorc}%)</p>
+            <p style="font-size:0.8rem; color:#94a3b8;">Solo criterio de caída de tensión. Comprueba también la intensidad admisible del cable (ITC-BT-19) y que la protección lo cubre.</p>
         `;
     }
 }
@@ -509,54 +492,60 @@ function calcularSeccionCable() {
 function calcularVE() {
     const potencia = parseFloat(document.getElementById('ve-potencia')?.value) || 7.4;
     const longitud = parseFloat(document.getElementById('ve-longitud')?.value) || 20;
-    let seccionMinima = 6;
-    let magnetotermico = "Curva C - 32A";
-    const diferencial = "Clase A / B (Superinmunizado con detección 6mA DC)";
-    const conductividadCobre = 48.5;
-    let caidaTension = 0;
+    const conductividadCobre = 48.5; // Cu a 70 °C
+    const trifasico = potencia > 7.4;
+    const V = trifasico ? 400 : 230;
 
-    if (potencia === 3.7) {
-        magnetotermico = "Curva C - 16A";
-        caidaTension = (2 * 3700 * longitud) / (conductividadCobre * seccionMinima * 230);
-    } else if (potencia === 7.4) {
-        magnetotermico = "Curva C - 32A";
-        caidaTension = (2 * 7400 * longitud) / (conductividadCobre * seccionMinima * 230);
-    } else if (potencia === 11) {
-        magnetotermico = "Curva C - 16A (Tetrapolar)";
-        caidaTension = (11000 * longitud) / (conductividadCobre * seccionMinima * 400);
-    } else if (potencia === 22) {
-        magnetotermico = "Curva C - 32A (Tetrapolar)";
-        caidaTension = (22000 * longitud) / (conductividadCobre * seccionMinima * 400);
-    }
+    const protecciones = {
+        3.7: "Curva C - 16A",
+        7.4: "Curva C - 32A",
+        11: "Curva C - 16A (Tetrapolar)",
+        22: "Curva C - 32A (Tetrapolar)"
+    };
+    const magnetotermico = protecciones[potencia] || "Curva C - 32A";
 
-    const vNominal = (potencia <= 7.4) ? 230 : 400;
-    let porcentajeCDT = (caidaTension / vNominal) * 100;
     const seccionesOpciones = [6, 10, 16, 25, 35, 50];
+    let seccion = seccionesOpciones[0];
+    let porcentaje = 0;
 
-    while (porcentajeCDT > 1.5 && seccionMinima < 50) {
-        let indexActual = seccionesOpciones.indexOf(seccionMinima);
-        if (indexActual < seccionesOpciones.length - 1) {
-            seccionMinima = seccionesOpciones[indexActual + 1];
-            caidaTension = (vNominal === 230)
-                ? (2 * (potencia * 1000) * longitud) / (conductividadCobre * seccionMinima * 230)
-                : ((potencia * 1000) * longitud) / (conductividadCobre * seccionMinima * 400);
-            porcentajeCDT = (caidaTension / vNominal) * 100;
-        } else {
-            break;
-        }
+    for (const s of seccionesOpciones) {
+        seccion = s;
+        const caida = trifasico
+            ? (potencia * 1000 * longitud) / (conductividadCobre * s * V)
+            : (2 * potencia * 1000 * longitud) / (conductividadCobre * s * V);
+        porcentaje = (caida / V) * 100;
+        if (porcentaje <= 1.5) break;
     }
 
-    alert(`⚡ Cálculo VE (ITC-BT-52):\n- Sección: ${seccionMinima} mm²\n- Protección Magnetotérmica: ${magnetotermico}\n- Diferencial: ${diferencial}\n- Caída estimada: ${porcentajeCDT.toFixed(2)}%`);
+    // Caja de resultados creada bajo el botón (en vez de alert)
+    let box = document.getElementById('ve-res-box');
+    if (!box) {
+        const seccionVE = document.querySelector('#vista-ve .seccion-bloque');
+        if (!seccionVE) return;
+        box = document.createElement('div');
+        box.id = 've-res-box';
+        box.className = 'resultado-caja';
+        seccionVE.appendChild(box);
+    }
+    box.classList.remove('oculto');
+    box.innerHTML = `
+        <h4 style="margin:0 0 10px 0; color:var(--verde-ia);">🚗 Resultados Punto de Carga (ITC-BT-52):</h4>
+        <p>• <strong>Sección mínima de cobre:</strong> <span style="color:var(--azul-brillante); font-weight:bold;">${seccion} mm²</span></p>
+        <p>• <strong>Magnetotérmico:</strong> ${magnetotermico}</p>
+        <p>• <strong>Diferencial:</strong> 30 mA con detección de 6 mA DC (o Tipo B)</p>
+        <p>• <strong>Caída estimada:</strong> ${porcentaje.toFixed(2)}%</p>
+        <p style="font-size:0.8rem; color:#94a3b8;">Orientativo. Comprueba el esquema de instalación aplicable y la intensidad admisible según el método de instalación.</p>
+    `;
 }
 
-// --- CÁLCULO SOLAR FOTOVOLTAICA (ITC-BT-40) ---
+// --- CÁLCULO SOLAR FOTOVOLTAICA ---
 function calcularSolar() {
     const wPanel = parseFloat(document.getElementById('solar-w-panel')?.value) || 450;
     const numPaneles = parseInt(document.getElementById('solar-num-paneles')?.value) || 10;
     const voc = parseFloat(document.getElementById('solar-voc')?.value) || 49.5;
 
     const potPicoTotal = (wPanel * numPaneles) / 1000;
-    const tensionVocString = (voc * numPaneles);
+    const tensionVocString = voc * numPaneles;
     const box = document.getElementById('solar-res-box');
 
     if (box) {
@@ -564,8 +553,9 @@ function calcularSolar() {
         box.innerHTML = `
             <h4 style="margin:0 0 10px 0; color:var(--verde-ia);">☀️ Resultados Fotovoltaica:</h4>
             <p>• <strong>Potencia Pico Total:</strong> ${potPicoTotal.toFixed(2)} kWp</p>
-            <p>• <strong>Tensión Voc String:</strong> ${tensionVocString.toFixed(1)} V DC</p>
-            <p>• <strong>Protección DC:</strong> Fusibles gPV y descargador Sobretensiones Tipo 2 DC (1000V DC).</p>
+            <p>• <strong>Tensión Voc del string (a 25 °C):</strong> ${tensionVocString.toFixed(1)} V DC</p>
+            <p>• <strong>Protección DC:</strong> fusibles gPV (si procede) y descargador Tipo 2 DC.</p>
+            <p style="font-size:0.8rem; color:#94a3b8;">Con frío el Voc sube: corrígelo con el coeficiente de temperatura del panel a la temperatura mínima del lugar y comprueba que no supera la tensión máxima del inversor.</p>
         `;
     }
 }
@@ -577,19 +567,16 @@ function calcularMotor() {
     const fp = parseFloat(document.getElementById('motor-fp')?.value || 0.85);
     const rend = parseFloat(document.getElementById('motor-rend')?.value || 0.88);
 
-    const potenciaW = kw * 1000;
-    const iNominal = potenciaW / (Math.sqrt(3) * v * fp * rend);
-    const iRegulacionMin = (iNominal * 0.9).toFixed(1);
-    const iRegulacionMax = (iNominal * 1.15).toFixed(1);
+    const iNominal = (kw * 1000) / (Math.sqrt(3) * v * fp * rend);
 
     const box = document.getElementById('motor-res-box');
     if (box) {
         box.classList.remove('oculto');
         box.innerHTML = `
             <h4 style="margin:0 0 10px 0; color:var(--verde-ia);">⚙️ Resultados Motor:</h4>
-            <p>• <strong>Intensidad Nominal:</strong> <span style="color:var(--azul-brillante); font-weight:bold;">${iNominal.toFixed(2)} A</span></p>
-            <p>• <strong>Rango Ajuste Guardamotor:</strong> ${iRegulacionMin} A - ${iRegulacionMax} A</p>
-            <p>• <strong>Arranque recomendado:</strong> ${kw > 5.5 ? 'Estrella-Triángulo o Arrancador Suave' : 'Arranque Directo'}</p>
+            <p>• <strong>Intensidad Nominal calculada:</strong> <span style="color:var(--azul-brillante); font-weight:bold;">${iNominal.toFixed(2)} A</span></p>
+            <p>• <strong>Guardamotor:</strong> elige uno cuyo rango incluya ${iNominal.toFixed(1)} A y ajústalo a la intensidad de la placa de características.</p>
+            <p>• <strong>Arranque:</strong> ${kw > 5.5 ? 'valora Estrella-Triángulo o arrancador suave' : 'arranque directo habitual'} (la ITC-BT-47 limita la intensidad de arranque según la potencia).</p>
         `;
     }
 }
@@ -606,32 +593,11 @@ function generarKNX() {
         box.classList.remove('oculto');
         box.innerHTML = `
             <h4 style="margin:0 0 10px 0; color:var(--verde-ia);">🟢 Parámetros ETS Generados:</h4>
-            <p>• <strong>Dirección Física Individual:</strong> <span style="color:var(--azul-brillante); font-weight:bold; font-size:1.1rem;">${dirFisica}</span></p>
-            <p>• <strong>Esquema de Grupos sugerido:</strong> 1/1/${disp}</p>
-            <p>• <strong>Cable de Bus:</strong> Par trenzado apantallado verde certificado (2x2x0.8 mm).</p>
+            <p>• <strong>Dirección Física Individual:</strong> <span style="color:var(--azul-brillante); font-weight:bold; font-size:1.1rem;">${escaparHTML(dirFisica)}</span></p>
+            <p>• <strong>Esquema de Grupos sugerido:</strong> 1/1/${escaparHTML(disp)}</p>
+            <p>• <strong>Cable de Bus:</strong> par trenzado apantallado verde certificado KNX.</p>
         `;
     }
-}
-
-// --- VIDEOTECA TÉCNICA ---
-function cargarVideo(id, titulo) {
-    const elTitulo = document.getElementById('video-titulo');
-    const elIframe = document.getElementById('iframe-video') || document.getElementById('reproductor-youtube');
-    if (elTitulo) elTitulo.innerText = titulo;
-    if (elIframe) elIframe.src = `https://www.youtube-nocookie.com/embed/${id}`;
-}
-
-const VIDEOS_TECNICOS_SM = [
-    { id: "AiT3uWCY6BQ", titulo: "⚙️ Arranque Estrella-Triángulo: Potencia y Mando Explicado", categoria: "Automatismos" },
-    { id: "1DBXkg5-5sY", titulo: "📱 Conexión e Instalación Práctica de Dispositivos Sonoff", categoria: "Domótica" },
-    { id: "2Vv-BfVoq4g", titulo: "🚗 Instalación y Funcionamiento de Puntos de Recarga para Coches Eléctricos", categoria: "Vehículo Eléctrico" },
-    { id: "9bZkp7q19f0", titulo: "🌞 Dimensionamiento y Montaje de Instalaciones Solar Fotovoltaica", categoria: "Fotovoltaica" },
-    { id: "oxeOtf38jQ4", titulo: "📡 Infraestructuras de Telecomunicaciones ICT-2 y Fibra Óptica", categoria: "ICT-2" }
-];
-
-function cargarVideoTecnico(index) {
-    const video = VIDEOS_TECNICOS_SM[index];
-    if (video) cargarVideo(video.id, video.titulo);
 }
 
 // ==========================================
@@ -640,6 +606,17 @@ function cargarVideoTecnico(index) {
 document.addEventListener('DOMContentLoaded', () => {
     console.log("J.F iniciado correctamente");
     actualizarBotonEstado();
+
+    // Revalida la clave guardada (si la retiras en Vercel, deja de funcionar)
+    const guardada = leerLicencia();
+    if (guardada) {
+        comprobarClave(guardada).then(ok => {
+            if (ok === false) {
+                borrarLicencia();
+                actualizarBotonEstado();
+            }
+        });
+    }
 
     const inputClaveModal = document.getElementById('input-clave-licencia');
     if (inputClaveModal) {
@@ -662,6 +639,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Simulador Marcha / Paro ---
     const btnMarcha = document.getElementById('sim-btn-marcha');
     const btnParo = document.getElementById('sim-btn-paro');
     const estadoS1 = document.getElementById('estado-s1');
@@ -689,6 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Calculadora IVA ---
     const btnFactura = document.getElementById('btn-calcular-factura');
     if (btnFactura) {
         btnFactura.addEventListener('click', () => {
@@ -705,6 +684,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Tarifas ---
     const btnTarifa = document.getElementById('btn-calcular-tarifa');
     if (btnTarifa) {
         btnTarifa.addEventListener('click', () => {
@@ -749,35 +729,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         recognition.onresult = async (event) => {
             const pregunta = event.results[0][0].transcript;
+            const preguntaSegura = escaparHTML(pregunta);
             if (statusVoz) statusVoz.innerText = `Pregunta: "${pregunta}"`;
             btnVoz.innerText = "⏳ Elena está pensando...";
             btnVoz.style.backgroundColor = "var(--azul-tecnico)";
 
             if (respuestaBox) {
                 respuestaBox.classList.remove('oculto');
-                respuestaBox.innerHTML = `<strong>Tú:</strong> ${pregunta}<br><br><em>Elena está analizando la normativa con Gemini...</em>`;
+                respuestaBox.innerHTML = `<strong>Tú:</strong> ${preguntaSegura}<br><br><em>Elena está analizando la consulta...</em>`;
             }
 
             try {
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: conInstrucciones(pregunta) })
-                });
-
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.details || data.error || `Error HTTP ${res.status}`);
-
-                const raw = data.text || data.respuesta || "No se obtuvo respuesta del servidor.";
-                const respuestaFormateada = formatearTextoElena(raw);
-
+                const raw = (await consultarElena(conInstrucciones(pregunta))) || "No se obtuvo respuesta del servidor.";
                 if (respuestaBox) {
                     respuestaBox.innerHTML = `
-                        <strong>Tú:</strong> ${pregunta}<br><br>
+                        <strong>Tú:</strong> ${preguntaSegura}<br><br>
                         <strong>Elena:</strong><br>
                         <div style="max-height:450px; overflow-y:auto;">
-                            ${respuestaFormateada}
+                            ${formatearTextoElena(raw)}
                         </div>
+                        ${AVISO_ORIENTATIVO}
                     `;
                 }
                 hablarComoElena(raw);
@@ -786,8 +757,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (respuestaBox) {
                     respuestaBox.innerHTML = `
                         <strong style="color:#ef4444;">❌ Error al conectar con Elena</strong><br><br>
-                        ${err.message}<br><br>
-                        Comprueba el endpoint <code>/api/chat</code> y <code>GEMINI_API_KEY</code>.
+                        ${escaparHTML(err.message)}
                     `;
                 }
             } finally {
@@ -823,7 +793,7 @@ document.addEventListener('DOMContentLoaded', () => {
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('Service Worker registrado correctamente en J.F:', reg.scope))
+            .then(reg => console.log('Service Worker registrado en J.F:', reg.scope))
             .catch(err => console.log('Error en el registro del Service Worker:', err));
     });
 }
@@ -832,6 +802,7 @@ if ('serviceWorker' in navigator) {
 // EXPOSICIÓN GLOBAL DE FUNCIONES
 // ==========================================
 window.tieneLicencia = tieneLicencia;
+window.comprobarClave = comprobarClave;
 window.verificarYEntrar = verificarYEntrar;
 window.cerrarModalLicencia = cerrarModalLicencia;
 window.validarClaveAcceso = validarClaveAcceso;
@@ -851,5 +822,3 @@ window.calcularVE = calcularVE;
 window.calcularSolar = calcularSolar;
 window.calcularMotor = calcularMotor;
 window.generarKNX = generarKNX;
-window.cargarVideo = cargarVideo;
-window.cargarVideoTecnico = cargarVideoTecnico;
