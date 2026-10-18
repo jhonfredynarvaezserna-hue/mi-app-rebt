@@ -327,3 +327,240 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();
 })();
+
+
+// ==========================================================
+// PRESUPUESTOS · Avería eléctrica · Urgencia 24 h · Climatización
+// Las cuentas las hace la app con TUS precios (editables y guardados en
+// este dispositivo). Salida: PDF (Imprimir → Guardar como PDF) o WhatsApp.
+// ¡LOS PRECIOS DE PARTIDA SON DE EJEMPLO! Cámbialos por los tuyos.
+// ==========================================================
+(function () {
+    'use strict';
+
+    var K_TAR = 'jf_presu_tarifas', K_NUM = 'jf_presu_num', K_EMP = 'jf_presu_empresa';
+    // [clave, concepto, cantidad, precio, ¿lleva recargo de urgencia? (mano de obra / desplazamiento)]
+    var PRESETS = {
+        averia: { nombre: 'Avería eléctrica', lineas: [
+            ['diag', 'Diagnóstico y localización de la avería', 1, 45, true],
+            ['mo', 'Mano de obra (hora)', 1, 45, true],
+            ['desp', 'Desplazamiento', 1, 30, true],
+            ['mag', 'Magnetotérmico (ud)', 1, 15, false],
+            ['dif', 'Diferencial 30 mA (ud)', 1, 50, false],
+            ['mat', 'Material pequeño (conductor, regletas, bridas)', 1, 10, false] ] },
+        urgencia: { nombre: 'Urgencia 24 horas', lineas: [
+            ['diag', 'Diagnóstico urgente y puesta en seguridad', 1, 45, true],
+            ['mo', 'Mano de obra (hora)', 1, 45, true],
+            ['desp', 'Desplazamiento urgente', 1, 30, true],
+            ['mag', 'Magnetotérmico (ud)', 1, 15, false],
+            ['dif', 'Diferencial 30 mA (ud)', 1, 50, false],
+            ['mat', 'Material pequeño (conductor, regletas, bridas)', 1, 10, false] ] },
+        clima: { nombre: 'Climatización', lineas: [
+            ['diag', 'Revisión y diagnóstico del equipo', 1, 45, true],
+            ['mo', 'Mano de obra (hora)', 1, 45, true],
+            ['desp', 'Desplazamiento', 1, 30, true],
+            ['fuga', 'Localización y reparación de fuga (ud)', 1, 80, false],
+            ['gas', 'Carga de refrigerante (kg)', 1, 50, false],
+            ['limp', 'Limpieza y mantenimiento de unidad (ud)', 1, 60, false],
+            ['inst', 'Instalación de split completo (mano de obra)', 1, 250, false],
+            ['linea', 'Línea frigorífica y material de instalación (m)', 3, 20, false] ] }
+    };
+    var FRANJAS = [['0', 'Horario normal (sin recargo)'], ['25', 'Tarde / noche (+25 %)'], ['50', 'Fin de semana (+50 %)'], ['75', 'Festivo / madrugada (+75 %)']];
+
+    var lineas = [];
+    var tipoActual = 'averia';
+
+    function $(id) { return document.getElementById(id); }
+    function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]; }); }
+    function eur(n) { return (Math.round(n * 100) / 100).toFixed(2).replace('.', ',') + ' €'; }
+    function num(v) { var n = parseFloat(String(v).replace(',', '.')); return isNaN(n) ? 0 : n; }
+    function leer(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } }
+    function guardar(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { } }
+
+    function cargarTipo(tipo) {
+        tipoActual = tipo;
+        var tar = leer(K_TAR, {});
+        lineas = PRESETS[tipo].lineas.map(function (l) {
+            var clave = tipo + ':' + l[0];
+            return { k: clave, c: l[1], q: l[2], p: tar[clave] != null ? tar[clave] : l[3], rec: l[4] };
+        });
+        $('pp-franja').value = tipo === 'urgencia' ? '25' : '0';
+        pintarTabla();
+    }
+
+    function pintarTabla() {
+        var h = '';
+        lineas.forEach(function (l, i) {
+            h += '<tr data-i="' + i + '">' +
+                '<td><input type="text" class="pp-c" value="' + esc(l.c) + '" style="width:100%"></td>' +
+                '<td><input type="number" class="pp-q" value="' + l.q + '" min="0" step="0.5" style="width:70px"></td>' +
+                '<td><input type="number" class="pp-p" value="' + l.p + '" min="0" step="1" style="width:90px"></td>' +
+                '<td class="pp-s" style="white-space:nowrap">' + eur(l.q * l.p) + '</td>' +
+                '<td><button type="button" class="pp-x" title="Quitar" style="background:#7f1d1d;padding:6px 10px">✕</button></td></tr>';
+        });
+        $('pp-lineas').innerHTML = h || '<tr><td colspan="5" style="color:#94a3b8">Sin partidas. Añade una.</td></tr>';
+        totales();
+    }
+
+    function calculo() {
+        var pct = num($('pp-franja').value), iva = num($('pp-iva').value);
+        var baseRec = 0, baseNo = 0;
+        lineas.forEach(function (l) { var s = l.q * l.p; if (l.rec) baseRec += s; else baseNo += s; });
+        var recargo = baseRec * pct / 100, sub = baseRec + baseNo + recargo, ivaImp = sub * iva / 100;
+        return { pct: pct, ivaPct: iva, recargo: recargo, sub: sub, iva: ivaImp, total: sub + ivaImp, baseRec: baseRec };
+    }
+
+    function totales() {
+        var t = calculo();
+        $('pp-tot').innerHTML =
+            (t.recargo > 0 ? '<p>• <strong>Recargo urgencia (' + t.pct + ' % sobre mano de obra y desplazamiento):</strong> ' + eur(t.recargo) + '</p>' : '') +
+            '<p>• <strong>Base imponible:</strong> ' + eur(t.sub) + '</p>' +
+            '<p>• <strong>IVA (' + t.ivaPct + ' %):</strong> ' + eur(t.iva) + '</p>' +
+            '<p style="margin-bottom:0">• <strong>Total:</strong> <span style="color:var(--verde-ia);font-weight:bold;font-size:1.15rem">' + eur(t.total) + '</span></p>';
+    }
+
+    function numeroPresupuesto() {
+        var n = (leer(K_NUM, 0) || 0) + 1;
+        guardar(K_NUM, n);
+        return 'JF-' + new Date().getFullYear() + '-' + ('000' + n).slice(-3);
+    }
+
+    function datos() {
+        return {
+            cliente: $('pp-cliente').value.trim(), tel: $('pp-tel').value.trim(), dir: $('pp-dir').value.trim(),
+            desc: $('pp-desc').value.trim(), nif: $('pp-nif').value.trim(), mail: $('pp-mail').value.trim(),
+            cond: $('pp-cond').value.trim()
+        };
+    }
+
+    function lineasValidas() { return lineas.filter(function (l) { return l.c.trim() && l.q > 0; }); }
+
+    function documento(numero) {
+        var d = datos(), t = calculo(), fecha = new Date().toLocaleDateString('es-ES');
+        guardar(K_EMP, { nif: d.nif, mail: d.mail, cond: d.cond });
+        var filas = lineasValidas().map(function (l) {
+            return '<tr><td>' + esc(l.c) + '</td><td style="text-align:right">' + l.q + '</td><td style="text-align:right">' + eur(l.p) + '</td><td style="text-align:right">' + eur(l.q * l.p) + '</td></tr>';
+        }).join('');
+        return '<div style="font-family:Arial,sans-serif;color:#111;background:#fff;padding:24px;max-width:780px;margin:0 auto">' +
+            '<div style="display:flex;justify-content:space-between;border-bottom:3px solid #1e6091;padding-bottom:10px">' +
+              '<div><h1 style="margin:0;font-size:22px;color:#1e6091">J.F Clima &amp; Electricidad</h1>' +
+              '<div style="font-size:12px;color:#444">Tel. 642 26 96 80' + (d.mail ? ' · ' + esc(d.mail) : '') + (d.nif ? '<br>NIF/CIF: ' + esc(d.nif) : '') + '</div></div>' +
+              '<div style="text-align:right;font-size:13px"><strong>PRESUPUESTO ' + esc(numero) + '</strong><br>Fecha: ' + fecha + '<br>Validez: 15 días</div></div>' +
+            '<div style="margin:16px 0;font-size:13px"><strong>Cliente:</strong> ' + esc(d.cliente || '—') + (d.tel ? ' · Tel. ' + esc(d.tel) : '') +
+              '<br><strong>Dirección:</strong> ' + esc(d.dir || '—') + '<br><strong>Trabajo:</strong> ' + esc(PRESETS[tipoActual].nombre) +
+              (d.desc ? '<br><strong>Descripción:</strong> ' + esc(d.desc) : '') + '</div>' +
+            '<table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="background:#e8f1f8">' +
+              '<th style="text-align:left;padding:6px;border:1px solid #bbb">Concepto</th><th style="padding:6px;border:1px solid #bbb">Cant.</th>' +
+              '<th style="padding:6px;border:1px solid #bbb">Precio</th><th style="padding:6px;border:1px solid #bbb">Importe</th></tr></thead><tbody>' +
+              filas.replace(/<td/g, '<td style="padding:6px;border:1px solid #ccc;"').replace(/style="padding:6px;border:1px solid #ccc;" style="/g, 'style="padding:6px;border:1px solid #ccc;') +
+            '</tbody></table>' +
+            '<div style="margin-top:12px;text-align:right;font-size:13px">' +
+              (t.recargo > 0 ? 'Recargo urgencia (' + t.pct + ' %): ' + eur(t.recargo) + '<br>' : '') +
+              'Base imponible: ' + eur(t.sub) + '<br>IVA (' + t.ivaPct + ' %): ' + eur(t.iva) + '<br>' +
+              '<strong style="font-size:17px">TOTAL: ' + eur(t.total) + '</strong></div>' +
+            '<div style="margin-top:18px;font-size:11px;color:#444;border-top:1px solid #ccc;padding-top:8px;white-space:pre-line">' + esc(d.cond) + '</div></div>';
+    }
+
+    function resumen(numero) {
+        var d = datos(), t = calculo();
+        var s = '*PRESUPUESTO ' + numero + ' · J.F Clima & Electricidad*\n' + PRESETS[tipoActual].nombre + (d.cliente ? ' · ' + d.cliente : '') + '\n\n';
+        lineasValidas().forEach(function (l) { s += '• ' + l.c + ': ' + l.q + ' × ' + eur(l.p) + ' = ' + eur(l.q * l.p) + '\n'; });
+        if (t.recargo > 0) s += '• Recargo urgencia (' + t.pct + ' %): ' + eur(t.recargo) + '\n';
+        s += '\nBase: ' + eur(t.sub) + '\nIVA (' + t.ivaPct + ' %): ' + eur(t.iva) + '\n*TOTAL: ' + eur(t.total) + '*\n\nValidez: 15 días. Tel. 642 26 96 80';
+        return s;
+    }
+
+    function aPDF() {
+        if (!lineasValidas().length) { $('pp-msg').textContent = 'Añade al menos una partida con cantidad mayor que 0.'; return; }
+        var numero = numeroPresupuesto();
+        $('pp-print').innerHTML = documento(numero);
+        $('pp-msg').textContent = 'Presupuesto ' + numero + ' listo: en la ventana de impresión elige "Guardar como PDF".';
+        setTimeout(function () { window.print(); }, 150);
+    }
+
+    function aWhatsApp() {
+        if (!lineasValidas().length) { $('pp-msg').textContent = 'Añade al menos una partida con cantidad mayor que 0.'; return; }
+        var numero = numeroPresupuesto(), tel = datos().tel.replace(/\D/g, '');
+        if (tel.length === 9) tel = '34' + tel;
+        window.open('https://wa.me/' + tel + '?text=' + encodeURIComponent(resumen(numero)), '_blank');
+        $('pp-msg').textContent = 'Presupuesto ' + numero + ' abierto en WhatsApp. Revisa el texto antes de enviarlo.';
+    }
+
+    function init() {
+        var main = document.querySelector('main.panel-tecnico'), menu = document.querySelector('.menu-sidebar');
+        if (!main || !menu || $('vista-presupuesto')) return;
+
+        var emp = leer(K_EMP, {});
+        var condDefecto = 'Presupuesto válido durante 15 días. Los trabajos o materiales no incluidos se presupuestarán aparte. Precios sujetos a revisión una vez inspeccionada la instalación.';
+
+        var st = document.createElement('style');
+        st.textContent = '#pp-print{display:none}@media print{body *{visibility:hidden!important}#pp-print,#pp-print *{visibility:visible!important}#pp-print{display:block!important;position:absolute;left:0;top:0;width:100%;background:#fff}}';
+        document.head.appendChild(st);
+
+        var s = document.createElement('section');
+        s.id = 'vista-presupuesto'; s.className = 'vista-section oculto';
+        s.innerHTML =
+            '<header><button type="button" class="btn-volver" onclick="abrirModuloDirecto(\'vista-inicio\')">⬅ Volver al Menú</button>' +
+            '<h1>🧾 Presupuesto: avería · urgencia 24 h · climatización</h1></header>' +
+            '<div class="seccion-bloque" style="border-top:3px solid #f59e0b"><p style="margin:0;font-size:.88rem;color:#fbbf24">⚠️ Los precios de partida son <strong>de ejemplo</strong>. Cámbialos por los tuyos: se guardan en este dispositivo. El presupuesto es un borrador: revísalo antes de enviarlo.</p></div>' +
+            '<div class="seccion-bloque"><h3 style="margin-top:0;color:var(--azul-brillante)">1. Cliente y trabajo</h3><div class="calc-grid">' +
+              '<div class="calc-field"><label>Tipo de trabajo:</label><select id="pp-tipo"><option value="averia">Avería eléctrica</option><option value="urgencia">Urgencia 24 horas</option><option value="clima">Climatización</option></select></div>' +
+              '<div class="calc-field"><label>Franja horaria:</label><select id="pp-franja">' + FRANJAS.map(function (f) { return '<option value="' + f[0] + '">' + f[1] + '</option>'; }).join('') + '</select></div>' +
+              '<div class="calc-field"><label>Cliente:</label><input type="text" id="pp-cliente"></div>' +
+              '<div class="calc-field"><label>Teléfono:</label><input type="tel" id="pp-tel" placeholder="6XXXXXXXX"></div>' +
+              '<div class="calc-field"><label>Dirección:</label><input type="text" id="pp-dir"></div>' +
+              '<div class="calc-field"><label>IVA (%):</label><input type="number" id="pp-iva" value="21" step="1" min="0"></div></div>' +
+              '<div class="calc-field"><label>Descripción del trabajo:</label><textarea id="pp-desc" rows="2" style="width:100%"></textarea></div></div>' +
+            '<div class="seccion-bloque"><h3 style="margin-top:0;color:var(--azul-brillante)">2. Partidas</h3>' +
+              '<div style="overflow-x:auto"><table class="tabla-normativa" style="min-width:560px"><thead><tr><th>Concepto</th><th>Cant.</th><th>Precio €</th><th>Importe</th><th></th></tr></thead><tbody id="pp-lineas"></tbody></table></div>' +
+              '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button type="button" id="pp-add">+ Añadir partida</button><button type="button" id="pp-reset" style="background:#475569">↺ Restaurar partidas del tipo</button></div>' +
+              '<div id="pp-tot" class="resultado-caja"></div></div>' +
+            '<div class="seccion-bloque"><h3 style="margin-top:0;color:var(--azul-brillante)">3. Datos de J.F y condiciones</h3><div class="calc-grid">' +
+              '<div class="calc-field"><label>NIF/CIF (opcional):</label><input type="text" id="pp-nif" value="' + esc(emp.nif || '') + '"></div>' +
+              '<div class="calc-field"><label>Email (opcional):</label><input type="text" id="pp-mail" value="' + esc(emp.mail || '') + '"></div></div>' +
+              '<div class="calc-field"><label>Condiciones:</label><textarea id="pp-cond" rows="3" style="width:100%">' + esc(emp.cond || condDefecto) + '</textarea></div>' +
+              '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:15px"><button type="button" id="pp-pdf" style="flex:1;background:var(--verde-ia)">🖨️ Generar PDF</button>' +
+              '<button type="button" id="pp-wa" style="flex:1;background:var(--verde-wa)">📱 Enviar por WhatsApp</button></div>' +
+              '<p id="pp-msg" style="color:#94a3b8;font-size:.85rem;margin-bottom:0"></p></div>';
+        main.appendChild(s);
+        var pr = document.createElement('div'); pr.id = 'pp-print'; document.body.appendChild(pr);
+
+        $('pp-tipo').onchange = function () { cargarTipo(this.value); };
+        $('pp-franja').onchange = totales; $('pp-iva').oninput = totales;
+        $('pp-add').onclick = function () { lineas.push({ k: null, c: '', q: 1, p: 0, rec: false }); pintarTabla(); };
+        $('pp-reset').onclick = function () { cargarTipo(tipoActual); };
+        $('pp-pdf').onclick = aPDF; $('pp-wa').onclick = aWhatsApp;
+
+        var cuerpo = $('pp-lineas');
+        cuerpo.addEventListener('input', function (e) {
+            var tr = e.target.closest('tr'); if (!tr) return;
+            var l = lineas[+tr.getAttribute('data-i')]; if (!l) return;
+            if (e.target.className === 'pp-c') l.c = e.target.value;
+            if (e.target.className === 'pp-q') l.q = num(e.target.value);
+            if (e.target.className === 'pp-p') {
+                l.p = num(e.target.value);
+                if (l.k) { var tar = leer(K_TAR, {}); tar[l.k] = l.p; guardar(K_TAR, tar); }   // guarda TU precio
+            }
+            tr.querySelector('.pp-s').textContent = eur(l.q * l.p);
+            totales();
+        });
+        cuerpo.addEventListener('click', function (e) {
+            if (e.target.className !== 'pp-x') return;
+            lineas.splice(+e.target.closest('tr').getAttribute('data-i'), 1); pintarTabla();
+        });
+
+        // Enlace en el menú
+        var li = '<li><a href="javascript:void(0)" id="pp-enlace"><span>🧾 Presupuesto (avería · urgencia · clima)</span></a></li>';
+        var extras = Array.prototype.find.call(menu.querySelectorAll('.menu-section'), function (m) { return m.textContent.indexOf('HERRAMIENTAS EXTRA') !== -1; });
+        if (extras && extras.querySelector('ul')) extras.querySelector('ul').insertAdjacentHTML('afterbegin', li);
+        else {
+            var b = document.createElement('div'); b.className = 'menu-section';
+            b.innerHTML = '<div style="color:var(--azul-brillante);font-size:.8rem;font-weight:bold;margin:15px 0 10px 0">💼 PRESUPUESTOS</div><ul>' + li + '</ul>';
+            menu.appendChild(b);
+        }
+        $('pp-enlace').onclick = function () { window.abrirModuloDirecto('vista-presupuesto'); };
+        cargarTipo('averia');
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+})();
