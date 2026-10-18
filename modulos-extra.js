@@ -564,3 +564,37 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();
 })();
+
+
+// ==========================================================
+// ACCESOS DIRECTOS AL PRESUPUESTO
+// - Botón dentro de "🚨 Urgencias 24/7"
+// - Enlace directo:  tu-web/#presupuesto-urgencia  (también #presupuesto-averia y #presupuesto-clima)
+// ==========================================================
+(function () {
+    'use strict';
+    function abrir(tipo) {
+        var sel = document.getElementById('pp-tipo');
+        if (sel) { sel.value = tipo; if (sel.onchange) sel.onchange.call(sel); }
+        window.abrirModuloDirecto('vista-presupuesto');
+    }
+    window.abrirPresupuesto = abrir;
+
+    function init() {
+        var u = document.getElementById('vista-urgencias');
+        if (u && !document.getElementById('pp-btn-urg')) {
+            var d = document.createElement('div');
+            d.className = 'seccion-bloque';
+            d.style.borderTop = '3px solid #16a34a';
+            d.innerHTML = '<button type="button" id="pp-btn-urg" style="width:100%;background:#16a34a;padding:14px;font-size:1rem">🧾 Hacer presupuesto de urgencia</button>';
+            var banner = u.querySelector('.banner-urgencias');
+            if (banner && banner.nextSibling) u.insertBefore(d, banner.nextSibling); else u.appendChild(d);
+            document.getElementById('pp-btn-urg').onclick = function () { abrir('urgencia'); };
+        }
+        var h = (location.hash || '').toLowerCase();
+        var mapa = { '#presupuesto-urgencia': 'urgencia', '#presupuesto-averia': 'averia', '#presupuesto-clima': 'clima' };
+        if (mapa[h]) abrir(mapa[h]);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+})();
