@@ -164,3 +164,166 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();
 })();
+
+
+// ==========================================================
+// MODO ESTUDIO 1 · SIN CANDADOS
+// Todos los módulos se abren libres; se ocultan 🔒, PRO y el botón de licencia
+// ==========================================================
+(function () {
+    'use strict';
+    window.verificarYEntrar = function (id) { window.abrirModuloDirecto(id); };
+
+    function limpiar() {
+        document.querySelectorAll('.insignia-candado').forEach(function (e) { e.remove(); });
+        document.querySelectorAll('.menu-sidebar a span').forEach(function (s) {
+            if (s.textContent.trim() === '🔒') s.remove();
+        });
+        var b = document.getElementById('btn-estado-licencia');
+        if (b && b.parentElement) b.parentElement.style.display = 'none';
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', limpiar);
+    else limpiar();
+})();
+
+
+// ==========================================================
+// MODO ESTUDIO 2 · TEST DE PROTECCIONES (con explicación y repaso de fallos)
+// El progreso se guarda en el móvil/navegador de cada persona.
+// IMPORTANTE: contrasta cada "ref" con el texto oficial del REBT (BOE).
+// ==========================================================
+(function () {
+    'use strict';
+
+    var CLAVE = 'jf_test_protecciones';
+    var PREGUNTAS = [
+        { id: 'p1', q: '¿Qué sensibilidad tiene el interruptor diferencial que protege a las personas en una vivienda?',
+          o: ['30 mA', '300 mA', '500 mA', '30 A'], c: 0,
+          e: 'Los diferenciales de alta sensibilidad, de 30 mA, son los que protegen a las personas frente a fugas y contactos indirectos.', ref: 'ITC-BT-24 / ITC-BT-25' },
+        { id: 'p2', q: '¿Contra qué protege un interruptor magnetotérmico (PIA)?',
+          o: ['Sobrecargas y cortocircuitos', 'Solo fugas a tierra', 'Solo sobretensiones', 'Solo contactos directos'], c: 0,
+          e: 'La parte térmica actúa ante sobrecargas y la parte magnética ante cortocircuitos. Protege al cable y a la instalación.', ref: 'ITC-BT-22' },
+        { id: 'p3', q: '¿Qué compara un interruptor diferencial para decidir si dispara?',
+          o: ['La corriente que entra con la que sale', 'La tensión con la frecuencia', 'La temperatura del cable', 'La potencia con el cos φ'], c: 0,
+          e: 'Si la corriente que sale es menor que la que entra, hay una fuga a tierra (por ejemplo, a través de una persona), y el diferencial corta.', ref: 'ITC-BT-24' },
+        { id: 'p4', q: 'En una vivienda básica, ¿qué magnetotérmico corresponde al circuito C3 (cocina y horno)?',
+          o: ['10 A', '16 A', '25 A', '40 A'], c: 2,
+          e: 'C3 lleva PIA de 25 A y conductor de 6 mm².', ref: 'ITC-BT-25 (tabla 1)' },
+        { id: 'p5', q: '¿Qué sección mínima de cobre lleva el circuito C1 (iluminación) en una vivienda?',
+          o: ['1 mm²', '1,5 mm²', '2,5 mm²', '4 mm²'], c: 1,
+          e: 'C1 lleva 1,5 mm² con PIA de 10 A. Las tomas generales (C2) llevan 2,5 mm² con PIA de 16 A.', ref: 'ITC-BT-25 (tabla 1)' },
+        { id: 'p6', q: 'Un magnetotérmico de curva C dispara magnéticamente entre…',
+          o: ['3 y 5 veces In', '5 y 10 veces In', '10 y 20 veces In', '20 y 30 veces In'], c: 1,
+          e: 'Curva B: 3 a 5 In. Curva C: 5 a 10 In. Curva D: 10 a 20 In. En viviendas lo habitual es la curva C.', ref: 'UNE-EN 60898-1' },
+        { id: 'p7', q: '¿Qué diferencial detecta también corrientes de fuga continuas pulsantes, además de las alternas?',
+          o: ['Tipo AC', 'Tipo A', 'Ninguno', 'Solo el de 300 mA'], c: 1,
+          e: 'El tipo AC solo detecta alterna senoidal. El tipo A añade la continua pulsante, necesaria con electrónica de potencia.', ref: 'UNE-EN 61008 / 61009' },
+        { id: 'p8', q: 'Para un punto de recarga de vehículo eléctrico, ¿qué exige la ITC-BT-52 en cuanto a corriente continua de fuga?',
+          o: ['Nada especial', 'Diferencial tipo A con detección de 6 mA CC, o tipo B', 'Diferencial de 300 mA', 'Solo magnetotérmico'], c: 1,
+          e: 'Se exige protección diferencial por toma, tipo A con dispositivo de detección de 6 mA de corriente continua, o tipo B.', ref: 'ITC-BT-52' },
+        { id: 'p9', q: 'En el cuadro de una vivienda, ¿qué va inmediatamente después del IGA?',
+          o: ['Los diferenciales', 'La derivación individual', 'El contador', 'Las tomas de tierra'], c: 0,
+          e: 'El orden es: ICP (o contador digital), IGA, diferenciales y después los PIA de cada circuito.', ref: 'ITC-BT-17 / ITC-BT-25' },
+        { id: 'p10', q: 'Un diferencial salta cada vez que enchufas una lavadora. ¿Qué es lo más probable?',
+          o: ['Hay una fuga a tierra en el aparato o en su línea', 'La tensión es demasiado baja', 'El IGA está mal calibrado', 'El contador está averiado'], c: 0,
+          e: 'Si salta al conectar un aparato concreto, lo normal es una fuga a tierra en él o en su circuito. Desenchúfalo y compruébalo antes de rearmar.', ref: 'ITC-BT-24' }
+    ];
+
+    var estado = { cola: [], i: 0, aciertos: 0, fallosSesion: [], modoRepaso: false };
+
+    function leer() { try { return JSON.parse(localStorage.getItem(CLAVE)) || {}; } catch (e) { return {}; } }
+    function guardar(d) { try { localStorage.setItem(CLAVE, JSON.stringify(d)); } catch (e) { } }
+    function mezclar(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+    function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]; }); }
+    function $(id) { return document.getElementById(id); }
+
+    function portada() {
+        var d = leer(), nFallos = (d.fallos || []).length;
+        $('tp-cuerpo').innerHTML =
+            '<p style="color:#94a3b8">10 preguntas con explicación y la referencia de donde sale cada respuesta. Lo que falles se guarda para repasarlo.</p>' +
+            '<div class="resultado-caja">' +
+              '<p>• <strong>Mejor nota:</strong> ' + (d.mejor != null ? d.mejor + ' / ' + PREGUNTAS.length : 'aún sin intentos') + '</p>' +
+              '<p>• <strong>Intentos:</strong> ' + (d.intentos || 0) + '</p>' +
+              '<p style="margin-bottom:0">• <strong>Preguntas por repasar:</strong> ' + nFallos + '</p></div>' +
+            '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:15px">' +
+              '<button type="button" id="tp-empezar" style="flex:2">▶ Empezar el test</button>' +
+              (nFallos ? '<button type="button" id="tp-repaso" style="flex:1;background:#d97706">🔁 Repasar fallos (' + nFallos + ')</button>' : '') +
+            '</div>';
+        $('tp-empezar').onclick = function () { empezar(false); };
+        if ($('tp-repaso')) $('tp-repaso').onclick = function () { empezar(true); };
+    }
+
+    function empezar(repaso) {
+        var d = leer(), lista = PREGUNTAS;
+        if (repaso) lista = PREGUNTAS.filter(function (p) { return (d.fallos || []).indexOf(p.id) !== -1; });
+        estado = { cola: mezclar(lista), i: 0, aciertos: 0, fallosSesion: [], modoRepaso: repaso };
+        pregunta();
+    }
+
+    function pregunta() {
+        var p = estado.cola[estado.i];
+        var orden = mezclar(p.o.map(function (t, k) { return { t: t, ok: k === p.c }; }));
+        var h = '<p style="color:#94a3b8;font-size:.85rem">Pregunta ' + (estado.i + 1) + ' de ' + estado.cola.length + (estado.modoRepaso ? ' · repaso' : '') + '</p>' +
+                '<h3 style="margin-top:0">' + esc(p.q) + '</h3><div style="display:flex;flex-direction:column;gap:10px">';
+        orden.forEach(function (o, k) { h += '<button type="button" class="tp-op" data-ok="' + (o.ok ? 1 : 0) + '" style="text-align:left;background:var(--input-bg);border:1px solid var(--bordes)">' + esc(o.t) + '</button>'; });
+        h += '</div><div id="tp-fb"></div>';
+        $('tp-cuerpo').innerHTML = h;
+        Array.prototype.forEach.call(document.querySelectorAll('.tp-op'), function (b) {
+            b.onclick = function () { responder(b, p); };
+        });
+    }
+
+    function responder(boton, p) {
+        var ok = boton.getAttribute('data-ok') === '1';
+        Array.prototype.forEach.call(document.querySelectorAll('.tp-op'), function (b) {
+            b.disabled = true;
+            if (b.getAttribute('data-ok') === '1') { b.style.background = '#065f46'; b.style.borderColor = '#10b981'; }
+        });
+        if (!ok) { boton.style.background = '#7f1d1d'; boton.style.borderColor = '#ef4444'; estado.fallosSesion.push(p.id); } else estado.aciertos++;
+        var ultima = estado.i === estado.cola.length - 1;
+        $('tp-fb').innerHTML =
+            '<div class="resultado-caja"><p style="margin-top:0"><strong>' + (ok ? '✅ Correcto' : '❌ No es esa') + '</strong></p>' +
+            '<p>' + esc(p.e) + '</p><p style="font-size:.8rem;color:#94a3b8;margin-bottom:0">Referencia: ' + esc(p.ref) + '</p></div>' +
+            '<button type="button" id="tp-sig" style="width:100%;margin-top:12px">' + (ultima ? 'Ver resultado' : 'Siguiente →') + '</button>';
+        $('tp-sig').onclick = function () { if (ultima) fin(); else { estado.i++; pregunta(); } };
+    }
+
+    function fin() {
+        var d = leer(), total = estado.cola.length, fallos = d.fallos || [];
+        estado.cola.forEach(function (p) {
+            var f = estado.fallosSesion.indexOf(p.id) !== -1, pos = fallos.indexOf(p.id);
+            if (f && pos === -1) fallos.push(p.id);
+            if (!f && pos !== -1) fallos.splice(pos, 1);
+        });
+        d.fallos = fallos;
+        if (!estado.modoRepaso) { d.intentos = (d.intentos || 0) + 1; if (d.mejor == null || estado.aciertos > d.mejor) d.mejor = estado.aciertos; }
+        guardar(d);
+        var nota = estado.aciertos / total;
+        $('tp-cuerpo').innerHTML =
+            '<h3 style="margin-top:0">Resultado: ' + estado.aciertos + ' / ' + total + '</h3>' +
+            '<p style="color:#94a3b8">' + (nota >= 0.9 ? 'Muy bien: este tema lo dominas.' : nota >= 0.6 ? 'Vas bien. Repasa los fallos y repite.' : 'Hay que reforzar este tema: repasa los fallos y vuelve a intentarlo.') + '</p>' +
+            '<div style="display:flex;gap:10px;flex-wrap:wrap"><button type="button" id="tp-otra" style="flex:1">Volver al inicio del test</button></div>';
+        $('tp-otra').onclick = portada;
+    }
+
+    function init() {
+        var main = document.querySelector('main.panel-tecnico'), menu = document.querySelector('.menu-sidebar');
+        if (!main || !menu || $('vista-test-protecciones')) return;
+        var s = document.createElement('section');
+        s.id = 'vista-test-protecciones'; s.className = 'vista-section oculto';
+        s.innerHTML = '<header><button type="button" class="btn-volver" onclick="abrirModuloDirecto(\'vista-inicio\')">⬅ Volver al Menú</button>' +
+            '<h1>📝 Test: Protecciones eléctricas</h1></header><div class="seccion-bloque"><div id="tp-cuerpo"></div>' +
+            '<p style="font-size:.78rem;color:#64748b;margin-bottom:0">Material de estudio. Contrasta siempre los valores con el texto oficial del REBT.</p></div>';
+        main.appendChild(s);
+
+        var bloque = document.createElement('div');
+        bloque.className = 'menu-section';
+        bloque.innerHTML = '<div style="color:var(--azul-brillante);font-size:.8rem;font-weight:bold;margin:15px 0 10px 0">🎓 PRÁCTICA Y TESTS</div><ul>' +
+            '<li><a href="javascript:void(0)" id="tp-enlace"><span>📝 Test de Protecciones</span></a></li></ul>';
+        var primero = menu.querySelectorAll('.menu-section')[1] || null;
+        if (primero) menu.insertBefore(bloque, primero); else menu.appendChild(bloque);
+        $('tp-enlace').onclick = function () { portada(); window.abrirModuloDirecto('vista-test-protecciones'); };
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+})();
