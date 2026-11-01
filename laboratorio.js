@@ -1,5 +1,5 @@
 // ==========================================================
-// J.F - LABORATORIO INTERACTIVO (anexo, no toca main.js)
+// J.F - lABORATORIO INTERACTIVO (anexo, no toca main.js)
 // 1) Dos depósitos con prioridad (tu práctica, simulada)
 // 2) Contactor y campo magnético (electroimán)
 // 3) Coche eléctrico: precarga de batería e interbloqueo de carga
