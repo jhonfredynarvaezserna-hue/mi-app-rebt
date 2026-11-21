@@ -1,0 +1,71 @@
+            <!-- ==================== VISTA ESQUEMAS CADE SIMU ==================== -->
+            <section id="vista-esquemas-cade" class="vista-section oculto">
+                <header>
+                    <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+                    <h1>📐 Esquemas de Automatismos (CADe SIMU)</h1>
+                </header>
+
+                <div class="seccion-bloque" style="border-top: 3px solid #d97706;">
+                    <h3 style="color: var(--azul-brillante); margin-top: 0;">⚙️ Tolva que almacena grano (2 motores)</h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">Dos motores trifásicos que llevan el grano a la tolva y lo mueven por dentro. Cada motor tiene su contactor y su relé térmico, y se puede cambiar de uno a otro sin parar el automatismo.</p>
+                    <div style="overflow-x: auto; background: #fff; border-radius: 8px; border: 1px solid var(--bordes);">
+                        <img src="esquema-tolva.png" alt="Esquema de la tolva de grano con dos motores M1 y M2, contactores QA y QA1, relés térmicos F1 y F2 y pilotos P1, P2 y P3" style="display: block; width: 100%; min-width: 720px; height: auto;">
+                    </div>
+                    <p style="font-size: 0.82rem; color: #94a3b8; margin: 8px 0 0 0;">En el móvil, desliza el plano hacia los lados. <a href="esquema-tolva.png" target="_blank" rel="noopener noreferrer" style="color: var(--verde-ia);">Abrir imagen completa ↗</a></p>
+                    <div class="resultado-caja">
+                        <h4 style="color: var(--azul-brillante); margin-top: 0;">Cómo funciona</h4>
+                        <ul style="margin-bottom: 0;">
+                            <li><strong>S1</strong> arranca el motor M1 (grano a la tolva).</li>
+                            <li><strong>S2</strong> arranca el motor M2 (mover el grano dentro de la tolva).</li>
+                            <li>Cada motor se mantiene en marcha con su contacto de realimentación.</li>
+                            <li>Pasar de un motor a otro no obliga a parar con <strong>S0</strong>.</li>
+                            <li>S0 para el automatismo. Si salta un relé térmico, también se para.</li>
+                        </ul>
+                    </div>
+                    <table class="tabla-normativa">
+                        <thead><tr><th>Elemento</th><th>Función</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>S0</strong></td><td>Paro</td></tr>
+                            <tr><td><strong>S1</strong></td><td>Grano a tolva</td></tr>
+                            <tr><td><strong>S2</strong></td><td>Mover grano dentro de la tolva</td></tr>
+                            <tr><td><strong>F1, F2</strong></td><td>Relés térmicos de M1 y M2</td></tr>
+                            <tr><td><strong>P1</strong></td><td>M1 o M2 en marcha</td></tr>
+                            <tr><td><strong>P2</strong></td><td>Motores parados</td></tr>
+                            <tr><td><strong>P3</strong></td><td>Sobrecarga en M1 o M2</td></tr>
+                        </tbody>
+                    </table>
+                    <a href="tolva_grano.cad" download style="background-color: #d97706; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center; margin-top: 15px;">⚙️ Descargar Tolva de Grano (.cad)</a>
+                </div>
+
+                <div class="seccion-bloque" style="border-top: 3px solid #0284c7;">
+                    <h3 style="color: var(--azul-brillante); margin-top: 0;">🍊 Almacén de naranjas (3 cintas transportadoras)</h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">Tres cintas, cada una con su motor, que transportan las naranjas según su calibre: M1 el calibre 0, M2 el calibre 5 y M3 el calibre 10.</p>
+                    <div style="overflow-x: auto; background: #fff; border-radius: 8px; border: 1px solid var(--bordes);">
+                        <img src="esquema-almacen-naranjas.png" alt="Esquema del almacén de naranjas con tres motores M1, M2 y M3, contactores QA, QA1 y QA2, relés térmicos F1, F2 y F3 y pilotos P1, P2, P3 y P4" style="display: block; width: 100%; min-width: 720px; height: auto;">
+                    </div>
+                    <p style="font-size: 0.82rem; color: #94a3b8; margin: 8px 0 0 0;">En el móvil, desliza el plano hacia los lados. <a href="esquema-almacen-naranjas.png" target="_blank" rel="noopener noreferrer" style="color: var(--verde-ia);">Abrir imagen completa ↗</a></p>
+                    <div class="resultado-caja">
+                        <h4 style="color: var(--azul-brillante); margin-top: 0;">Cómo funciona</h4>
+                        <ul style="margin-bottom: 0;">
+                            <li><strong>S1, S2 y S3</strong> arrancan M1, M2 y M3, cada uno con su realimentación.</li>
+                            <li>M1 puede funcionar en cualquier momento.</li>
+                            <li>M2 y M3 nunca funcionan a la vez, y se puede pasar de uno a otro sin parar.</li>
+                            <li>Un solo pulsador de paro, <strong>S0</strong>, detiene los tres motores.</li>
+                            <li>Cada motor tiene su relé térmico contra sobrecargas.</li>
+                        </ul>
+                    </div>
+                    <table class="tabla-normativa">
+                        <thead><tr><th>Elemento</th><th>Función</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>S0</strong></td><td>Paro general</td></tr>
+                            <tr><td><strong>S1, S2, S3</strong></td><td>Marcha de M1, M2 y M3</td></tr>
+                            <tr><td><strong>F1, F2, F3</strong></td><td>Relés térmicos de M1, M2 y M3</td></tr>
+                            <tr><td><strong>P1</strong></td><td>M1 en marcha</td></tr>
+                            <tr><td><strong>P2</strong></td><td>M2 o M3 en marcha</td></tr>
+                            <tr><td><strong>P3</strong></td><td>Motores parados</td></tr>
+                            <tr><td><strong>P4</strong></td><td>Sobrecarga en alguno de los tres</td></tr>
+                        </tbody>
+                    </table>
+                    <a href="almacen_naranjas.cad" download style="background-color: #0284c7; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-size: 0.9rem; font-weight: bold; display: block; text-align: center; margin-top: 15px;">🍊 Descargar Almacén de Naranjas (.cad)</a>
+                </div>
+            </section>
