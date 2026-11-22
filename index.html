@@ -114,7 +114,9 @@
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-ve')"><span>🚗 Vehículo Eléctrico (BT-52)</span> <span>🔒</span></a></li>
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-solar')"><span>🌞 Solar Fotovoltaica (BT-40)</span> <span>🔒</span></a></li>
                             
-                            <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-esquemas-cade')"><span>📐 Esquemas CADe SIMU</span></a></li>
+                        
+                                <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-cuadro3d')"><span>🧩 Cuadro eléctrico 3D</span></a></li>
+                                <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-esquemas-cade')"><span>📐 Esquemas CADe SIMU</span></a></li>
                         
                             <li><a href="javascript:void(0)" onclick="abrirModuloDirecto('vista-vuelta-auto')"><span>🔁 Inversión de giro</span></a></li>
                             <li><a href="javascript:void(0)" onclick="verificarYEntrar('vista-industrial')"><span>⚙️ Automatismos, Piscinas & Riego</span> <span>🔒</span></a></li>
@@ -1540,6 +1542,16 @@
                 })();
                 </script>
             </section>
+            <section id="vista-cuadro3d" class="vista-section oculto">
+    <header>
+        <button type="button" class="btn-volver" onclick="abrirModuloDirecto('vista-inicio')">⬅ Volver al Menú</button>
+        <h1>🧩 Montaje de un cuadro eléctrico en 3D</h1>
+    </header>
+    <div class="seccion-bloque" style="padding:0; overflow:hidden;">
+        <iframe src="cuadro-electrico-3d.html" title="Montaje de cuadro eléctrico en 3D"
+                style="width:100%; height:85vh; border:0;" loading="lazy"></iframe>
+    </div>
+</section>
         </main>
     </div>
 
